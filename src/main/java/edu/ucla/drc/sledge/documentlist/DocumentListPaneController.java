@@ -3,6 +3,7 @@ package edu.ucla.drc.sledge.documentlist;
 import edu.ucla.drc.sledge.Document;
 import edu.ucla.drc.sledge.ImportFileSettings;
 import javafx.beans.value.ObservableValue;
+import javafx.beans.value.WritableObjectValue;
 import javafx.collections.ObservableList;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -14,9 +15,9 @@ public class DocumentListPaneController {
     private final ObservableList<Document> documents;
     private final File projectStorageRoot;
     private final ImportFileSettings settings;
-    private ObservableValue<Document> selectedDocument;
+    private WritableObjectValue<Document> selectedDocument;
 
-    public DocumentListPaneController (ObservableList<Document> documents, File projectStorageRoot, ImportFileSettings settings, ObservableValue<Document> selectedDocument) {
+    public DocumentListPaneController (ObservableList<Document> documents, File projectStorageRoot, ImportFileSettings settings, WritableObjectValue<Document> selectedDocument) {
         this.documents = documents;
         this.projectStorageRoot = projectStorageRoot;
         this.settings = settings;

@@ -37,6 +37,8 @@ public class DocumentListView {
         documentListTree.getSelectionModel().selectedItemProperty().addListener(new ChangeListener() {
             @Override
             public void changed(ObservableValue observable, Object oldValue, Object newValue) {
+                TreeItem<Document> selectedValue = (TreeItem<Document>)newValue;
+                selectedDocument.set(selectedValue.getValue());
 //                selectedDocument.set(newValue);
             }
         });
