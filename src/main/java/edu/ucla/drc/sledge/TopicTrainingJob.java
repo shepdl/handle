@@ -9,13 +9,25 @@ public class TopicTrainingJob {
 
     private int topicCount;
 
-    private double alpha;
-    private double beta;
-    private int randomSeed;
+    private double alpha = 5.0;
+    private double beta = 0.01;
+    private int randomSeed = 1;
 
-    private boolean useSymmetricAlpha;
+    private boolean useSymmetricAlpha = false;
 
-    private int optimizeInterval;
+    private int optimizeInterval = 0;
+
+    public int getIterationCount() {
+        return iterationCount;
+    }
+
+    private int iterationCount = 1000;
+
+    public int getBurnInPeriod() {
+        return burnInPeriod;
+    }
+
+    private int burnInPeriod = 200;
 
     public static TopicTrainingJob createBlank () {
         TopicTrainingJob job = new TopicTrainingJob();
