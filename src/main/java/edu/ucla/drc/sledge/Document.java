@@ -19,6 +19,10 @@ public class Document {
         this.textContent = textContent;
     }
 
+    public Document (File file) {
+        this.file = file;
+    }
+
     public String toString () {
         return this.file.getName();
     }

@@ -7,7 +7,7 @@ public class TopicTrainingJob {
     private UUID id;
     private String name;
 
-    private int topicCount;
+    private int topicCount = 20;
 
     private double alpha = 5.0;
     private double beta = 0.01;

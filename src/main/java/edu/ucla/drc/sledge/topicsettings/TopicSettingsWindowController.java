@@ -1,18 +1,18 @@
 package edu.ucla.drc.sledge.topicsettings;
 
 import cc.mallet.topics.ParallelTopicModel;
+import cc.mallet.topics.TopicModel;
 import cc.mallet.types.Instance;
 import cc.mallet.types.InstanceList;
 import edu.ucla.drc.sledge.Document;
 import edu.ucla.drc.sledge.ProjectModel;
 import edu.ucla.drc.sledge.TopicTrainingJob;
+import javafx.application.Platform;
 
-import javax.imageio.IIOException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class TopicSettingsWindowController {
 
@@ -36,12 +36,26 @@ public class TopicSettingsWindowController {
         view.show();
     }
 
+    int updateProgress (int completedIterations) {
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                model.progress.set(new Double(completedIterations) / new Double(model.getIterationCount()));
+            }
+        });
+        return 0;
+    }
+
     void executeJob () {
-        ParallelTopicModel topicModel = new ParallelTopicModel(
-            model.getNumTopics(), model.getAlpha(), model.getBeta()
+//        ParallelTopicModel topicModel = new ParallelTopicModel(
+//            model.getNumTopics(), model.getAlpha(), model.getBeta()
+//        );
+
+        TopicModel topicModel = new TopicModel(
+                model.getNumTopics(), model.getAlpha(), model.getBeta()
         );
 
-        ParallelTopicModel.logger.setLevel(Level.OFF);
+//        ParallelTopicModel.logger.setLevel(Level.OFF);
 
         topicModel.setRandomSeed(model.getRandomSeed());
         topicModel.setTopicDisplay(0, 0);
@@ -53,14 +67,18 @@ public class TopicSettingsWindowController {
         for (Document doc : projectModel.getDocuments()) {
             documents.add(doc.getIngested());
         }
-        instances.addThruPipe(documents.iterator());
-        topicModel.addInstances(instances);
+//        instances.addThruPipe(documents.iterator());
+//        topicModel.addInstances(instances);
+        topicModel.addInstances(projectModel.getInstances());
+        topicModel.setProgress = this::updateProgress;
 
-        try {
-            topicModel.estimate();
-        } catch (IOException ex) {
-            System.out.println("IOException occurred during training");
-        }
+        topicModel.start();
+
+//        try {
+//            topicModel.estimate();
+//        } catch (IOException ex) {
+//            System.out.println("IOException occurred during training");
+//        }
     }
 
 }

@@ -86,6 +86,9 @@ public class TopicSettingsWindowModel {
         trainingInProgress.set(inProgress);
     }
 
+    public SimpleDoubleProperty progress = new SimpleDoubleProperty(0.0);
+
+
     public boolean getTrainingInProgress () {
         return trainingInProgress.get();
     }
@@ -102,7 +105,7 @@ public class TopicSettingsWindowModel {
 
     private WritableIntegerValue threadCount = new SimpleIntegerProperty();
 
-    public WritableBooleanValue trainingInProgress = new SimpleBooleanProperty();
+    public SimpleBooleanProperty trainingInProgress = new SimpleBooleanProperty();
 
 
     public static TopicSettingsWindowModel blank () {

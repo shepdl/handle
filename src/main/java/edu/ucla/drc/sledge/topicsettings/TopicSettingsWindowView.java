@@ -38,6 +38,7 @@ public class TopicSettingsWindowView {
 
         HBox topicCountRoot = new HBox();
         TextField topicCountField = new TextField();
+        topicCountField.setText(Integer.toString(model.getNumTopics()));
         topicCountField.textProperty().addListener(new ChangeListener<String>() {
             @Override
             public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
@@ -63,15 +64,22 @@ public class TopicSettingsWindowView {
             // Get project model
             model.setTrainingInProgress(true);
             controller.executeJob();
-            model.setTrainingInProgress(false);
+//            model.setTrainingInProgress(false);
         });
 
         Button cancelButton = new Button("Cancel");
 
         ProgressBar trainingProgress = new ProgressBar();
-//        trainingProgress.visibleProperty().bindBidirectional(model.trainingInProgress);
+        trainingProgress.visibleProperty().bindBidirectional(model.trainingInProgress);
 
 //        trainingProgress.setVisible(false);
+
+        model.progress.addListener(new ChangeListener<Number>() {
+            @Override
+            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+                trainingProgress.setProgress(newValue.doubleValue());
+            }
+        });
 
         root.getChildren().addAll(
             topicCountRoot, advancedPane, trainingProgress, runButton, cancelButton
@@ -92,6 +100,7 @@ public class TopicSettingsWindowView {
 
 
         TextField alphaField = new TextField();
+        alphaField.setText(Double.toString(model.getAlpha()));
         alphaField.textProperty().addListener((ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
             try {
                 double alpha = Double.parseDouble(newValue);
@@ -105,11 +114,12 @@ public class TopicSettingsWindowView {
 
         Label betaLabel = new Label("beta");
         TextField betaField = new TextField();
-        alphaField.textProperty().addListener((ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
+        betaField.setText(Double.toString(model.getBeta()));
+        betaField.textProperty().addListener((ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
             try {
-                double alpha = Double.parseDouble(newValue);
+                double beta = Double.parseDouble(newValue);
                 betaField.setText(newValue);
-                model.setAlpha(alpha);
+                model.setBeta(beta);
             } catch (NumberFormatException ex) {
                 betaField.setText(oldValue);
             }
@@ -117,11 +127,12 @@ public class TopicSettingsWindowView {
 
         Label randomSeedLabel = new Label("Random Seed");
         TextField randomSeedField = new TextField();
-        alphaField.textProperty().addListener((ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
+        randomSeedField.setText(Integer.toString(model.getRandomSeed()));
+        randomSeedField.textProperty().addListener((ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
             try {
-                double alpha = Double.parseDouble(newValue);
+                int randomSeed = Integer.parseInt(newValue);
                 randomSeedField.setText(newValue);
-                model.setAlpha(alpha);
+                model.setRandomSeed(randomSeed);
             } catch (NumberFormatException ex) {
                 randomSeedField.setText(oldValue);
             }
@@ -129,6 +140,7 @@ public class TopicSettingsWindowView {
 
         Label iterationsLabel = new Label("Iterations");
         TextField iterationCountField = new TextField();
+        iterationCountField.setText(Integer.toString(model.getIterationCount()));
         iterationCountField.textProperty().addListener((observable, oldValue, newValue) -> {
             try {
                 int iterationCount = Integer.parseInt(newValue);
@@ -141,6 +153,7 @@ public class TopicSettingsWindowView {
 
         Label optimizeLabel = new Label("Optimize Interval");
         TextField optimizeIntervalField = new TextField();
+        optimizeIntervalField.setText(Integer.toString(model.getOptimizeInterval()));
         optimizeIntervalField.textProperty().addListener((observable, oldValue, newValue) -> {
             try {
                 int optimizeInterval = Integer.parseInt(newValue);
@@ -153,6 +166,7 @@ public class TopicSettingsWindowView {
 
         Label burnInPeriodLabel = new Label("Burn in period");
         TextField burnInPeriodField = new TextField();
+        burnInPeriodField.setText(Integer.toString(model.getBurnInPeriod()));
         burnInPeriodField.textProperty().addListener((observable, oldValue, newValue) -> {
             try {
                 int burnInPeriod = Integer.parseInt(newValue);
@@ -165,6 +179,7 @@ public class TopicSettingsWindowView {
 
         Label threadCountLabel = new Label("Threads");
         TextField threadCountField = new TextField();
+        threadCountField.setText(Integer.toString(model.getThreadCount()));
         threadCountField.textProperty().addListener((observable, oldValue, newValue) -> {
             try {
                 int threadCount = Integer.parseInt(newValue);
