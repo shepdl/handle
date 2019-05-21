@@ -13,6 +13,7 @@ import java.text.NumberFormat;
 import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.logging.Logger;
 import java.util.zip.GZIPOutputStream;
@@ -70,6 +71,7 @@ public class TopicModel extends Thread {
 	public boolean printLogLikelihood = true;
 
 	public Function<Integer, Integer> setProgress;
+	public Function<TopicModel, String> updateTopWords;
 
 	// The number of times each type appears in the corpus
 	int[] typeTotals;
@@ -77,6 +79,8 @@ public class TopicModel extends Thread {
 	int maxTypeCount;
 
 	int numThreads = 1;
+
+	boolean running = false;
 
 	public TopicModel (int numberOfTopics) {
 		this (numberOfTopics, numberOfTopics, DEFAULT_BETA);
@@ -628,6 +632,7 @@ public class TopicModel extends Thread {
 	}
 
 	public void run () {
+		this.running = true;
 		this.estimate();
 	}
 
@@ -708,12 +713,15 @@ public class TopicModel extends Thread {
 
 		ExecutorService executor = Executors.newFixedThreadPool(numThreads);
 
-		for (int iteration = 1; iteration <= numIterations; iteration++) {
+		for (int iteration = 1; running && iteration <= numIterations; iteration++) {
 
 			long iterationStart = System.currentTimeMillis();
 
 			if (iteration % 10 == 0) {
 				setProgress.apply(iteration);
+			}
+			if (iteration % 50 == 0) {
+				updateTopWords.apply(this);
 			}
 
 			if (showTopicsInterval != 0 && iteration != 0 && iteration % showTopicsInterval == 0) {
@@ -1882,6 +1890,10 @@ public class TopicModel extends Thread {
 	public MarginalProbEstimator getProbEstimator() {
 		return new MarginalProbEstimator(numTopics, alpha, alphaSum, beta,
 										 typeTopicCounts, tokensPerTopic);
+	}
+
+	public void cancel () {
+		this.running = false;
 	}
 
 

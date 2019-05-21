@@ -8,6 +8,8 @@ import edu.ucla.drc.sledge.Document;
 import edu.ucla.drc.sledge.ProjectModel;
 import edu.ucla.drc.sledge.TopicTrainingJob;
 import javafx.application.Platform;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -19,6 +21,8 @@ public class TopicSettingsWindowController {
     private final TopicSettingsWindowModel model;
     private ProjectModel projectModel;
     private TopicTrainingJob job;
+
+    private ObservableList<TopTenWords> topWords = FXCollections.observableArrayList();
 
     TopicSettingsWindowController (TopicTrainingJob job) {
         this.job = job;
@@ -46,12 +50,95 @@ public class TopicSettingsWindowController {
         return 0;
     }
 
-    void executeJob () {
-//        ParallelTopicModel topicModel = new ParallelTopicModel(
-//            model.getNumTopics(), model.getAlpha(), model.getBeta()
-//        );
+    String updateTopicWords (TopicModel topicModel) {
+        Object[][] topWords = topicModel.getTopWords(10);
+        List<ArrayList<String>> topWordsAsString = new ArrayList<ArrayList<String>>();
+        for (int i = 0; i < topWords.length; i++) {
+            ArrayList<String> thisTopicWords = new ArrayList<>();
+            String[] fixedTopWords = new String[topWords[i].length];
+            for (int j = 0; j < 10; j++) {
+                fixedTopWords[j] = topWords[i][j].toString();
+            }
+            if (i >= this.topWords.size()) {
+                this.topWords.add(new TopTenWords(fixedTopWords));
+            } else {
+                this.topWords.set(i, new TopTenWords(fixedTopWords));
+            }
+            continue;
+//            for (int j = 0; j < topWords[i].length; j++) {
+//                thisTopicWords.add((String)topWords[i][j]);
+//                String[] fixedTopWords = new String[topWords[i].length];
+//                for (int k = 0; k < topWords[i].length; k++) {
+//                    fixedTopWords[k] = (String)topWords[i][k];
+//                }
+//                this.topWords.set(i, new TopTenWords(topWords[i]));
+//                this.topWords.get(i).set(j, (String)topWords[i][j]);
+//            }
+//            topWordsAsString.add(thisTopicWords);
+//            this.topWords.set(i, FXCollections.observableArrayList())
+        }
 
-        TopicModel topicModel = new TopicModel(
+        return "";
+    }
+
+    public class TopTenWords {
+
+        private final String[] words;
+
+        public TopTenWords (String[] words) {
+            this.words = words;
+        }
+
+        public String getWord0 () {
+            return words[0];
+        }
+
+        public String getWord1 () {
+            return words[1];
+        }
+
+        public String getWord2 () {
+            return words[2];
+        }
+
+        public String getWord3 () {
+            return words[3];
+        }
+        public String getWord4 () {
+            return words[4];
+        }
+        public String getWord5 () {
+            return words[5];
+        }
+        public String getWord6 () {
+            return words[6];
+        }
+        public String getWord7 () {
+            return words[7];
+        }
+        public String getWord8 () {
+            return words[8];
+        }
+        public String getWord9 () {
+            return words[9];
+        }
+    }
+
+    ObservableList<TopTenWords> getTopWords () {
+        return this.topWords;
+    }
+
+    void stopJob () {
+        if (topicModel != null) {
+            topicModel.cancel();
+        }
+    }
+
+    TopicModel topicModel;
+
+    void executeJob () {
+
+        topicModel = new TopicModel(
                 model.getNumTopics(), model.getAlpha(), model.getBeta()
         );
 
@@ -71,6 +158,7 @@ public class TopicSettingsWindowController {
 //        topicModel.addInstances(instances);
         topicModel.addInstances(projectModel.getInstances());
         topicModel.setProgress = this::updateProgress;
+        topicModel.updateTopWords = this::updateTopicWords;
 
         topicModel.start();
 

@@ -1,11 +1,18 @@
 package edu.ucla.drc.sledge.topicsettings;
 
 import edu.ucla.drc.sledge.TopicTrainingJob;
+import javafx.beans.property.Property;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
+import javafx.collections.ObservableList;
+import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -35,22 +42,11 @@ public class TopicSettingsWindowView {
 
     private void initialize() {
         VBox root = new VBox();
+        root.setAlignment(Pos.TOP_CENTER);
 
         HBox topicCountRoot = new HBox();
         TextField topicCountField = new TextField();
         topicCountField.setText(Integer.toString(model.getNumTopics()));
-        topicCountField.textProperty().addListener(new ChangeListener<String>() {
-            @Override
-            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-                try {
-                    int numTopics = Integer.parseInt(newValue);
-                    topicCountField.setText(newValue);
-                    model.setNumTopics(numTopics);
-                } catch (NumberFormatException ex) {
-                    topicCountField.setText(oldValue);
-                }
-            }
-        });
         topicCountRoot.getChildren().addAll(
                 new Label("Topic Count"),
                 topicCountField
@@ -60,17 +56,31 @@ public class TopicSettingsWindowView {
         TitledPane advancedPane = buildAdvancedOptions();
 
         Button runButton = new Button("Run");
-        runButton.setOnMouseClicked((event) -> {
-            // Get project model
-            model.setTrainingInProgress(true);
-            controller.executeJob();
+        runButton.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            private boolean running = false;
+            @Override
+            public void handle(MouseEvent event) {
+                // Get project model
+                if (!running) {
+                    model.setTrainingInProgress(true);
+                    controller.executeJob();
+                    running = true;
+                    runButton.setText("Stop");
+                } else {
+                    running = false;
+                    model.setTrainingInProgress(false);
+                    controller.stopJob();
+                    runButton.setText("Run");
+                }
 //            model.setTrainingInProgress(false);
+            }
         });
 
         Button cancelButton = new Button("Cancel");
 
         ProgressBar trainingProgress = new ProgressBar();
         trainingProgress.visibleProperty().bindBidirectional(model.trainingInProgress);
+        trainingProgress.prefWidthProperty().bind(root.widthProperty().subtract(20));
 
 //        trainingProgress.setVisible(false);
 
@@ -81,8 +91,17 @@ public class TopicSettingsWindowView {
             }
         });
 
+        TitledPane topicResults = buildTopicResults();
+
+        ButtonBar controlButtons = new ButtonBar();
+        controlButtons.getButtons().add(runButton);
+        controlButtons.getButtons().add(cancelButton);
+
         root.getChildren().addAll(
-            topicCountRoot, advancedPane, trainingProgress, runButton, cancelButton
+            topicCountRoot, advancedPane,
+                trainingProgress,
+                topicResults,
+                controlButtons
         );
 
         Scene scene = new Scene(root);
@@ -91,6 +110,75 @@ public class TopicSettingsWindowView {
         stage.setTitle("Topic Model settings");
         stage.initModality(Modality.APPLICATION_MODAL);
         stage.show();
+    }
+
+    private TitledPane buildTopicResults() {
+        TitledPane pane = new TitledPane();
+        pane.setText("Results");
+        pane.setCollapsible(true);
+
+        TableView<TopicSettingsWindowController.TopTenWords> topicTopWordsTable = new TableView<>();
+
+        for (int i = 0; i < 10; i++) {
+            TableColumn wordColumn = new TableColumn("Word " + i);
+            wordColumn.setCellValueFactory(new PropertyValueFactory<TopicSettingsWindowController.TopTenWords, String>("word" + i));
+            topicTopWordsTable.getColumns().add(wordColumn);
+        }
+
+        topicTopWordsTable.setItems(controller.getTopWords());
+
+        pane.setContent(topicTopWordsTable);
+
+
+        /*
+        controller.getTopWords().addListener(new ListChangeListener<ObservableList<String>>() {
+            @Override
+            public void onChanged(Change<? extends ObservableList<String>> c) {
+                if (c.wasAdded()) {
+                    int paneWidth = 5;
+                    int currentColumn = 0;
+                    int currentRow = 0;
+                    GridPane newRoot = new GridPane();
+                    for (int i = 0; i < controller.getTopWords().size(); i++) {
+                        TableView<String> tableView = new TableView<>();
+                        TableColumn wordColumn = new TableColumn("Word");
+                        tableView.getColumns().addAll(wordColumn);
+                        tableView.setItems(controller.getTopWords().get(i));
+
+                        newRoot.add(tableView, currentColumn, currentRow);
+                        currentColumn += 1;
+                        if (currentColumn > paneWidth - 1) {
+                            currentColumn = 0;
+                            currentRow += 1;
+                        }
+                    }
+                    pane.setContent(newRoot);
+                } else if (c.wasRemoved()) {
+                    int paneWidth = 5;
+                    int currentColumn = 0;
+                    int currentRow = 0;
+                    GridPane newRoot = new GridPane();
+                    for (int i = 0; i < controller.getTopWords().size(); i++) {
+                        TableView<String> tableView = new TableView<>();
+                        TableColumn wordColumn = new TableColumn("Word");
+                        tableView.getColumns().addAll(wordColumn);
+                        tableView.setItems(controller.getTopWords().get(i));
+
+                        newRoot.add(tableView, currentColumn, currentRow);
+                        currentColumn += 1;
+                        if (currentColumn > paneWidth - 1) {
+                            currentColumn = 0;
+                            currentRow += 1;
+                        }
+                    }
+                    pane.setContent(newRoot);
+                }
+            }
+        });
+
+         */
+
+        return pane;
     }
 
     private TitledPane buildAdvancedOptions() {
