@@ -13,12 +13,19 @@ public class TopicSettingsWindowApp extends Application {
     public void start(Stage primaryStage) throws Exception {
         TopicTrainingJob job = TopicTrainingJob.createBlank();
         ProjectModel model = ProjectModel.blank();
-        model.getDocuments().addAll(
-            new Document(new File("./sample-data/59390-0.txt")),
-            new Document(new File("./sample-data/59486-0.txt")),
-            new Document(new File("./sample-data/pg59485.txt")),
-            new Document(new File("./sample-data/pg59489.txt"))
-        );
+        File sourceDir = new File("./sample-data/");
+        File[] sourceFiles = sourceDir.listFiles();
+        for (int i = 0; i < sourceFiles.length; i++) {
+            model.getDocuments().add(
+                    new Document(sourceFiles[i])
+            );
+        }
+//        model.getDocuments().addAll(
+//            new Document(new File("./sample-data/59390-0.txt")),
+//            new Document(new File("./sample-data/59486-0.txt")),
+//            new Document(new File("./sample-data/pg59485.txt")),
+//            new Document(new File("./sample-data/pg59489.txt"))
+//        );
         TopicSettingsWindowController controller = new TopicSettingsWindowController(model, job);
         controller.initialize();
 

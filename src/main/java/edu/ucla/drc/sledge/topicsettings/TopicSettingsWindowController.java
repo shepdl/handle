@@ -2,6 +2,8 @@ package edu.ucla.drc.sledge.topicsettings;
 
 import cc.mallet.topics.ParallelTopicModel;
 import cc.mallet.topics.TopicModel;
+import cc.mallet.types.Alphabet;
+import cc.mallet.types.IDSorter;
 import cc.mallet.types.Instance;
 import cc.mallet.types.InstanceList;
 import edu.ucla.drc.sledge.Document;
@@ -13,7 +15,9 @@ import javafx.collections.ObservableList;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.TreeSet;
 import java.util.logging.Level;
 
 public class TopicSettingsWindowController {
@@ -21,6 +25,7 @@ public class TopicSettingsWindowController {
     private final TopicSettingsWindowModel model;
     private ProjectModel projectModel;
     private TopicTrainingJob job;
+    private TopicSettingsWindowView view;
 
     private ObservableList<TopTenWords> topWords = FXCollections.observableArrayList();
 
@@ -36,7 +41,7 @@ public class TopicSettingsWindowController {
     }
 
     public void initialize () {
-        TopicSettingsWindowView view = new TopicSettingsWindowView(model, this);
+        view = new TopicSettingsWindowView(model, this);
         view.show();
     }
 
@@ -48,6 +53,69 @@ public class TopicSettingsWindowController {
             }
         });
         return 0;
+    }
+
+    static class Topic {
+        public int getId() {
+            return id;
+        }
+
+        private int id;
+
+        public List<String> getTopWords() {
+            return topWords;
+        }
+
+        private List<String> topWords = new ArrayList<>();
+
+        public List<Double> getTopWordCounts() {
+            return topWordCounts;
+        }
+
+        private List<Double> topWordCounts = new ArrayList<>();
+
+        public Topic (int id) {
+            this.id = id;
+        }
+
+        public void addTopWord (String word, double value) {
+            topWords.add(word);
+            topWordCounts.add(value);
+        }
+
+        public void clearWords () {
+            this.topWords.clear();
+            this.topWordCounts.clear();
+        }
+
+    }
+
+    String updateTopicCounts (TopicModel topicModel) {
+        Alphabet alphabet = topicModel.getAlphabet();
+
+        List<TreeSet<IDSorter>> sortedWords = topicModel.getSortedWords();
+        List<Topic> topics = new ArrayList<>();
+        for (int i = 0; i < sortedWords.size(); i++) {
+            Topic topic = new Topic(i);
+            Iterator items = sortedWords.get(i).iterator();
+            int limit = 10;
+            int count = 0;
+            while (count < limit && items.hasNext()) {
+                IDSorter item = (IDSorter)items.next();
+                topic.addTopWord((String)alphabet.lookupObject(item.getID()), item.getWeight());
+            }
+            topics.add(topic);
+        }
+
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                view.updateTopicResults(topics);
+            }
+        });
+
+        return "";
+
     }
 
     String updateTopicWords (TopicModel topicModel) {
@@ -159,6 +227,7 @@ public class TopicSettingsWindowController {
         topicModel.addInstances(projectModel.getInstances());
         topicModel.setProgress = this::updateProgress;
         topicModel.updateTopWords = this::updateTopicWords;
+        topicModel.updateTopWords = this::updateTopicCounts;
 
         topicModel.start();
 

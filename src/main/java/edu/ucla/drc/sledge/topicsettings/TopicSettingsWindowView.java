@@ -10,6 +10,10 @@ import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.chart.CategoryAxis;
+import javafx.scene.chart.LineChart;
+import javafx.scene.chart.NumberAxis;
+import javafx.scene.chart.XYChart;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
@@ -20,12 +24,17 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import sun.font.TextLabel;
 
+import javax.sound.sampled.Line;
+import java.util.List;
+
 public class TopicSettingsWindowView {
 
     private final Stage stage;
     private final boolean initialized;
     private TopicSettingsWindowModel model;
     private TopicSettingsWindowController controller;
+    private TitledPane topicResults;
+    private ScrollPane topicScrollPane;
 
     public TopicSettingsWindowView(TopicSettingsWindowModel model, TopicSettingsWindowController topicSettingsWindowController) {
         this.model = model;
@@ -46,6 +55,18 @@ public class TopicSettingsWindowView {
 
         HBox topicCountRoot = new HBox();
         TextField topicCountField = new TextField();
+        topicCountField.textProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                try {
+                    int topicCount = Integer.parseInt(newValue);
+                    topicCountField.setText(newValue);
+                    model.setNumTopics(topicCount);
+                } catch (NumberFormatException ex) {
+                    topicCountField.setText(oldValue);
+                }
+            }
+        });
         topicCountField.setText(Integer.toString(model.getNumTopics()));
         topicCountRoot.getChildren().addAll(
                 new Label("Topic Count"),
@@ -91,7 +112,8 @@ public class TopicSettingsWindowView {
             }
         });
 
-        TitledPane topicResults = buildTopicResults();
+//        TitledPane topicResults = buildTopicResults();
+        topicResults = initializeTopicTopWordsLineCharts();
 
         ButtonBar controlButtons = new ButtonBar();
         controlButtons.getButtons().add(runButton);
@@ -104,13 +126,75 @@ public class TopicSettingsWindowView {
                 controlButtons
         );
 
-        Scene scene = new Scene(root);
+        Scene scene = new Scene(root, 800, 600);
 
         stage.setScene(scene);
         stage.setTitle("Topic Model settings");
         stage.initModality(Modality.APPLICATION_MODAL);
         stage.show();
     }
+
+    private TitledPane initializeTopicTopWordsLineCharts () {
+        TitledPane pane = new TitledPane();
+        pane.setText("Results");
+        pane.setCollapsible(true);
+        topicScrollPane = new ScrollPane();
+        topicScrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+        pane.setContent(topicScrollPane);
+        return pane;
+    }
+
+    public int updateTopicResults (List<TopicSettingsWindowController.Topic> topics) {
+//        HBox root = new HBox();
+        topicScrollPane.setContent(null);
+        GridPane pane = new GridPane();
+        int widthLimit = 3;
+        int widthCounter = 0;
+        int heightCounter = 0;
+        for (TopicSettingsWindowController.Topic topic : topics) {
+            CategoryAxis xAxis = new CategoryAxis();
+            NumberAxis yAxis = new NumberAxis();
+
+            LineChart<String, Number> lineChart = new LineChart<>(xAxis, yAxis);
+
+            XYChart.Series series = new XYChart.Series();
+            StringBuilder titleBuilder = new StringBuilder();
+            titleBuilder.append(topic.getTopWords().get(0));
+            titleBuilder.append("/");
+            titleBuilder.append(topic.getTopWords().get(1));
+            titleBuilder.append("/");
+            titleBuilder.append(topic.getTopWords().get(2));
+
+            series.setName("Topic " + Integer.toString(topic.getId()));
+            series.setName(titleBuilder.toString());
+
+            for (int i = 0; i < topic.getTopWords().size() && i < 10; i++) {
+                series.getData().add(
+                    new XYChart.Data<String, Number>(
+                        topic.getTopWords().get(i),
+                        topic.getTopWordCounts().get(i)
+                    )
+                );
+            }
+
+            lineChart.getData().add(series);
+
+            pane.add(lineChart, widthCounter, heightCounter);
+            widthCounter += 1;
+            if (widthCounter >= widthLimit) {
+                widthCounter = 0;
+                heightCounter += 1;
+            }
+        }
+
+        topicScrollPane.setContent(pane);
+
+        return 0;
+    }
+
+//    String updateTopicTopWordsLineCharts (List <) {
+//
+//    }
 
     private TitledPane buildTopicResults() {
         TitledPane pane = new TitledPane();
