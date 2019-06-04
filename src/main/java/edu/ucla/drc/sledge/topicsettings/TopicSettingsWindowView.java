@@ -1,12 +1,7 @@
 package edu.ucla.drc.sledge.topicsettings;
 
-import edu.ucla.drc.sledge.TopicTrainingJob;
-import javafx.beans.property.Property;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-import javafx.collections.FXCollections;
-import javafx.collections.ListChangeListener;
-import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -22,9 +17,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import sun.font.TextLabel;
 
-import javax.sound.sampled.Line;
 import java.util.List;
 
 public class TopicSettingsWindowView {
@@ -144,14 +137,14 @@ public class TopicSettingsWindowView {
         return pane;
     }
 
-    public int updateTopicResults (List<TopicSettingsWindowController.Topic> topics) {
+    public int updateTopicResults (List<Topic> topics) {
 //        HBox root = new HBox();
         topicScrollPane.setContent(null);
         GridPane pane = new GridPane();
         int widthLimit = 3;
         int widthCounter = 0;
         int heightCounter = 0;
-        for (TopicSettingsWindowController.Topic topic : topics) {
+        for (Topic topic : topics) {
             CategoryAxis xAxis = new CategoryAxis();
             NumberAxis yAxis = new NumberAxis();
 

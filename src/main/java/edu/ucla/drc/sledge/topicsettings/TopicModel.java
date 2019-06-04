@@ -1,12 +1,10 @@
 //package edu.ucla.drc.sledge.topicsettings;
 package cc.mallet.topics;
 
-import cc.mallet.topics.MarginalProbEstimator;
-import cc.mallet.topics.TopicAssignment;
-import cc.mallet.topics.TopicInferencer;
-import cc.mallet.topics.WorkerRunnable;
 import cc.mallet.types.*;
 import cc.mallet.util.Randoms;
+import edu.ucla.drc.sledge.topicsettings.TopicDocumentContainerSummary;
+import edu.ucla.drc.sledge.topicsettings.TopicDocumentSummary;
 
 import java.io.*;
 import java.text.NumberFormat;
@@ -15,8 +13,6 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.function.Consumer;
 import java.util.function.Function;
-import java.util.logging.Logger;
-import java.util.zip.GZIPOutputStream;
 
 public class TopicModel extends Thread {
 	public static final int UNASSIGNED_TOPIC = -1;
@@ -36,8 +32,8 @@ public class TopicModel extends Thread {
 	public int totalTokens;
 
 	public double[] alpha;	 // Dirichlet(alpha,alpha,...) is the distribution over topics
-	public double alphaSum;
-	public double beta;   // Prior on per-topic multinomial distribution over words
+	private double alphaSum;
+	private double beta;   // Prior on per-topic multinomial distribution over words
 	public double betaSum;
 
 	public boolean usingSymmetricAlpha = false;
@@ -70,8 +66,8 @@ public class TopicModel extends Thread {
 	public NumberFormat formatter;
 	public boolean printLogLikelihood = true;
 
-	public Function<Integer, Integer> setProgress;
-	public Function<TopicModel, String> updateTopWords;
+	public Consumer<Integer> setProgress;
+	public Consumer<TopicModel> updateTopWords;
 
 	// The number of times each type appears in the corpus
 	int[] typeTotals;
@@ -101,8 +97,8 @@ public class TopicModel extends Thread {
 
 		this.data = new ArrayList<TopicAssignment>();
 		this.topicAlphabet = topicAlphabet;
-		this.alphaSum = alphaSum;
-		this.beta = beta;
+		this.setAlphaSum(alphaSum);
+		this.setBeta(beta);
 
 		setNumTopics(topicAlphabet.size());
 
@@ -132,7 +128,7 @@ public class TopicModel extends Thread {
 		}
 
 		this.alpha = new double[numTopics];
-		Arrays.fill(alpha, alphaSum / numTopics);
+		Arrays.fill(alpha, getAlphaSum() / numTopics);
 
 		tokensPerTopic = new int[numTopics];
 	}
@@ -208,7 +204,7 @@ public class TopicModel extends Thread {
 		alphabet = training.getDataAlphabet();
 		numTypes = alphabet.size();
 
-		betaSum = beta * numTypes;
+		betaSum = getBeta() * numTypes;
 
 		Randoms random = null;
 		if (randomSeed == -1) {
@@ -523,21 +519,21 @@ public class TopicModel extends Thread {
 		}
 
 		if (usingSymmetricAlpha) {
-			alphaSum = Dirichlet.learnSymmetricConcentration(topicDocCounts[0],
+			setAlphaSum(Dirichlet.learnSymmetricConcentration(topicDocCounts[0],
 															 docLengthCounts,
 															 numTopics,
-															 alphaSum);
+					getAlphaSum()));
 			for (int topic = 0; topic < numTopics; topic++) {
-				alpha[topic] = alphaSum / numTopics;
+				alpha[topic] = getAlphaSum() / numTopics;
 			}
 		}
 		else {
 			try {
-				alphaSum = Dirichlet.learnParameters(alpha, topicDocCounts, docLengthCounts, 1.001, 1.0, 1);
+				setAlphaSum(Dirichlet.learnParameters(alpha, topicDocCounts, docLengthCounts, 1.001, 1.0, 1));
 			} catch (RuntimeException e) {
 				// Dirichlet optimization has become unstable. This is known to happen for very small corpora (~5 docs).
 //				logger.warning("Dirichlet optimization has become unstable. Resetting to alpha_t = 1.0.");
-				alphaSum = numTopics;
+				setAlphaSum(numTopics);
 				for (int topic = 0; topic < numTopics; topic++) {
 					alpha[topic] = 1.0;
 				}
@@ -577,7 +573,7 @@ public class TopicModel extends Thread {
 		for (int topic = 0; topic < numTopics; topic++) {
 			alpha[topic] = 1.0;
 		}
-		alphaSum = numTopics;
+		setAlphaSum(numTopics);
 	}
 
 	public void optimizeBeta(WorkerRunnable[] runnables) {
@@ -620,13 +616,13 @@ public class TopicModel extends Thread {
 														topicSizeHistogram,
 														numTypes,
 														betaSum);
-		beta = betaSum / numTypes;
+		setBeta(betaSum / numTypes);
 
 
 //		logger.info("[beta: " + formatter.format(beta) + "] ");
 		// Now publish the new value
 		for (int thread = 0; thread < numThreads; thread++) {
-			runnables[thread].resetBeta(beta, betaSum);
+			runnables[thread].resetBeta(getBeta(), betaSum);
 		}
 
 	}
@@ -672,7 +668,7 @@ public class TopicModel extends Thread {
 				}
 
 				runnables[thread] = new WorkerRunnable(numTopics,
-													   alpha, alphaSum, beta,
+													   alpha, getAlphaSum(), getBeta(),
 													   random, data,
 													   runnableCounts, runnableTotals,
 													   offset, docsPerThread);
@@ -697,7 +693,7 @@ public class TopicModel extends Thread {
 			}
 
 			runnables[0] = new WorkerRunnable(numTopics,
-											  alpha, alphaSum, beta,
+											  alpha, getAlphaSum(), getBeta(),
 											  random, data,
 											  typeTopicCounts, tokensPerTopic,
 											  offset, docsPerThread);
@@ -718,10 +714,10 @@ public class TopicModel extends Thread {
 			long iterationStart = System.currentTimeMillis();
 
 			if (iteration % 10 == 0) {
-				setProgress.apply(iteration);
+				setProgress.accept(iteration);
 			}
 			if (iteration % 50 == 0) {
-				updateTopWords.apply(this);
+				updateTopWords.accept(this);
 			}
 
 			if (showTopicsInterval != 0 && iteration != 0 && iteration % showTopicsInterval == 0) {
@@ -911,9 +907,9 @@ public class TopicModel extends Thread {
 				double globalMaxScore = 0.0;
 				for (int topic = 0; topic < numTopics; topic++) {
 					topicCoefficients[topic] = (alpha[topic] + localTopicCounts[topic]) / (betaSum + tokensPerTopic[topic]);
-					if (beta * topicCoefficients[topic] > globalMaxScore) {
+					if (getBeta() * topicCoefficients[topic] > globalMaxScore) {
 						globalMaxTopic = topic;
-						globalMaxScore = beta * topicCoefficients[topic];
+						globalMaxScore = getBeta() * topicCoefficients[topic];
 					}
 				}
 
@@ -938,11 +934,11 @@ public class TopicModel extends Thread {
 					// If the topic we just decremented was the previous max topic, search
 					//  for a new max topic.
 					if (oldTopic == globalMaxTopic) {
-						globalMaxScore = beta * topicCoefficients[oldTopic];
+						globalMaxScore = getBeta() * topicCoefficients[oldTopic];
 						for (int topic = 0; topic < numTopics; topic++) {
-							if (beta * topicCoefficients[topic] > globalMaxScore) {
+							if (getBeta() * topicCoefficients[topic] > globalMaxScore) {
 								globalMaxTopic = topic;
-								globalMaxScore = beta * topicCoefficients[topic];
+								globalMaxScore = getBeta() * topicCoefficients[topic];
 							}
 						}
 					}
@@ -992,7 +988,7 @@ public class TopicModel extends Thread {
 						}
 						else {
 							score =
-								topicCoefficients[currentTopic] * (beta + currentValue);
+								topicCoefficients[currentTopic] * (getBeta() + currentValue);
 							if (score > maxScore) {
 								newTopic = currentTopic;
 								maxScore = score;
@@ -1032,8 +1028,8 @@ public class TopicModel extends Thread {
 					}
 
 					topicCoefficients[newTopic] = (alpha[newTopic] + localTopicCounts[newTopic]) / (betaSum + tokensPerTopic[newTopic]);
-					if (beta * topicCoefficients[newTopic] > globalMaxScore) {
-						globalMaxScore = beta * topicCoefficients[newTopic];
+					if (getBeta() * topicCoefficients[newTopic] > globalMaxScore) {
+						globalMaxScore = getBeta() * topicCoefficients[newTopic];
 						globalMaxTopic = newTopic;
 					}
 
@@ -1365,7 +1361,7 @@ public class TopicModel extends Thread {
 
 				int[] topicCounts = typeTopicCounts[type];
 
-				double weight = beta;
+				double weight = getBeta();
 
 				int index = 0;
 				while (index < topicCounts.length &&
@@ -1457,7 +1453,7 @@ public class TopicModel extends Thread {
 
 			// And normalize
 			for (int topic = 0; topic < numTopics; topic++) {
-				builder.append("\t" + ((alpha[topic] + topicCounts[topic]) / (docLen + alphaSum) ));
+				builder.append("\t" + ((alpha[topic] + topicCounts[topic]) / (docLen + getAlphaSum()) ));
 			}
 			out.println(builder);
 
@@ -1515,7 +1511,7 @@ public class TopicModel extends Thread {
 
 			// And normalize
 			for (int topic = 0; topic < numTopics; topic++) {
-				sortedTopics[topic].set(topic, (alpha[topic] + topicCounts[topic]) / (docLen + alphaSum) );
+				sortedTopics[topic].set(topic, (alpha[topic] + topicCounts[topic]) / (docLen + getAlphaSum()) );
 			}
 
 			Arrays.sort(sortedTopics);
@@ -1551,7 +1547,7 @@ public class TopicModel extends Thread {
 		if (smoothed) {
 			for (int topic = 0; topic < numTopics; topic++) {
 				for (int type = 0; type < numTypes; type++) {
-					result[topic][type] += beta;
+					result[topic][type] += getBeta();
 				}
 			}
 		}
@@ -1560,7 +1556,7 @@ public class TopicModel extends Thread {
 			double[] topicNormalizers = new double[numTopics];
 			if (smoothed) {
 				for (int topic = 0; topic < numTopics; topic++) {
-					topicNormalizers[topic] = 1.0 / (subCorpusTokensPerTopic[topic] + numTypes * beta);
+					topicNormalizers[topic] = 1.0 / (subCorpusTokensPerTopic[topic] + numTypes * getBeta());
 				}
 			}
 			else {
@@ -1601,7 +1597,7 @@ public class TopicModel extends Thread {
 		if (smoothed) {
 			for (int topic = 0; topic < numTopics; topic++) {
 				for (int type = 0; type < numTypes; type++) {
-					result[topic][type] += beta;
+					result[topic][type] += getBeta();
 				}
 			}
 		}
@@ -1610,7 +1606,7 @@ public class TopicModel extends Thread {
 			double[] topicNormalizers = new double[numTopics];
 			if (smoothed) {
 				for (int topic = 0; topic < numTopics; topic++) {
-					topicNormalizers[topic] = 1.0 / (tokensPerTopic[topic] + numTypes * beta);
+					topicNormalizers[topic] = 1.0 / (tokensPerTopic[topic] + numTypes * getBeta());
 				}
 			}
 			else {
@@ -1717,6 +1713,37 @@ public class TopicModel extends Thread {
 		}
 	}
 
+	public List<TopicDocumentContainerSummary> getSummary () {
+		ArrayList<TreeSet<IDSorter>> topicSortedDocuments = getTopicDocuments(10.0);
+
+		List<TopicDocumentContainerSummary> report = new ArrayList<>();
+
+		for (int topic = 0; topic < numTopics; topic++) {
+			TreeSet<IDSorter> sortedDocuments = topicSortedDocuments.get(topic);
+
+			TopicDocumentContainerSummary summary = new TopicDocumentContainerSummary(topic);
+
+			int i = 0;
+			for (IDSorter sorter: sortedDocuments) {
+
+				int doc = sorter.getID();
+				double proportion = sorter.getWeight();
+				String name = (String) data.get(doc).instance.getName().toString();
+				if (name == null) {
+					name = "no-name";
+				}
+				summary.add(name, proportion);
+//				out.format("%d %d %s %f\n", topic, doc, name, proportion);
+
+				i++;
+			}
+
+			report.add(summary);
+		}
+
+		return report;
+	}
+
 	public void printState (PrintStream out) {
 
 		out.println ("#doc source pos typeindex type topic");
@@ -1725,7 +1752,7 @@ public class TopicModel extends Thread {
 			out.print(alpha[topic] + " ");
 		}
 		out.println();
-		out.println("#beta : " + beta);
+		out.println("#beta : " + getBeta());
 
 		for (int doc = 0; doc < data.size(); doc++) {
 			FeatureSequence tokenSequence =	(FeatureSequence) data.get(doc).instance.getData();
@@ -1802,13 +1829,13 @@ public class TopicModel extends Thread {
 			}
 
 			// subtract the (count + parameter) sum term
-			logLikelihood -= Dirichlet.logGammaStirling(alphaSum + docTopics.length);
+			logLikelihood -= Dirichlet.logGammaStirling(getAlphaSum() + docTopics.length);
 
 			Arrays.fill(topicCounts, 0);
 		}
 
 		// add the parameter sum term
-		logLikelihood += data.size() * Dirichlet.logGammaStirling(alphaSum);
+		logLikelihood += data.size() * Dirichlet.logGammaStirling(getAlphaSum());
 
 		// And the topics
 
@@ -1827,7 +1854,7 @@ public class TopicModel extends Thread {
 				int count = topicCounts[index] >> topicBits;
 
 				nonZeroTypeTopics++;
-				logLikelihood += Dirichlet.logGammaStirling(beta + count);
+				logLikelihood += Dirichlet.logGammaStirling(getBeta() + count);
 
 				if (Double.isNaN(logLikelihood)) {
 //					logger.warning("NaN in log likelihood calculation");
@@ -1844,7 +1871,7 @@ public class TopicModel extends Thread {
 
 		for (int topic=0; topic < numTopics; topic++) {
 			logLikelihood -=
-				Dirichlet.logGammaStirling( (beta * numTypes) +
+				Dirichlet.logGammaStirling( (getBeta() * numTypes) +
 											tokensPerTopic[ topic ] );
 
 			if (Double.isNaN(logLikelihood)) {
@@ -1860,11 +1887,11 @@ public class TopicModel extends Thread {
 
 		// logGamma(|V|*beta) for every topic
 		logLikelihood +=
-			Dirichlet.logGammaStirling(beta * numTypes) * numTopics;
+			Dirichlet.logGammaStirling(getBeta() * numTypes) * numTopics;
 
 		// logGamma(beta) for all type/topic pairs with non-zero count
 		logLikelihood -=
-			Dirichlet.logGammaStirling(beta) * nonZeroTypeTopics;
+			Dirichlet.logGammaStirling(getBeta()) * nonZeroTypeTopics;
 
 		if (Double.isNaN(logLikelihood)) {
 //			logger.info("at the end");
@@ -1882,13 +1909,13 @@ public class TopicModel extends Thread {
 	public TopicInferencer getInferencer() {
 		return new TopicInferencer(typeTopicCounts, tokensPerTopic,
 								   data.get(0).instance.getDataAlphabet(),
-								   alpha, beta, betaSum);
+								   alpha, getBeta(), betaSum);
 	}
 
 	/** Return a tool for evaluating the marginal probability of new documents
 	 *   under this model */
 	public MarginalProbEstimator getProbEstimator() {
-		return new MarginalProbEstimator(numTopics, alpha, alphaSum, beta,
+		return new MarginalProbEstimator(numTopics, alpha, getAlphaSum(), getBeta(),
 										 typeTopicCounts, tokensPerTopic);
 	}
 
@@ -1897,4 +1924,19 @@ public class TopicModel extends Thread {
 	}
 
 
+	public double getAlphaSum() {
+		return alphaSum;
+	}
+
+	public void setAlphaSum(double alphaSum) {
+		this.alphaSum = alphaSum;
+	}
+
+	public double getBeta() {
+		return beta;
+	}
+
+	public void setBeta(double beta) {
+		this.beta = beta;
+	}
 }

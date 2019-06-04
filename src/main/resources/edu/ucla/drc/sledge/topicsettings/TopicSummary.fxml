@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import javafx.scene.chart.LineChart?>
+<?import javafx.scene.chart.CategoryAxis?>
+<?import javafx.scene.chart.NumberAxis?>
+<fx:root xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            type="javafx.scene.layout.VBox"
+         >
+
+    <TextField fx:id="titleField"/>
+    <LineChart fx:id="wordDistributionChart" legendVisible="false">
+        <xAxis>
+            <CategoryAxis label=""/>
+        </xAxis>
+        <yAxis>
+            <NumberAxis label="Instances"/>
+        </yAxis>
+
+    </LineChart>
+
+    <Button text="Details" fx:id="detailsButton" />
+
+</fx:root>

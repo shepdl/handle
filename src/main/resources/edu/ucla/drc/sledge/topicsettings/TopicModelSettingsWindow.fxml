@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import javafx.geometry.Insets?>
+<VBox xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="edu.ucla.drc.sledge.topicsettings.TopicModelSettingsWindow"
+            prefHeight="600.0" prefWidth="800.0"
+>
+        <GridPane alignment="CENTER" hgap="10" vgap="10">
+            <Label text="Topic Count" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
+            <TextField fx:id="numTopicsField" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+        </GridPane>
+
+        <TitledPane text="Advanced ..." expanded="false">
+            <GridPane alignment="CENTER" hgap="10" vgap="10">
+                <padding>
+                    <Insets topRightBottomLeft="10" />
+                </padding>
+                <Label text="alpha" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
+                <TextField fx:id="alphaField" GridPane.rowIndex="0" GridPane.columnIndex="1" />
+                <Label text="beta" GridPane.rowIndex="0" GridPane.columnIndex="2"/>
+                <TextField fx:id="betaField" GridPane.rowIndex="0" GridPane.columnIndex="3" />
+                <Label text="random seed" GridPane.rowIndex="0" GridPane.columnIndex="4"/>
+                <TextField fx:id="randomSeedField" GridPane.rowIndex="0" GridPane.columnIndex="5" />
+                <Label text="iterations" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+                <TextField fx:id="iterationsField" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+                <Label text="optimize interval" GridPane.rowIndex="1" GridPane.columnIndex="2"/>
+                <TextField fx:id="optimizeIntervalField" GridPane.rowIndex="1" GridPane.columnIndex="3"/>
+                <Label text="Burn-in period" GridPane.rowIndex="1" GridPane.columnIndex="4"/>
+                <TextField fx:id="burinInPeriodField" GridPane.rowIndex="1" GridPane.columnIndex="5"/>
+                <Label text="Threads" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
+                <TextField fx:id="threadsField" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+            </GridPane>
+        </TitledPane>
+
+        <VBox>
+            <Button fx:id="runButton" onMouseClicked="#runButtonClicked" text="Run" />
+            <ProgressBar fx:id="jobProgressBar" visible="false" />
+        </VBox>
+
+        <TitledPane fx:id="topicResultsPane" text="Topic Results" expanded="false" visible="false">
+            <ScrollPane fx:id="topicScrollPane" hbarPolicy="NEVER" vbarPolicy="AS_NEEDED"/>
+        </TitledPane>
+
+</VBox>

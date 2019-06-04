@@ -7,3 +7,5 @@ target/
 sample-data
 *.txt
 
+
+dependency-reduced-pom.xml

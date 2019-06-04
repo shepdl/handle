@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import javafx.scene.chart.LineChart?>
+<?import javafx.scene.chart.CategoryAxis?>
+<?import javafx.scene.chart.NumberAxis?>
+<?import javafx.scene.chart.BarChart?>
+<fx:root xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+         type="javafx.scene.layout.VBox"
+            prefHeight="400.0" prefWidth="600.0">
+
+    <TextField fx:id="titleField"/>
+    <LineChart fx:id="wordDistributionChart" legendVisible="false">
+        <xAxis>
+            <CategoryAxis label=""/>
+        </xAxis>
+        <yAxis>
+            <NumberAxis label="Instances"/>
+        </yAxis>
+
+    </LineChart>
+
+    <BarChart fx:id="documentDistributionChart" legendVisible="false">
+        <xAxis>
+            <NumberAxis label="Percentage"></NumberAxis>
+        </xAxis>
+        <yAxis>
+            <CategoryAxis></CategoryAxis>
+        </yAxis>
+    </BarChart>
+
+
+</fx:root>
