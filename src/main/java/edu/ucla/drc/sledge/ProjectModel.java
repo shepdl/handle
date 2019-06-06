@@ -1,9 +1,7 @@
 package edu.ucla.drc.sledge;
 
 import cc.mallet.pipe.Pipe;
-import cc.mallet.pipe.iterator.ArrayIterator;
-import cc.mallet.pipe.iterator.FileListIterator;
-import cc.mallet.pipe.iterator.StringArrayIterator;
+import cc.mallet.types.Instance;
 import cc.mallet.types.InstanceList;
 import edu.ucla.drc.sledge.documentlist.ImportPipeBuilder;
 import javafx.beans.value.ObservableBooleanValue;
@@ -13,7 +11,8 @@ import javafx.collections.ObservableList;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.util.ArrayList;
+import java.net.URI;
+import java.util.Iterator;
 import java.util.List;
 
 public class ProjectModel {
@@ -48,20 +47,43 @@ public class ProjectModel {
 
     private InstanceList instances;
 
+    private static class DocumentIterator implements Iterator<Instance> {
+
+        private final List<Document> documents;
+        private int index = 0;
+
+        public DocumentIterator(List<Document> documents) {
+            this.documents = documents;
+        }
+
+        @Override
+        public boolean hasNext() {
+            return index < documents.size();
+        }
+
+        @Override
+        public Instance next() {
+            Document document = documents.get(index);
+            index++;
+            URI uri = document.getFile().toURI();
+            try {
+                return new Instance(
+                        document.getTextContent(), null, uri, null
+                );
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+    }
+
     public ProjectModel () {
         documents.addListener(new ListChangeListener<Document>() {
             @Override
             public void onChanged(Change<? extends Document> c) {
                 instances = new InstanceList(getPipe());
-                ArrayList<String> inFiles = new ArrayList<String>();
-                for (Document doc : documents) {
-                    try {
-                        inFiles.add(doc.getTextContent());
-                    } catch (FileNotFoundException e) {
-                        e.printStackTrace();
-                    }
-                }
-                instances.addThruPipe(new StringArrayIterator(inFiles.toArray(new String[0])));
+                DocumentIterator iterator = new DocumentIterator(documents);
+                instances.addThruPipe(iterator);
                 for (int i = 0; i < documents.size(); i++) {
                     documents.get(i).setIngested(instances.get(i));
                 }

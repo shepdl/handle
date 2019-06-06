@@ -67,6 +67,7 @@ public class TopicDetails extends VBox {
         XYChart.Series documentSeries = new XYChart.Series();
 
         for (TopicDocumentSummary topicDocumentSummary : summary.getItems()) {
+            String components[] = topicDocumentSummary.getDocumentName().split("/");
             documentSeries.getData().add(
 //                new XYChart.Data<String, Number>(
 //                    topicDocumentSummary.getDocumentName(),
@@ -74,7 +75,7 @@ public class TopicDetails extends VBox {
 //                )
                     new XYChart.Data<Number, String>(
                             topicDocumentSummary.getProportion(),
-                            topicDocumentSummary.getDocumentName()
+                            components[components.length - 1]
                     )
             );
         }
