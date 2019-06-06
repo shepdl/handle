@@ -1529,6 +1529,18 @@ public class TopicModel extends Thread {
 
 	}
 
+	public int[] getTopicWeightsForDocument (int docIndex) {
+		int[] topicWeights = new int[numTopics];
+
+		LabelSequence topicSequence = (LabelSequence)data.get(docIndex).topicSequence;
+		int[] currentDocTopics = topicSequence.getFeatures();
+		for (int currentDocTopic : currentDocTopics) {
+			topicWeights[currentDocTopic]++;
+		}
+
+		return topicWeights;
+	}
+
 	public double[][] getSubCorpusTopicWords(boolean[] documentMask, boolean normalized, boolean smoothed) {
 		double[][] result = new double[numTopics][numTypes];
 		int[] subCorpusTokensPerTopic = new int[numTopics];

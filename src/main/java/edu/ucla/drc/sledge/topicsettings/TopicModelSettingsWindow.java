@@ -6,6 +6,7 @@ import cc.mallet.types.IDSorter;
 import cc.mallet.types.Instance;
 import cc.mallet.types.InstanceList;
 import edu.ucla.drc.sledge.Document;
+import edu.ucla.drc.sledge.DocumentSummary;
 import edu.ucla.drc.sledge.ProjectModel;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
@@ -169,4 +170,12 @@ public class TopicModelSettingsWindow {
 
     }
 
+    public void showDocument(MouseEvent event) {
+        List<Document> documents = projectModel.getDocuments();
+        DocumentSummary summary = new DocumentSummary(
+                documents.get(0),
+                documents,
+                topicModel
+        );
+    }
 }
