@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import javafx.scene.control.cell.PropertyValueFactory?>
+<fx:root xmlns="http://javafx.com/javafx"
+         xmlns:fx="http://javafx.com/fxml"
+         type="BorderPane"
+>
+
+    <left>
+        <VBox>
+            <TreeView fx:id="documentListTree" showRoot="false">
+
+            </TreeView>
+
+            <Button fx:id="settingsButton" onMouseClicked="#showSettingsPane">
+                Settings
+            </Button>
+            <Button fx:id="stopwordsButton" onMouseClicked="#showStopwordsPane">
+                Stopwords
+            </Button>
+        </VBox>
+    </left>
+
+    <center>
+        <TextArea fx:id="documentViewTextArea"/>
+    </center>
+
+    <right>
+        <TableView fx:id="countsTable">
+            <columns>
+                <TableColumn text="Word">
+                    <cellValueFactory>
+                        <PropertyValueFactory property="word"/>
+                    </cellValueFactory>
+                </TableColumn>
+                <TableColumn text="Count">
+                    <cellValueFactory>
+                        <PropertyValueFactory property="count"/>
+                    </cellValueFactory>
+                </TableColumn>
+            </columns>
+        </TableView>
+    </right>
+
+
+</fx:root>
