@@ -4,7 +4,6 @@ package cc.mallet.topics;
 import cc.mallet.types.*;
 import cc.mallet.util.Randoms;
 import edu.ucla.drc.sledge.topicsettings.TopicDocumentContainerSummary;
-import edu.ucla.drc.sledge.topicsettings.TopicDocumentSummary;
 
 import java.io.*;
 import java.text.NumberFormat;
@@ -12,9 +11,19 @@ import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.function.Consumer;
-import java.util.function.Function;
 
 public class TopicModel extends Thread {
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    private String title = "Empty topic model";
+
     public static final int UNASSIGNED_TOPIC = -1;
 
     public ArrayList<TopicAssignment> data;  // the training instances and their topic assignments
@@ -77,6 +86,12 @@ public class TopicModel extends Thread {
     int numThreads = 1;
 
     boolean running = false;
+
+    public boolean isComplete() {
+        return complete;
+    }
+
+    private boolean complete = false;
 
     public TopicModel(int numberOfTopics) {
         this(numberOfTopics, numberOfTopics, DEFAULT_BETA);
@@ -650,6 +665,7 @@ public class TopicModel extends Thread {
     public void run() {
         this.running = true;
         this.estimate();
+        this.complete = true;
     }
 
     public void estimate() {
@@ -1978,5 +1994,9 @@ public class TopicModel extends Thread {
 
     public void setBeta(double beta) {
         this.beta = beta;
+    }
+
+    public String toString () {
+        return title;
     }
 }

@@ -16,12 +16,18 @@ class IntegerValidator implements ChangeListener<String> {
         this.property = property;
     }
 
+    public IntegerValidator (TextField field) {
+        this.field = field;
+    }
+
     @Override
     public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
         try {
             int parsedValue = Integer.parseInt(newValue);
             field.setText(newValue);
-            this.property.accept(parsedValue);
+            if (this.property != null) {
+                this.property.accept(parsedValue);
+            }
         } catch (NumberFormatException ex) {
             field.setText(oldValue);
         }

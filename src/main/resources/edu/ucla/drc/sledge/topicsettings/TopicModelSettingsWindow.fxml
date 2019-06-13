@@ -7,15 +7,13 @@
 <?import javafx.scene.layout.*?>
 
 <?import javafx.geometry.Insets?>
-<VBox xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
-            fx:controller="edu.ucla.drc.sledge.topicsettings.TopicModelSettingsWindow"
-            prefHeight="600.0" prefWidth="800.0"
+<fx:root xmlns="http://javafx.com/javafx"
+         xmlns:fx="http://javafx.com/fxml"
+         type="VBox"
 >
         <GridPane alignment="CENTER" hgap="10" vgap="10">
             <Label text="Topic Count" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
             <TextField fx:id="numTopicsField" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
-            <Button onMouseClicked="#showDocument">Show Document</Button>
         </GridPane>
 
         <TitledPane text="Advanced ..." expanded="false">
@@ -49,4 +47,4 @@
             <ScrollPane fx:id="topicScrollPane" hbarPolicy="NEVER" vbarPolicy="AS_NEEDED"/>
         </TitledPane>
 
-</VBox>
+</fx:root>

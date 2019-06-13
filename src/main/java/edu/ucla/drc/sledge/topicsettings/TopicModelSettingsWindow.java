@@ -4,22 +4,23 @@ import cc.mallet.topics.TopicModel;
 import cc.mallet.types.Alphabet;
 import cc.mallet.types.IDSorter;
 import cc.mallet.types.Instance;
-import cc.mallet.types.InstanceList;
 import edu.ucla.drc.sledge.Document;
-import edu.ucla.drc.sledge.DocumentSummary;
 import edu.ucla.drc.sledge.ProjectModel;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.VBox;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.TreeSet;
 
-public class TopicModelSettingsWindow {
+public class TopicModelSettingsWindow extends VBox {
 
     @FXML private TextField numTopicsField;
 
@@ -42,32 +43,55 @@ public class TopicModelSettingsWindow {
     private List topWords;
     private ProjectModel projectModel;
 
-    public TopicModelSettingsWindow() {
-        topicModel = new TopicModel(20, 5.0, 0.1);
+
+    public TopicModelSettingsWindow () {
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("TopicModelSettingsWindow.fxml"));
+        fxmlLoader.setRoot(this);
+        fxmlLoader.setController(this);
+
+        try {
+            fxmlLoader.load();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @FXML
     public void initialize () {
-        numTopicsField.textProperty().addListener(new IntegerValidator(numTopicsField, topicModel::setNumTopics));
-        numTopicsField.setText(Integer.toString(topicModel.getNumTopics()));
-        alphaField.textProperty().addListener(new DoubleValidator(alphaField, topicModel::setAlphaSum));
-        alphaField.setText(Double.toString(topicModel.getAlphaSum()));
-        betaField.textProperty().addListener(new DoubleValidator(betaField, topicModel::setBeta));
-        betaField.setText(Double.toString(topicModel.getBeta()));
-        randomSeedField.textProperty().addListener(new IntegerValidator(randomSeedField, topicModel::setRandomSeed));
-        randomSeedField.setText(Integer.toString(topicModel.randomSeed));
-        iterationsField.textProperty().addListener(new IntegerValidator(iterationsField, topicModel::setNumIterations));
-        iterationsField.setText(Integer.toString(topicModel.numIterations));
-        optimizeIntervalField.textProperty().addListener(new IntegerValidator(optimizeIntervalField, topicModel::setNumIterations));
-        optimizeIntervalField.setText(Integer.toString(topicModel.optimizeInterval));
-        burinInPeriodField.textProperty().addListener(new IntegerValidator(burinInPeriodField, topicModel::setBurninPeriod));
-        burinInPeriodField.setText(Integer.toString(topicModel.burninPeriod));
-        threadsField.textProperty().addListener(new IntegerValidator(threadsField, topicModel::setNumThreads));
-
+        numTopicsField.textProperty().addListener(new IntegerValidator(numTopicsField));
+        alphaField.textProperty().addListener(new DoubleValidator(alphaField));
+        betaField.textProperty().addListener(new DoubleValidator(betaField));
+        randomSeedField.textProperty().addListener(new IntegerValidator(randomSeedField));
+        iterationsField.textProperty().addListener(new IntegerValidator(iterationsField));
+        optimizeIntervalField.textProperty().addListener(new IntegerValidator(optimizeIntervalField));
+        burinInPeriodField.textProperty().addListener(new IntegerValidator(burinInPeriodField));
+        threadsField.textProperty().addListener(new IntegerValidator(threadsField));
         int availableProcessors = Runtime.getRuntime().availableProcessors();
         threadsField.setText(Integer.toString(availableProcessors));
-        topicModel.setNumThreads(availableProcessors);
 
+        updateFields();
+
+    }
+
+    private void updateFields () {
+        if (topicModel != null) {
+            numTopicsField.setText(Integer.toString(topicModel.getNumTopics()));
+            alphaField.setText(Double.toString(topicModel.getAlphaSum()));
+            betaField.setText(Double.toString(topicModel.getBeta()));
+            randomSeedField.setText(Integer.toString(topicModel.randomSeed));
+            iterationsField.setText(Integer.toString(topicModel.numIterations));
+            optimizeIntervalField.setText(Integer.toString(topicModel.optimizeInterval));
+            burinInPeriodField.setText(Integer.toString(topicModel.burninPeriod));
+            numTopicsField.setText(Integer.toString(topicModel.getNumTopics()));
+            int availableProcessors = Runtime.getRuntime().availableProcessors();
+            topicModel.setNumThreads(availableProcessors);
+
+            runButton.setVisible(true);
+            jobProgressBar.setVisible(true);
+        } else {
+            runButton.setVisible(false);
+            jobProgressBar.setVisible(false);
+        }
     }
 
     public void setup (ProjectModel projectModel) {
@@ -144,7 +168,6 @@ public class TopicModelSettingsWindow {
                 );
                 if (completedIterations == topicModel.numIterations) {
                     running = false;
-
                 }
             }
         });
@@ -152,11 +175,19 @@ public class TopicModelSettingsWindow {
 
     void executeJob () {
 
-        InstanceList instances = new InstanceList(projectModel.getPipe());
         List<Instance> documents = new ArrayList<>();
         for (Document doc : projectModel.getDocuments()) {
             documents.add(doc.getIngested());
         }
+
+        topicModel.setNumTopics(Integer.parseInt(numTopicsField.textProperty().getValue()));
+        topicModel.setAlphaSum(Double.parseDouble(alphaField.textProperty().getValue()));
+        topicModel.setBeta(Double.parseDouble(betaField.textProperty().getValue()));
+        topicModel.setRandomSeed(Integer.parseInt(randomSeedField.textProperty().getValue()));
+        topicModel.setNumIterations(Integer.parseInt(iterationsField.textProperty().getValue()));
+        topicModel.setOptimizeInterval(Integer.parseInt(optimizeIntervalField.textProperty().getValue()));
+        topicModel.setBurninPeriod(Integer.parseInt(burinInPeriodField.textProperty().getValue()));
+        topicModel.setNumThreads(Integer.parseInt(threadsField.textProperty().getValue()));
 
         topicModel.addInstances(projectModel.getInstances());
         topicModel.setProgress = this::updateProgress;
@@ -170,6 +201,7 @@ public class TopicModelSettingsWindow {
 
     }
 
+    /*
     public void showDocument(MouseEvent event) {
         List<Document> documents = projectModel.getDocuments();
         DocumentSummary summary = new DocumentSummary(
@@ -178,4 +210,16 @@ public class TopicModelSettingsWindow {
                 topicModel
         );
     }
+     */
+
+    public void setTopicModel(TopicModel topicModel) {
+        this.topicModel = topicModel;
+        topicScrollPane.setContent(new VBox());
+        if (topicModel.isComplete()) {
+            updateTopicCounts(topicModel);
+            jobProgressBar.setVisible(false);
+        }
+        updateFields();
+    }
+
 }

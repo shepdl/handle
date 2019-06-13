@@ -35,6 +35,10 @@ public class ImportFileSettings {
         return tokenRegexPattern;
     }
 
+    public void setTokenRegexPattern (Pattern tokenRegexPattern) {
+        this.tokenRegexPattern = tokenRegexPattern;
+    }
+
     public String toString () {
         return defaultRegex.toString() + "/" + (preserveCase ? "preserve case" : "insensitive");
     }

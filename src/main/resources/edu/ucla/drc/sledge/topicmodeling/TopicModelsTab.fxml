@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import edu.ucla.drc.sledge.topicmodeling.TopicModelsList?>
+<?import edu.ucla.drc.sledge.topicsettings.TopicModelSettingsWindow?>
+<fx:root xmlns="http://javafx.com/javafx"
+         xmlns:fx="http://javafx.com/fxml"
+         type="BorderPane"
+         >
+
+
+    <left>
+        <VBox>
+            <TopicModelsList fx:id="topicModelsList" />
+            <!-- new button -->
+            <Button fx:id="addTopicModelButton" onMouseClicked="#addTopicModel">Add ...</Button>
+        </VBox>
+    </left>
+
+    <center>
+        <TopicModelSettingsWindow fx:id="topicModelSettings"/>
+    </center>
+
+</fx:root>

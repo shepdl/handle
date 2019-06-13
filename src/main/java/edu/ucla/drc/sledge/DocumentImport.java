@@ -1,34 +1,33 @@
 package edu.ucla.drc.sledge;
 
-import javafx.beans.value.ObservableValue;
-import javafx.beans.value.WritableObjectValue;
-import javafx.collections.ListChangeListener;
-import javafx.collections.ObservableList;
+import com.sun.tools.internal.ws.wsdl.document.Import;
+import edu.ucla.drc.sledge.documentimport.*;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.input.DragEvent;
-import javafx.scene.input.Dragboard;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.input.TransferMode;
 import javafx.scene.layout.BorderPane;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 
-import javax.print.Doc;
-import java.io.File;
 import java.io.IOException;
-import java.util.Iterator;
-import java.util.List;
 
 public class DocumentImport extends BorderPane {
 
-    @FXML public TreeView documentListTree;
+    @FXML private DocumentList documentList;
+
     @FXML public Button settingsButton;
-    @FXML public TextArea documentViewTextArea;
-    @FXML public TableView countsTable;
+
+    @FXML private DocumentTextView documentView;
+
+    @FXML private WordCountTable countsTable;
     @FXML public Button stopwordsButton;
 
-    private ObservableList<Document> documents;
-    private WritableObjectValue<Document> selectedDocument;
+    private ProjectModel model;
 
 
     public DocumentImport () {
@@ -41,67 +40,55 @@ public class DocumentImport extends BorderPane {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
     }
 
-    public void setData (ObservableList<Document> documents, WritableObjectValue<Document> selectedDocument) {
-        this.documents = documents;
-        this.selectedDocument = selectedDocument;
-
-        this.documents.addListener((ListChangeListener.Change<? extends Document> c) -> {
-            while (c.next()) {
-                if (c.wasAdded()) {
-                    c.getAddedSubList().forEach(doc -> {
-                        TreeItem<Document> treeItem = new TreeItem<>(doc);
-                        rootTreeItem.getChildren().add(treeItem);
-                    });
-                }
-            }
-        });
-
-        this.selectedDocument
-    }
-
-    private final TreeItem rootTreeItem = new TreeItem("Files");
     @FXML
     public void initialize () {
-        System.out.println("Document Importer initialized");
+    }
 
-        documentListTree.setRoot(rootTreeItem);
-        documentListTree.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
-        documentListTree.getSelectionModel().selectedItemProperty().addListener(
-                (ObservableValue observable, Object oldValue, Object newValue) -> {
-                    TreeItem<Document> selectedValue = (TreeItem<Document>)newValue;
-                    selectedDocument.set(selectedValue.getValue());
-                }
-        );
-
-        documentListTree.setOnDragOver((DragEvent event) -> {
-            if (event.getDragboard().hasFiles()) {
-                event.acceptTransferModes(TransferMode.COPY_OR_MOVE);
-            }
-            event.consume();
-        });
-
-        documentListTree.setOnDragDropped((DragEvent event) -> {
-            Dragboard db = event.getDragboard();
-            for (File file : db.getFiles()) {
-                Document doc = new Document(file, null);
-                documents.add(doc);
-            }
-
-            event.setDropCompleted(true);
-            event.consume();
-        });
-
-
+    public void setModel (ProjectModel model) {
+        this.model = model;
+        SimpleObjectProperty<Document> selectedDocument = new SimpleObjectProperty<Document>();
+        documentList.setData(model.getDocuments(), selectedDocument);
+        documentView.setData(selectedDocument);
+        countsTable.setData(selectedDocument);
     }
 
     public void showSettingsPane (MouseEvent event) {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("documentimport/ImportSettingsDialog.fxml"));
+        try {
+            Parent root = (Parent) loader.load();
+            ImportSettingsDialog controller = loader.<ImportSettingsDialog>getController();
+            controller.setModel(model);
+
+            Scene scene = new Scene(root, 300, 200);
+            Stage stage = new Stage();
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.setTitle("Document settings");
+            stage.setScene(scene);
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
     }
 
     public void showStopwordsPane (MouseEvent event) {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("documentimport/StopwordsDialog.fxml"));
+        try {
+            Parent root = (Parent) loader.load();
+            StopwordsDialog controller = loader.<StopwordsDialog>getController();
+            controller.setModel(model);
+
+            Scene scene = new Scene(root, 300, 200);
+            Stage stage = new Stage();
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.setTitle("Stopwords");
+            stage.setScene(scene);
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
     }
 

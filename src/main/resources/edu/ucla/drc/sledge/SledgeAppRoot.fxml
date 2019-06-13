@@ -7,6 +7,7 @@
 <?import javafx.scene.layout.*?>
 <?import edu.ucla.drc.sledge.DocumentImport ?>
 
+<?import edu.ucla.drc.sledge.topicmodeling.TopicModelsTab?>
 <AnchorPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
             fx:controller="edu.ucla.drc.sledge.SledgeAppRoot"
@@ -18,7 +19,7 @@
             <DocumentImport fx:id="documentImport" />
         </Tab>
         <Tab text="Topic Models" closable="false">
-
+            <TopicModelsTab fx:id="topicModels"></TopicModelsTab>
         </Tab>
     </TabPane>
 </AnchorPane>

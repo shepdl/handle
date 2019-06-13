@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="edu.ucla.drc.sledge.documentimport.ImportSettingsDialog"
+            prefHeight="400.0" prefWidth="600.0"
+>
+
+    <VBox>
+        <Label text="One document is ..."/>
+        <fx:define>
+            <ToggleGroup fx:id="documentGroup"/>
+        </fx:define>
+
+        <RadioButton text="One file" selected="true" fx:id="oneFileRadio" toggleGroup="$documentGroup"/>
+        <RadioButton text="One line in one file" fx:id="oneLineRadio" toggleGroup="$documentGroup"/>
+
+        <Label text="One word is ..."/>
+
+        <fx:define>
+            <ToggleGroup fx:id="tokenGroup" />
+        </fx:define>
+
+        <RadioButton text="Just letters" fx:id="justLettersRadio" toggleGroup="$tokenGroup" />
+        <RadioButton text="All characters between spaces" fx:id="allCharactersRadio" toggleGroup="$tokenGroup"/>
+
+
+        <CheckBox text="Preserve capital letters" selected="false" fx:id="preserveCaseCheckBox" />
+
+    </VBox>
+
+</AnchorPane>

@@ -16,12 +16,18 @@ class DoubleValidator implements ChangeListener<String> {
         this.property = property;
     }
 
+    public DoubleValidator(TextField field) {
+        this.field = field;
+    }
+
     @Override
     public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
         try {
             double alpha = Double.parseDouble(newValue);
             field.setText(newValue);
-            this.property.accept(alpha);
+            if (this.property != null) {
+                this.property.accept(alpha);
+            }
         } catch (NumberFormatException ex) {
             field.setText(oldValue);
         }

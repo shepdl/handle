@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import javafx.scene.control.cell.PropertyValueFactory?>
+<fx:root xmlns="http://javafx.com/javafx"
+         xmlns:fx="http://javafx.com/fxml"
+         prefHeight="400.0" prefWidth="600.0"
+         type="TableView"
+>
+    <columns>
+        <TableColumn text="Word">
+            <cellValueFactory>
+                <PropertyValueFactory property="word"/>
+            </cellValueFactory>
+        </TableColumn>
+        <TableColumn text="Count" sortType="DESCENDING">
+            <cellValueFactory>
+                <PropertyValueFactory property="count"/>
+            </cellValueFactory>
+        </TableColumn>
+    </columns>
+
+</fx:root>

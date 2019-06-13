@@ -7,6 +7,9 @@
 <?import javafx.scene.layout.*?>
 
 <?import javafx.scene.control.cell.PropertyValueFactory?>
+<?import edu.ucla.drc.sledge.documentimport.DocumentList?>
+<?import edu.ucla.drc.sledge.documentimport.DocumentTextView?>
+<?import edu.ucla.drc.sledge.documentimport.WordCountTable?>
 <fx:root xmlns="http://javafx.com/javafx"
          xmlns:fx="http://javafx.com/fxml"
          type="BorderPane"
@@ -14,9 +17,8 @@
 
     <left>
         <VBox>
-            <TreeView fx:id="documentListTree" showRoot="false">
 
-            </TreeView>
+            <DocumentList fx:id="documentList"/>
 
             <Button fx:id="settingsButton" onMouseClicked="#showSettingsPane">
                 Settings
@@ -28,24 +30,11 @@
     </left>
 
     <center>
-        <TextArea fx:id="documentViewTextArea"/>
+        <DocumentTextView fx:id="documentView"/>
     </center>
 
     <right>
-        <TableView fx:id="countsTable">
-            <columns>
-                <TableColumn text="Word">
-                    <cellValueFactory>
-                        <PropertyValueFactory property="word"/>
-                    </cellValueFactory>
-                </TableColumn>
-                <TableColumn text="Count">
-                    <cellValueFactory>
-                        <PropertyValueFactory property="count"/>
-                    </cellValueFactory>
-                </TableColumn>
-            </columns>
-        </TableView>
+        <WordCountTable fx:id="countsTable"></WordCountTable>
     </right>
 
 
