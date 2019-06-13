@@ -3,14 +3,12 @@ package edu.ucla.drc.sledge.documentimport;
 import cc.mallet.types.FeatureSequence;
 import cc.mallet.types.Instance;
 import edu.ucla.drc.sledge.Document;
-import edu.ucla.drc.sledge.documentlist.WordCountEntry;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.TableView;
-import sun.jvm.hotspot.ui.ObjectHistogramPanel;
 
 import java.io.IOException;
 import java.util.ArrayList;

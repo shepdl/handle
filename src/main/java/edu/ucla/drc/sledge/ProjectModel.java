@@ -3,7 +3,7 @@ package edu.ucla.drc.sledge;
 import cc.mallet.pipe.Pipe;
 import cc.mallet.types.Instance;
 import cc.mallet.types.InstanceList;
-import edu.ucla.drc.sledge.documentlist.ImportPipeBuilder;
+import edu.ucla.drc.sledge.documentimport.ImportPipeBuilder;
 import javafx.beans.value.ObservableBooleanValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;

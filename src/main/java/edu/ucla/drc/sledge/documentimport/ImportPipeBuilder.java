@@ -1,9 +1,8 @@
-package edu.ucla.drc.sledge.documentlist;
+package edu.ucla.drc.sledge.documentimport;
 
 import cc.mallet.pipe.*;
 import edu.ucla.drc.sledge.ImportFileSettings;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 

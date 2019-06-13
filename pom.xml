@@ -40,7 +40,6 @@
                     <archive>
                         <manifest>
 <!--                            <mainClass>edu.ucla.drc.sledge.SledgeApp</mainClass>-->
-                            <mainClass>edu.ucla.drc.sledge.topicsettings.TopicSettingsWindowApp</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
