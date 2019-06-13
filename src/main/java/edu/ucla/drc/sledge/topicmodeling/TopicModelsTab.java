@@ -1,11 +1,8 @@
 package edu.ucla.drc.sledge.topicmodeling;
 
-import cc.mallet.topics.TopicAssignment;
 import cc.mallet.topics.TopicModel;
-import cc.mallet.types.Alphabet;
-import cc.mallet.types.LabelAlphabet;
 import edu.ucla.drc.sledge.ProjectModel;
-import edu.ucla.drc.sledge.topicsettings.TopicModelSettingsWindow;
+import edu.ucla.drc.sledge.topicsettings.TopicModelSettings;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -18,15 +15,15 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 
 import java.io.IOException;
-import java.util.ArrayList;
 
 public class TopicModelsTab extends BorderPane {
 
     @FXML private TopicModelsList topicModelsList;
     @FXML private Button addTopicModelButton;
-    @FXML private TopicModelSettingsWindow topicModelSettings;
+    @FXML private TopicModelSettings topicModelSettings;
 
     private ProjectModel model;
+    private SimpleObjectProperty<TopicModel> selectedTopicModel = new SimpleObjectProperty<>();
 
     private ObservableList<TopicModel> topicModels = FXCollections.observableArrayList();
 
@@ -44,7 +41,6 @@ public class TopicModelsTab extends BorderPane {
 
     public void setModel (ProjectModel model) {
         this.model = model;
-        SimpleObjectProperty<TopicModel> selectedTopicModel = new SimpleObjectProperty<>();
         topicModelsList.setData(topicModels, selectedTopicModel);
         topicModelSettings.setup(model);
         selectedTopicModel.addListener(new ChangeListener<TopicModel>() {
@@ -56,8 +52,9 @@ public class TopicModelsTab extends BorderPane {
     }
 
     public void addTopicModel (MouseEvent event) {
-        TopicModel model = new TopicModel(20);
+        TopicModel model = new TopicModel(20, 50.0, 0.01);
         topicModels.add(model);
+        selectedTopicModel.set(model);
     }
 
 }

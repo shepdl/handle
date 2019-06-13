@@ -7,6 +7,8 @@ import cc.mallet.types.Instance;
 import edu.ucla.drc.sledge.Document;
 import edu.ucla.drc.sledge.ProjectModel;
 import javafx.application.Platform;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
@@ -20,8 +22,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.TreeSet;
 
-public class TopicModelSettingsWindow extends VBox {
+public class TopicModelSettings extends VBox {
 
+    @FXML private TextField titleField;
     @FXML private TextField numTopicsField;
 
     @FXML private TextField alphaField;
@@ -44,8 +47,8 @@ public class TopicModelSettingsWindow extends VBox {
     private ProjectModel projectModel;
 
 
-    public TopicModelSettingsWindow () {
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("TopicModelSettingsWindow.fxml"));
+    public TopicModelSettings() {
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("TopicModelSettings.fxml"));
         fxmlLoader.setRoot(this);
         fxmlLoader.setController(this);
 
@@ -58,6 +61,12 @@ public class TopicModelSettingsWindow extends VBox {
 
     @FXML
     public void initialize () {
+        titleField.textProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                topicModel.setTitle(newValue);
+            }
+        });
         numTopicsField.textProperty().addListener(new IntegerValidator(numTopicsField));
         alphaField.textProperty().addListener(new DoubleValidator(alphaField));
         betaField.textProperty().addListener(new DoubleValidator(betaField));
@@ -75,6 +84,7 @@ public class TopicModelSettingsWindow extends VBox {
 
     private void updateFields () {
         if (topicModel != null) {
+            titleField.setText(topicModel.getTitle());
             numTopicsField.setText(Integer.toString(topicModel.getNumTopics()));
             alphaField.setText(Double.toString(topicModel.getAlphaSum()));
             betaField.setText(Double.toString(topicModel.getBeta()));
@@ -167,6 +177,8 @@ public class TopicModelSettingsWindow extends VBox {
                         (double)completedIterations / topicModel.numIterations
                 );
                 if (completedIterations == topicModel.numIterations) {
+                    jobProgressBar.setVisible(false);
+                    runButton.setVisible(false);
                     running = false;
                 }
             }
@@ -200,17 +212,6 @@ public class TopicModelSettingsWindow extends VBox {
         running = true;
 
     }
-
-    /*
-    public void showDocument(MouseEvent event) {
-        List<Document> documents = projectModel.getDocuments();
-        DocumentSummary summary = new DocumentSummary(
-                documents.get(0),
-                documents,
-                topicModel
-        );
-    }
-     */
 
     public void setTopicModel(TopicModel topicModel) {
         this.topicModel = topicModel;

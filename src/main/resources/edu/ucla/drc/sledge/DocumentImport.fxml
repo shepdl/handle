@@ -16,16 +16,18 @@
 >
 
     <left>
-        <VBox>
+        <VBox prefWidth="200">
 
             <DocumentList fx:id="documentList"/>
 
-            <Button fx:id="settingsButton" onMouseClicked="#showSettingsPane">
-                Settings
-            </Button>
-            <Button fx:id="stopwordsButton" onMouseClicked="#showStopwordsPane">
-                Stopwords
-            </Button>
+            <GridPane vgap="10" hgap="10">
+                <Button fx:id="settingsButton" onMouseClicked="#showSettingsPane" GridPane.columnIndex="0" GridPane.rowIndex="0">
+                    Settings
+                </Button>
+                <Button fx:id="stopwordsButton" onMouseClicked="#showStopwordsPane" GridPane.columnIndex="1" GridPane.rowIndex="0">
+                    Stopwords
+                </Button>
+            </GridPane>
         </VBox>
     </left>
 
@@ -34,7 +36,9 @@
     </center>
 
     <right>
-        <WordCountTable fx:id="countsTable"></WordCountTable>
+        <VBox prefWidth="200">
+            <WordCountTable fx:id="countsTable"></WordCountTable>
+        </VBox>
     </right>
 
 

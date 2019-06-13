@@ -15,7 +15,7 @@
          >
 
     <TextField fx:id="titleField"/>
-    <LineChart fx:id="wordDistributionChart" legendVisible="false">
+    <LineChart fx:id="wordDistributionChart" legendVisible="false" maxWidth="100">
         <xAxis>
             <CategoryAxis label=""/>
         </xAxis>

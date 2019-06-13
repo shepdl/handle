@@ -9,8 +9,11 @@ import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.control.TreeCell;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
+import javafx.scene.control.cell.TextFieldTreeCell;
+import javafx.util.Callback;
 
 import java.io.IOException;
 
@@ -31,6 +34,13 @@ public class TopicModelsList extends TreeView<TopicModel> {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+        this.setCellFactory(new Callback<TreeView<TopicModel>, TreeCell<TopicModel>>() {
+            @Override
+            public TreeCell<TopicModel> call(TreeView<TopicModel> param) {
+                return new TopicModelCell();
+            }
+        });
     }
 
     public void setData (ObservableList<TopicModel> topicModels, ObjectProperty<TopicModel> selectedTopicModel) {
@@ -59,5 +69,30 @@ public class TopicModelsList extends TreeView<TopicModel> {
                 selectedTopicModel.set(selectedValue.getValue());
             }
         });
+    }
+
+    private static class TopicModelCell extends TextFieldTreeCell<TopicModel> {
+
+        @Override
+        public void updateItem (TopicModel item, boolean empty) {
+            if (empty) {
+                setText(null);
+                setGraphic(null);
+            } else {
+                StringBuilder stringBuilder = new StringBuilder();
+                if (item.getTitle() != null) {
+                    stringBuilder.append(item.getTitle());
+                    stringBuilder.append(" - (");
+                }
+                stringBuilder.append(item.getNumTopics());
+                stringBuilder.append(" topics, ");
+                stringBuilder.append("alpha " + item.getAlphaSum());
+                stringBuilder.append(", beta " + item.getBeta());
+                if (item.getTitle() != null) {
+                    stringBuilder.append(")");
+                }
+                setText(stringBuilder.toString());
+            }
+        }
     }
 }

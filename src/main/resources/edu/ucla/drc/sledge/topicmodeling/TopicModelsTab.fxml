@@ -7,15 +7,22 @@
 <?import javafx.scene.layout.*?>
 
 <?import edu.ucla.drc.sledge.topicmodeling.TopicModelsList?>
-<?import edu.ucla.drc.sledge.topicsettings.TopicModelSettingsWindow?>
+<?import edu.ucla.drc.sledge.topicsettings.TopicModelSettings?>
+<?import javafx.geometry.Insets?>
 <fx:root xmlns="http://javafx.com/javafx"
          xmlns:fx="http://javafx.com/fxml"
          type="BorderPane"
          >
 
+    <padding>
+        <Insets topRightBottomLeft="10.0"></Insets>
+    </padding>
 
     <left>
-        <VBox>
+        <VBox prefWidth="200">
+            <padding>
+                <Insets topRightBottomLeft="10.0" />
+            </padding>
             <TopicModelsList fx:id="topicModelsList" />
             <!-- new button -->
             <Button fx:id="addTopicModelButton" onMouseClicked="#addTopicModel">Add ...</Button>
@@ -23,7 +30,7 @@
     </left>
 
     <center>
-        <TopicModelSettingsWindow fx:id="topicModelSettings"/>
+        <TopicModelSettings fx:id="topicModelSettings"/>
     </center>
 
 </fx:root>

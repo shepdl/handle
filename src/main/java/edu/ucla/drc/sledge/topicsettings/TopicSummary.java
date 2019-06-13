@@ -30,7 +30,6 @@ public class TopicSummary extends VBox {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
     }
 
     @FXML void initialize () {
@@ -67,7 +66,6 @@ public class TopicSummary extends VBox {
                     )
             );
         }
-
         wordDistributionChart.getData().add(series);
     }
 
@@ -75,5 +73,4 @@ public class TopicSummary extends VBox {
         TopicDetails controller = new TopicDetails(topic, summary);
         controller.setData();
     }
-
 }
