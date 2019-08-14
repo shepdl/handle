@@ -10,15 +10,12 @@
 <AnchorPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
             fx:controller="edu.ucla.drc.sledge.documentimport.StopwordsDialog"
-            prefHeight="400.0" prefWidth="600.0">
+            >
 
-    <TableView>
+    <VBox>
+
+    <TableView fx:id="stopwordsTable" onDragOver="#setTransferMode" onDragDropped="#dropFile">
         <columns>
-            <TableColumn text="Word">
-                <cellValueFactory>
-                    <PropertyValueFactory property="word"/>
-                </cellValueFactory>
-            </TableColumn>
             <TableColumn text="Actions">
                 <cellValueFactory>
                     <PropertyValueFactory property="dummy"/>
@@ -28,4 +25,9 @@
 
     </TableView>
 
+    <Button fx:id="saveButton" onMouseClicked="#saveStopwords">Save</Button>
+    <Button fx:id="cancelButton">Cancel</Button>
+
+
+    </VBox>
 </AnchorPane>

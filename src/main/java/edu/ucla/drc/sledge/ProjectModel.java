@@ -12,8 +12,7 @@ import javafx.collections.ObservableList;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.net.URI;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 public class ProjectModel {
 
@@ -93,12 +92,30 @@ public class ProjectModel {
 
     private ImportFileSettings importFileSettings = ImportFileSettings.withDefaults();
 
+    public Set<String> getStopwords() {
+        return stopwords;
+    }
+
+    public void setStopwords(Set<String> stopwords) {
+        this.stopwords = stopwords;
+    }
+
+    private Set<String> stopwords = new HashSet<>();
+
     private Pipe importPipe;
 
     public Pipe getPipe () {
         ImportPipeBuilder builder = new ImportPipeBuilder();
         builder.addSettings(importFileSettings);
+        builder.addStopwords(new ArrayList<>(stopwords));
         return builder.complete();
+    }
+
+    public Pipe getFeaturePipe () {
+        ImportPipeBuilder builder = new ImportPipeBuilder();
+        builder.addSettings(importFileSettings);
+        builder.addStopwords(new ArrayList<>(stopwords));
+        return builder.buildFeaturePipe();
     }
 
     private ObservableList topicJobs;

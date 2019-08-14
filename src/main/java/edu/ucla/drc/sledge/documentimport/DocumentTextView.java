@@ -1,7 +1,6 @@
 package edu.ucla.drc.sledge.documentimport;
 
-import cc.mallet.types.FeatureSequence;
-import cc.mallet.types.Instance;
+import cc.mallet.types.*;
 import edu.ucla.drc.sledge.Document;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.value.ObservableValue;
@@ -28,14 +27,28 @@ public class DocumentTextView extends TextArea {
         selectedDocument.addListener((ObservableValue<? extends Document> observable, Document oldValue, Document newValue) -> {
             StringBuilder builder = new StringBuilder();
             Instance instance = newValue.getIngested();
-            FeatureSequence fs = (FeatureSequence)instance.getData();
-            for (int i = 0; i < fs.getFeatures().length; i++) {
-                builder.append(fs.get(i));
+//            FeatureSequence fs = (FeatureSequence)instance.getData();
+            TokenSequence ts = (TokenSequence)instance.getData();
+            for (int i = 0; i < ts.size(); i++) {
+                Token token = (Token)ts.get(i);
+                if (token.hasProperty(FeatureSequenceWithBigrams.deletionMark)) {
+                    builder.append("|||");
+                } else {
+                    builder.append(ts.get(i).getText());
+                }
                 builder.append(" ");
                 if (i > 0 && i % 10 == 0) {
                     builder.append("\n");
                 }
             }
+//            for (int i = 0; i < fs.getFeatures().length; i++) {
+//                Token token = (Token)fs.get(i);
+//                builder.append(fs.get(i));
+//                builder.append(" ");
+//                if (i > 0 && i % 10 == 0) {
+//                    builder.append("\n");
+//                }
+//            }
             this.setText(builder.toString());
         });
 

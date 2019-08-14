@@ -2,6 +2,7 @@ package edu.ucla.drc.sledge.documentimport;
 
 import cc.mallet.types.FeatureSequence;
 import cc.mallet.types.Instance;
+import cc.mallet.types.TokenSequence;
 import edu.ucla.drc.sledge.Document;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.value.ObservableValue;
@@ -39,9 +40,11 @@ public class WordCountTable extends TableView<WordCountEntry> {
     private ObservableList<WordCountEntry> countWords (Instance instance) {
         Map<String, Integer> counts = new HashMap<>();
 
-        FeatureSequence fs = (FeatureSequence)instance.getData();
-        for (int i = 0; i < fs.getLength(); i++) {
-            String word = (String)fs.get(i);
+//        FeatureSequence fs = (FeatureSequence)instance.getData();
+        TokenSequence fs = (TokenSequence)instance.getData();
+        for (int i = 0; i < fs.size(); i++) {
+//            String word = (String)fs.get(i);
+            String word = fs.get(i).getText();
             if (!counts.containsKey(word)) {
                 counts.put(word, 0);
             }

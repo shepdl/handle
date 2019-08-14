@@ -78,7 +78,7 @@ public class DocumentImport extends BorderPane {
             StopwordsDialog controller = loader.<StopwordsDialog>getController();
             controller.setModel(model);
 
-            Scene scene = new Scene(root, 300, 200);
+            Scene scene = new Scene(root);
             Stage stage = new Stage();
             stage.initModality(Modality.APPLICATION_MODAL);
             stage.setTitle("Stopwords");

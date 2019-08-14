@@ -11,7 +11,7 @@ public class ImportPipeBuilder {
     private ImportFileSettings settings;
 
     private Pipe pipe;
-    private List<String> stopwords;
+    private List<String> stopwords = new ArrayList<>();
 
     public ImportPipeBuilder () {
     }
@@ -49,14 +49,30 @@ public class ImportPipeBuilder {
         pipes.add(new CharSequence2TokenSequence(settings.getTokenRegexPattern()));
         pipes.add(new TokenSequenceRemoveNonAlpha(true));
 
-        /*
-        TokenSequenceRemoveStopwords stopwordFilter = new TokenSequenceRemoveStopwords(
-            false,
-            true
-        );
+        TokenSequenceRemoveStopwords stopwordFilter = new TokenSequenceRemoveStopwords();
+        stopwordFilter.addStopWords(stopwords.toArray(new String[0]));
         pipes.add(stopwordFilter);
 
-         */
+//        pipes.add(new TokenSequence2FeatureSequence());
+
+        this.pipe = new SerialPipes(pipes);
+        return this.pipe;
+    }
+
+    public Pipe buildFeaturePipe() {
+         List<Pipe> pipes = new ArrayList<Pipe>();
+        pipes.add(new SaveDataInSource());
+        pipes.add(new Input2CharSequence());
+        if (!settings.preserveCase()) {
+            pipes.add(new CharSequenceLowercase());
+        }
+
+        pipes.add(new CharSequence2TokenSequence(settings.getTokenRegexPattern()));
+        pipes.add(new TokenSequenceRemoveNonAlpha(true));
+
+        TokenSequenceRemoveStopwords stopwordFilter = new TokenSequenceRemoveStopwords();
+        stopwordFilter.addStopWords(stopwords.toArray(new String[0]));
+        pipes.add(stopwordFilter);
         pipes.add(new TokenSequence2FeatureSequence());
 
         this.pipe = new SerialPipes(pipes);
