@@ -16,23 +16,32 @@
             prefHeight="400.0" prefWidth="600.0">
 
     <GridPane>
-        <BubbleChart GridPane.columnIndex="0" GridPane.rowIndex="0">
+        <BubbleChart GridPane.columnIndex="0" GridPane.rowIndex="0" fx:id="topicDistance" title="Topic Distance">
             <xAxis>
-                <NumberAxis></NumberAxis>
+                <NumberAxis label="Component 1"/>
             </xAxis>
             <yAxis>
-                <NumberAxis></NumberAxis>
+                <NumberAxis label="Component 2"/>
             </yAxis>
         </BubbleChart>
 
-        <LineChart GridPane.rowIndex="0" GridPane.columnIndex="1">
+        <LineChart GridPane.rowIndex="0" GridPane.columnIndex="1" fx:id="topWords" title="Topic">
             <xAxis>
                 <NumberAxis label="Counts" side="LEFT" />
             </xAxis>
             <yAxis>
-                <CategoryAxis />
+                <CategoryAxis label="Words" />
             </yAxis>
         </LineChart>
+
+        <FlowPane GridPane.rowIndex="1" GridPane.columnIndex="0">
+            <Button fx:id="exportModelButton" onMouseClicked="exportModel">
+                Export Model
+            </Button>
+            <Button fx:id="exportTopicsButton" onMouseClicked="exportTopics">
+                Export Topics
+            </Button>
+        </FlowPane>
     </GridPane>
 
 </AnchorPane>

@@ -28,10 +28,10 @@
 
     <BarChart fx:id="documentDistributionChart" legendVisible="false">
         <xAxis>
-            <NumberAxis label="Percentage"></NumberAxis>
+            <NumberAxis label="Percentage"/>
         </xAxis>
         <yAxis>
-            <CategoryAxis></CategoryAxis>
+            <CategoryAxis/>
         </yAxis>
     </BarChart>
 
