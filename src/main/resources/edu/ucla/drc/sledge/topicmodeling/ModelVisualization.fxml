@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import javafx.scene.chart.BubbleChart?>
+<?import javafx.scene.chart.NumberAxis?>
+<?import javafx.scene.chart.LineChart?>
+<?import javafx.scene.chart.CategoryAxis?>
+<AnchorPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="edu.ucla.drc.sledge.topicmodeling.ModelVisualization"
+            prefHeight="400.0" prefWidth="600.0">
+
+    <GridPane>
+        <BubbleChart GridPane.columnIndex="0" GridPane.rowIndex="0">
+            <xAxis>
+                <NumberAxis></NumberAxis>
+            </xAxis>
+            <yAxis>
+                <NumberAxis></NumberAxis>
+            </yAxis>
+        </BubbleChart>
+
+        <LineChart GridPane.rowIndex="0" GridPane.columnIndex="1">
+            <xAxis>
+                <NumberAxis label="Counts" side="LEFT" />
+            </xAxis>
+            <yAxis>
+                <CategoryAxis />
+            </yAxis>
+        </LineChart>
+    </GridPane>
+
+</AnchorPane>
