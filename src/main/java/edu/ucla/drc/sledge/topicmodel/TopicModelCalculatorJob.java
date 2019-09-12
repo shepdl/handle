@@ -7,6 +7,6 @@ public interface TopicModelCalculatorJob {
     void cancel ();
 
     void setSetProgress(Consumer<Integer> onSetProgress);
-    void setUpdateTopWords(Consumer<TopicModel> onUpdateTopWords);
-    void setOnCompletion(Consumer<TopicModel> onCompletion);
+    void setUpdateTopWords(Consumer<TopicModelResults> onUpdateTopWords);
+    void setOnCompletion(Consumer<TopicModelResults> onCompletion);
 }

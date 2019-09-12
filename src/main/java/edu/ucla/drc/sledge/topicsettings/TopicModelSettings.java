@@ -24,22 +24,35 @@ import java.util.TreeSet;
 
 public class TopicModelSettings extends VBox {
 
-    @FXML private TextField titleField;
-    @FXML private TextField numTopicsField;
+    @FXML
+    private TextField titleField;
+    @FXML
+    private TextField numTopicsField;
 
-    @FXML private TextField alphaField;
-    @FXML private TextField betaField;
-    @FXML private TextField randomSeedField;
-    @FXML private TextField iterationsField;
-    @FXML private TextField optimizeIntervalField;
-    @FXML private TextField burinInPeriodField;
-    @FXML private TextField threadsField;
+    @FXML
+    private TextField alphaField;
+    @FXML
+    private TextField betaField;
+    @FXML
+    private TextField randomSeedField;
+    @FXML
+    private TextField iterationsField;
+    @FXML
+    private TextField optimizeIntervalField;
+    @FXML
+    private TextField burinInPeriodField;
+    @FXML
+    private TextField threadsField;
 
-    @FXML private ProgressBar jobProgressBar;
-    @FXML private Button runButton;
+    @FXML
+    private ProgressBar jobProgressBar;
+    @FXML
+    private Button runButton;
 
-    @FXML private TitledPane topicResultsPane;
-    @FXML private ScrollPane topicScrollPane;
+    @FXML
+    private TitledPane topicResultsPane;
+    @FXML
+    private ScrollPane topicScrollPane;
 
     private boolean running;
     private TopicModel topicModel;
@@ -54,13 +67,14 @@ public class TopicModelSettings extends VBox {
 
         try {
             fxmlLoader.load();
+            topicModel = new TopicModel(20);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
     @FXML
-    public void initialize () {
+    public void initialize() {
         titleField.textProperty().addListener(new ChangeListener<String>() {
             @Override
             public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
@@ -77,34 +91,26 @@ public class TopicModelSettings extends VBox {
         threadsField.textProperty().addListener(new IntegerValidator(threadsField));
         int availableProcessors = Runtime.getRuntime().availableProcessors();
         threadsField.setText(Integer.toString(availableProcessors));
-
-        updateFields();
-
     }
 
-    private void updateFields () {
-        if (topicModel != null) {
-            titleField.setText(topicModel.getTitle());
-            numTopicsField.setText(Integer.toString(topicModel.getNumTopics()));
-            alphaField.setText(Double.toString(topicModel.getAlphaSum()));
-            betaField.setText(Double.toString(topicModel.getBeta()));
-            randomSeedField.setText(Integer.toString(topicModel.randomSeed));
-            iterationsField.setText(Integer.toString(topicModel.numIterations));
-            optimizeIntervalField.setText(Integer.toString(topicModel.optimizeInterval));
-            burinInPeriodField.setText(Integer.toString(topicModel.burninPeriod));
-            numTopicsField.setText(Integer.toString(topicModel.getNumTopics()));
-            int availableProcessors = Runtime.getRuntime().availableProcessors();
-            topicModel.setNumThreads(availableProcessors);
+    private void updateFields() {
+        titleField.setText(topicModel.getTitle());
+        numTopicsField.setText(Integer.toString(topicModel.getNumTopics()));
+        alphaField.setText(Double.toString(topicModel.getAlphaSum()));
+        betaField.setText(Double.toString(topicModel.getBeta()));
+        randomSeedField.setText(Integer.toString(topicModel.randomSeed));
+        iterationsField.setText(Integer.toString(topicModel.numIterations));
+        optimizeIntervalField.setText(Integer.toString(topicModel.optimizeInterval));
+        burinInPeriodField.setText(Integer.toString(topicModel.burninPeriod));
+        numTopicsField.setText(Integer.toString(topicModel.getNumTopics()));
+        int availableProcessors = Runtime.getRuntime().availableProcessors();
+        topicModel.setNumThreads(availableProcessors);
 
-            runButton.setVisible(true);
-            jobProgressBar.setVisible(true);
-        } else {
-            runButton.setVisible(false);
-            jobProgressBar.setVisible(false);
-        }
+        runButton.setVisible(true);
+//        jobProgressBar.setVisible(true);
     }
 
-    public void setup (ProjectModel projectModel) {
+    public void setup(ProjectModel projectModel) {
         this.projectModel = projectModel;
     }
 
@@ -115,6 +121,7 @@ public class TopicModelSettings extends VBox {
             runButton.setText("Run");
         } else {
             runButton.setText("Stop");
+            jobProgressBar.setVisible(true);
             executeJob();
         }
     }
@@ -130,8 +137,8 @@ public class TopicModelSettings extends VBox {
             int limit = 10;
             int count = 0;
             while (count < limit && items.hasNext()) {
-                IDSorter item = (IDSorter)items.next();
-                topic.addTopWord((String)alphabet.lookupObject(item.getID()), item.getWeight());
+                IDSorter item = (IDSorter) items.next();
+                topic.addTopWord((String) alphabet.lookupObject(item.getID()), item.getWeight());
             }
 
             topics.add(topic);
@@ -146,7 +153,7 @@ public class TopicModelSettings extends VBox {
 
     }
 
-    private void updateTopicResults (List<Topic> topics) {
+    private void updateTopicResults(List<Topic> topics) {
         topicResultsPane.setExpanded(true);
         topicResultsPane.setVisible(true);
         GridPane pane = new GridPane();
@@ -169,12 +176,12 @@ public class TopicModelSettings extends VBox {
         topicScrollPane.setContent(pane);
     }
 
-    void updateProgress (int completedIterations) {
+    void updateProgress(int completedIterations) {
         Platform.runLater(new Runnable() {
             @Override
             public void run() {
                 jobProgressBar.setProgress(
-                        (double)completedIterations / topicModel.numIterations
+                        (double) completedIterations / topicModel.numIterations
                 );
                 if (completedIterations == topicModel.numIterations) {
                     jobProgressBar.setVisible(false);
@@ -185,12 +192,7 @@ public class TopicModelSettings extends VBox {
         });
     }
 
-    void executeJob () {
-
-        List<Instance> documents = new ArrayList<>();
-        for (Document doc : projectModel.getDocuments()) {
-            documents.add(doc.getIngested());
-        }
+    void executeJob() {
 
         topicModel.setNumTopics(Integer.parseInt(numTopicsField.textProperty().getValue()));
         topicModel.setAlphaSum(Double.parseDouble(alphaField.textProperty().getValue()));
@@ -201,7 +203,7 @@ public class TopicModelSettings extends VBox {
         topicModel.setBurninPeriod(Integer.parseInt(burinInPeriodField.textProperty().getValue()));
         topicModel.setNumThreads(Integer.parseInt(threadsField.textProperty().getValue()));
 
-        topicModel.addInstances(projectModel.getInstances());
+        topicModel.addInstances(projectModel.getInstancesForModeling());
         topicModel.setProgress = this::updateProgress;
         topicModel.updateTopWords = this::updateTopicCounts;
 
@@ -211,16 +213,6 @@ public class TopicModelSettings extends VBox {
 
         running = true;
 
-    }
-
-    public void setTopicModel(TopicModel topicModel) {
-        this.topicModel = topicModel;
-        topicScrollPane.setContent(new VBox());
-        if (topicModel.isComplete()) {
-            updateTopicCounts(topicModel);
-            jobProgressBar.setVisible(false);
-        }
-        updateFields();
     }
 
 }

@@ -3,6 +3,8 @@ package cc.mallet.topics;
 
 import cc.mallet.types.*;
 import cc.mallet.util.Randoms;
+import edu.ucla.drc.sledge.topicmodel.LDATopicModelResults;
+import edu.ucla.drc.sledge.topicmodel.TopicModelResults;
 import edu.ucla.drc.sledge.topicsettings.TopicDocumentContainerSummary;
 
 import java.io.*;
@@ -77,6 +79,16 @@ public class TopicModel extends Thread {
 
     public Consumer<Integer> setProgress;
     public Consumer<TopicModel> updateTopWords;
+
+    public TopicModelResults getResults () {
+        return new LDATopicModelResults(
+                data, alphabet, topicAlphabet, numTopics, numTypes,
+                alpha, alphaSum, beta, betaSum,
+                typeTopicCounts, tokensPerTopic, docLengthCounts, topicDocCounts,
+                numIterations,
+                randomSeed
+        );
+    }
 
     // The number of times each type appears in the corpus
     int[] typeTotals;
@@ -665,6 +677,7 @@ public class TopicModel extends Thread {
     public void run() {
         this.running = true;
         this.estimate();
+        this.running = false;
         this.complete = true;
     }
 
@@ -1999,4 +2012,5 @@ public class TopicModel extends Thread {
     public String toString () {
         return title;
     }
+
 }

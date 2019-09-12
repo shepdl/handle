@@ -118,6 +118,16 @@ public class ProjectModel {
         return builder.buildFeaturePipe();
     }
 
+    public InstanceList getInstancesForModeling () {
+        InstanceList instances = new InstanceList(getFeaturePipe());
+        DocumentIterator iterator = new DocumentIterator(documents);
+        instances.addThruPipe(iterator);
+        for (int i = 0; i < documents.size(); i++) {
+            documents.get(i).setIngested(instances.get(i));
+        }
+        return instances;
+    }
+
     private ObservableList topicJobs;
 
     @org.jetbrains.annotations.NotNull

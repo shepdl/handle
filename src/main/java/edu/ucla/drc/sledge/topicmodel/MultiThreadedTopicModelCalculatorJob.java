@@ -1,12 +1,5 @@
 package edu.ucla.drc.sledge.topicmodel;
 
-import cc.mallet.topics.WorkerRunnable;
-import cc.mallet.types.Dirichlet;
-import cc.mallet.util.Randoms;
-
-import java.util.Arrays;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.function.Consumer;
 
 public class MultiThreadedTopicModelCalculatorJob implements TopicModelCalculatorJob {
@@ -26,31 +19,31 @@ public class MultiThreadedTopicModelCalculatorJob implements TopicModelCalculato
     }
 
     @Override
-    public void setUpdateTopWords(Consumer<TopicModel> onUpdateTopWords) {
+    public void setUpdateTopWords(Consumer<TopicModelResults> onUpdateTopWords) {
 
     }
 
     @Override
-    public void setOnCompletion(Consumer<TopicModel> onCompletion) {
+    public void setOnCompletion(Consumer<TopicModelResults> onCompletion) {
 
     }
 
 	/*
 	private int numThreads;
 	private int randomSeed;
-	private TopicModel model;
+	private TopicModelResults model;
 	private int showTopicsInterval;
 	private int saveStateInterval;
 	private int saveModelInterval;
 	private boolean printLogLikelihood;
 	private int saveSampleInterval;
 
-	public MultiThreadedTopicModelCalculatorJob (int numThreads, TopicModel model) {
+	public MultiThreadedTopicModelCalculatorJob (int numThreads, TopicModelResults model) {
 		this.numThreads = numThreads;
 		this.model = model;
 	}
 
-	public MultiThreadedTopicModelCalculatorJob (int numThreads, int randomSeed, TopicModel model) {
+	public MultiThreadedTopicModelCalculatorJob (int numThreads, int randomSeed, TopicModelResults model) {
 		this.numThreads = numThreads;
 		this.randomSeed = randomSeed;
 		this.model = model;
@@ -424,8 +417,8 @@ public class MultiThreadedTopicModelCalculatorJob implements TopicModelCalculato
     private boolean running = false;
 
     private Consumer<Integer> setProgress;
-    private Consumer<TopicModel> updateTopWords;
-    private Consumer<TopicModel> onCompletion;
+    private Consumer<TopicModelResults> updateTopWords;
+    private Consumer<TopicModelResults> onCompletion;
 
     @Override
     public void setSetProgress(Consumer<Integer> setProgress) {
@@ -433,12 +426,12 @@ public class MultiThreadedTopicModelCalculatorJob implements TopicModelCalculato
     }
 
     @Override
-    public void setUpdateTopWords(Consumer<TopicModel> updateTopWords) {
+    public void setUpdateTopWords(Consumer<TopicModelResults> updateTopWords) {
         this.updateTopWords = updateTopWords;
     }
 
     @Override
-    public void setOnCompletion(Consumer<TopicModel> onCompletion) {
+    public void setOnCompletion(Consumer<TopicModelResults> onCompletion) {
         this.onCompletion = onCompletion;
     }
 

@@ -62,30 +62,33 @@
         </GridPane>
     </TitledPane>
 
-    <GridPane alignment="CENTER" hgap="10" prefWidth="822.0" vgap="10" VBox.vgrow="ALWAYS">
-        <Button fx:id="runButton" alignment="CENTER" onMouseClicked="#runButtonClicked" text="Run" GridPane.columnIndex="0" GridPane.rowIndex="0">
-         <GridPane.margin>
-            <Insets />
-         </GridPane.margin>
-        </Button>
-        <ProgressBar fx:id="jobProgressBar" prefHeight="20.0" prefWidth="739.0" progress="0.0" GridPane.columnIndex="1" GridPane.rowIndex="0" GridPane.valignment="CENTER">
-         <GridPane.margin>
-            <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-         </GridPane.margin></ProgressBar>
-      <columnConstraints>
-         <ColumnConstraints />
-         <ColumnConstraints />
-      </columnConstraints>
-      <rowConstraints>
-         <RowConstraints maxHeight="47.0" minHeight="46.0" prefHeight="46.0" />
-         <RowConstraints maxHeight="1.0" minHeight="0.0" prefHeight="1.0" />
-         <RowConstraints />
-         <RowConstraints />
-         <RowConstraints />
-         <RowConstraints />
-      </rowConstraints>
-    </GridPane>
 
+    <GridPane alignment="CENTER">
+        <GridPane alignment="CENTER" hgap="10" prefWidth="822.0" vgap="10" VBox.vgrow="ALWAYS">
+            <Button fx:id="runButton" alignment="CENTER" onMouseClicked="#runButtonClicked" text="Run" GridPane.columnIndex="0" GridPane.rowIndex="0">
+                <GridPane.margin>
+                    <Insets />
+                </GridPane.margin>
+            </Button>
+            <ProgressBar fx:id="jobProgressBar" prefHeight="20.0" prefWidth="739.0" progress="0.0" GridPane.columnIndex="1" GridPane.rowIndex="0" GridPane.valignment="CENTER">
+                <GridPane.margin>
+                    <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                </GridPane.margin></ProgressBar>
+            <columnConstraints>
+                <ColumnConstraints />
+                <ColumnConstraints />
+            </columnConstraints>
+            <rowConstraints>
+                <RowConstraints maxHeight="47.0" minHeight="46.0" prefHeight="46.0" />
+                <RowConstraints maxHeight="1.0" minHeight="0.0" prefHeight="1.0" />
+                <RowConstraints />
+                <RowConstraints />
+                <RowConstraints />
+                <RowConstraints />
+            </rowConstraints>
+        </GridPane>
+    </GridPane>
+    
     <TitledPane fx:id="topicResultsPane" expanded="false" text="Topic Results" visible="false">
         <ScrollPane fx:id="topicScrollPane" hbarPolicy="NEVER" prefWidth="300" />
     </TitledPane>

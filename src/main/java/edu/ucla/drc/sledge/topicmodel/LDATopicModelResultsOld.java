@@ -11,7 +11,7 @@ import java.text.NumberFormat;
 import java.util.*;
 
 
-public class LDATopicModel implements TopicModel {
+public class LDATopicModelResultsOld implements TopicModelResults {
 
     public static final int UNASSIGNED_TOPIC = -1;
 
@@ -68,7 +68,11 @@ public class LDATopicModel implements TopicModel {
     // The max over typeTotals, used for beta optimization
     int maxTypeCount;
 
-    public LDATopicModel (int numberOfTopics, double alphaSum, double beta) {
+    public int getRandomSeed () {
+        return 1;
+    }
+
+    public LDATopicModelResultsOld(int numberOfTopics, double alphaSum, double beta) {
         this (newLabelAlphabet (numberOfTopics), alphaSum, beta);
     }
 
@@ -79,7 +83,7 @@ public class LDATopicModel implements TopicModel {
         return ret;
     }
 
-    public LDATopicModel (LabelAlphabet topicAlphabet, double alphaSum, double beta) {
+    public LDATopicModelResultsOld(LabelAlphabet topicAlphabet, double alphaSum, double beta) {
 
         this.data = new ArrayList<TopicAssignment>();
         this.topicAlphabet = topicAlphabet;
@@ -122,6 +126,16 @@ public class LDATopicModel implements TopicModel {
         Arrays.fill(alpha, getAlphaSum() / numTopics);
 
         tokensPerTopic = new int[numTopics];
+    }
+
+    @Override
+    public String getTitle() {
+        return null;
+    }
+
+    @Override
+    public void setTitle() {
+
     }
 
     public ArrayList<TopicAssignment> getData() { return data; }
@@ -1021,8 +1035,18 @@ public class LDATopicModel implements TopicModel {
     }
 
     @Override
-    public int getDocLengthCounts() {
+    public double getBetaSum() {
         return 0;
+    }
+
+    @Override
+    public int[] getDocLengthCounts() {
+        return new int[0];
+    }
+
+    @Override
+    public int[][] getTopicDocCounts() {
+        return new int[0][];
     }
 
     @Override
