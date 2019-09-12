@@ -9,6 +9,7 @@
 <?import edu.ucla.drc.sledge.topicmodeling.TopicModelsList?>
 <?import edu.ucla.drc.sledge.topicsettings.TopicModelSettings?>
 <?import javafx.geometry.Insets?>
+<?import edu.ucla.drc.sledge.topicsettings.TopicSummary?>
 <fx:root xmlns="http://javafx.com/javafx"
          xmlns:fx="http://javafx.com/fxml"
          type="BorderPane"
@@ -30,7 +31,7 @@
     </left>
 
     <center>
-        <TopicModelSettings fx:id="topicModelSettings"/>
+        <TopicSummary fx:id="topicModelSettings"></TopicSummary>
     </center>
 
 </fx:root>

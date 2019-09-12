@@ -14,8 +14,6 @@
 
     <TopicModelSettings fx:id="settingsPane"/>
 
-    <VBox fx:id="topicGraphs"/>
-
-    <Button onMouseClicked="#closeButtonHandler">Close</Button>
+    <!--<Button onMouseClicked="#closeButtonHandler">Close</Button>-->
 
 </VBox>

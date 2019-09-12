@@ -1,11 +1,11 @@
 package edu.ucla.drc.sledge.topicmodeling;
 
-import edu.ucla.drc.sledge.topicmodel.TopicModelResults;
+import cc.mallet.topics.TopicModel;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.FileChooser;
 
 public class ModelVisualization {
-    private TopicModelResults model;
+    private TopicModel model;
 
     public void exportModel(MouseEvent mouseEvent) {
         // TODO: write to a file
@@ -20,7 +20,7 @@ public class ModelVisualization {
 //        }
     }
 
-    public void setData (TopicModelResults model) {
+    public void setData (TopicModel model) {
         this.model = model;
     }
 }

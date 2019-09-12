@@ -2,9 +2,9 @@ package edu.ucla.drc.sledge.topicmodeling;
 
 import cc.mallet.topics.TopicModel;
 import edu.ucla.drc.sledge.ProjectModel;
-import edu.ucla.drc.sledge.topicmodel.TopicModelResults;
 import edu.ucla.drc.sledge.topicsettings.TopicModelSettings;
 import edu.ucla.drc.sledge.topicsettings.TopicModelSettingsModalWindow;
+import edu.ucla.drc.sledge.topicsettings.TopicSummary;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -26,7 +26,7 @@ public class TopicModelsTab extends BorderPane {
 
     @FXML private TopicModelsList topicModelsList;
     @FXML private Button addTopicModelButton;
-    @FXML private TopicModelSettings topicModelSettings;
+    @FXML private TopicSummary topicModelSettings;
 
     private ProjectModel model;
     private SimpleObjectProperty<TopicModel> selectedTopicModel = new SimpleObjectProperty<>();
@@ -48,7 +48,7 @@ public class TopicModelsTab extends BorderPane {
     public void setModel (ProjectModel model) {
         this.model = model;
         topicModelsList.setData(topicModels, selectedTopicModel);
-        topicModelSettings.setup(model);
+//        topicModelSettings.setup(model);
         selectedTopicModel.addListener(new ChangeListener<TopicModel>() {
             @Override
             public void changed(ObservableValue<? extends TopicModel> observable, TopicModel oldValue, TopicModel newValue) {
@@ -58,18 +58,12 @@ public class TopicModelsTab extends BorderPane {
     }
 
     public void addTopicModel (MouseEvent event) {
-//        TopicModel model = new TopicModel(20, 50.0, 0.01);
-//        topicModels.add(model);
-//        selectedTopicModel.set(model);
-
-//        TopicModelSettingsModalWindow window = new TopicModelSettingsModalWindow(this::topicModelComplete, model);
-//        window.show();
         FXMLLoader loader = new FXMLLoader(getClass().getResource("TopicModelSettingsModalWindow.fxml"));
         try {
             TopicModelSettingsModalWindow controller = new TopicModelSettingsModalWindow(this::topicModelComplete, model);
             loader.setController(controller);
             Parent root = (Parent) loader.load();
-            Scene scene = new Scene(root, 300, 200);
+            Scene scene = new Scene(root, 400, 800);
             Stage stage = new Stage();
             stage.initModality(Modality.APPLICATION_MODAL);
             stage.setTitle("New topic model");
@@ -78,19 +72,10 @@ public class TopicModelsTab extends BorderPane {
         } catch (IOException ex) {
             ex.printStackTrace();
         }
-//        loader.setController(window);
-//        Stage stage = new Stage();
-//        try {
-//            Scene scene = new Scene(loader.load());
-//            stage.setScene(scene);
-//            stage.show();
-//        } catch (IOException ex) {
-//            ex.printStackTrace();
-//        }
     }
 
-    private void topicModelComplete(TopicModelResults model) {
-
+    private void topicModelComplete(TopicModel model) {
+        topicModels.add(model);
     }
 
 }

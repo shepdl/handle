@@ -3,8 +3,6 @@ package edu.ucla.drc.sledge.topicsettings;
 import cc.mallet.topics.TopicModel;
 import cc.mallet.types.Alphabet;
 import cc.mallet.types.IDSorter;
-import cc.mallet.types.Instance;
-import edu.ucla.drc.sledge.Document;
 import edu.ucla.drc.sledge.ProjectModel;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
@@ -21,6 +19,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.TreeSet;
+import java.util.function.Consumer;
 
 public class TopicModelSettings extends VBox {
 
@@ -58,6 +57,10 @@ public class TopicModelSettings extends VBox {
     private TopicModel topicModel;
     private List topWords;
     private ProjectModel projectModel;
+    private Consumer<TopicModel> onClose;
+
+    @FXML
+    private Button closeButton;
 
 
     public TopicModelSettings() {
@@ -110,8 +113,9 @@ public class TopicModelSettings extends VBox {
 //        jobProgressBar.setVisible(true);
     }
 
-    public void setup(ProjectModel projectModel) {
+    public void setup(ProjectModel projectModel, Consumer<TopicModel> onClose) {
         this.projectModel = projectModel;
+        this.onClose = onClose;
     }
 
     public void runButtonClicked(MouseEvent mouseEvent) {
@@ -187,6 +191,7 @@ public class TopicModelSettings extends VBox {
                     jobProgressBar.setVisible(false);
                     runButton.setVisible(false);
                     running = false;
+                    closeButton.setText("Save");
                 }
             }
         });
@@ -212,7 +217,10 @@ public class TopicModelSettings extends VBox {
         jobProgressBar.setVisible(true);
 
         running = true;
+    }
 
+    public void closeButtonHandler (MouseEvent event) {
+        onClose.accept(topicModel);
     }
 
 }
