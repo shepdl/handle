@@ -19,7 +19,7 @@
             <DocumentImport fx:id="documentImport" />
         </Tab>
         <Tab text="Topic Models" closable="false">
-            <TopicModelsTab fx:id="topicModels"></TopicModelsTab>
+            <TopicModelsTab fx:id="topicModels"/>
         </Tab>
     </TabPane>
 </AnchorPane>

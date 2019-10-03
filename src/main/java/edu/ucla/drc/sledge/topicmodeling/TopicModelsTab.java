@@ -1,6 +1,7 @@
 package edu.ucla.drc.sledge.topicmodeling;
 
 import cc.mallet.topics.TopicModel;
+import edu.ucla.drc.sledge.LoadsFxml;
 import edu.ucla.drc.sledge.ProjectModel;
 import edu.ucla.drc.sledge.topicsettings.TopicModelSettings;
 import edu.ucla.drc.sledge.topicsettings.TopicModelSettingsModalWindow;
@@ -15,6 +16,8 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.SelectionMode;
+import javafx.scene.control.TreeItem;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Modality;
@@ -22,11 +25,11 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 
-public class TopicModelsTab extends BorderPane {
+public class TopicModelsTab extends BorderPane implements LoadsFxml {
 
     @FXML private TopicModelsList topicModelsList;
     @FXML private Button addTopicModelButton;
-    @FXML private TopicSummary topicModelSettings;
+    @FXML private ModelVisualization topicModelSettings;
 
     private ProjectModel model;
     private SimpleObjectProperty<TopicModel> selectedTopicModel = new SimpleObjectProperty<>();
@@ -34,24 +37,26 @@ public class TopicModelsTab extends BorderPane {
     private ObservableList<TopicModel> topicModels = FXCollections.observableArrayList();
 
     public TopicModelsTab () {
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("TopicModelsTab.fxml"));
-        fxmlLoader.setRoot(this);
-        fxmlLoader.setController(this);
-
-        try {
-            fxmlLoader.load();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        loadFxml();
     }
 
     public void setModel (ProjectModel model) {
         this.model = model;
+        topicModelSettings.setProjectModel(model);
         topicModelsList.setData(topicModels, selectedTopicModel);
 //        topicModelSettings.setup(model);
+        topicModelsList.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
+        topicModelsList.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<TreeItem<TopicModel>>() {
+            @Override
+            public void changed(ObservableValue<? extends TreeItem<TopicModel>> observableValue, TreeItem<TopicModel> oldValue, TreeItem<TopicModel> newValue) {
+                topicModelSettings.setVisible(true);
+                topicModelSettings.setTopicModel(newValue.getValue());
+            }
+        });
         selectedTopicModel.addListener(new ChangeListener<TopicModel>() {
             @Override
             public void changed(ObservableValue<? extends TopicModel> observable, TopicModel oldValue, TopicModel newValue) {
+//                topicModelSettings.setTopicModel(newValue);
 //                topicModelSettings.setTopicModel(newValue);
             }
         });

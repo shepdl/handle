@@ -12,7 +12,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.function.Consumer;
 
-public class TopicModel extends Thread {
+public class TopicModel extends Thread implements Serializable {
 
     public String getTitle() {
         return title;
@@ -56,7 +56,7 @@ public class TopicModel extends Thread {
     public int[] docLengthCounts; // histogram of document sizes
     public int[][] topicDocCounts; // histogram of document/topic counts, indexed by <topic index, sequence position index>
 
-    public int numIterations = 1000;
+    public int numIterations = 100;
     public int burninPeriod = 200;
     public int saveSampleInterval = 10;
     public int optimizeInterval = 50;
@@ -2002,4 +2002,69 @@ public class TopicModel extends Thread {
         return title;
     }
 
+    private void writeObject(ObjectOutputStream out) throws IOException {
+        out.writeInt(0);
+        out.writeObject(this.data);
+        out.writeObject(this.alphabet);
+        out.writeObject(this.topicAlphabet);
+        out.writeInt(this.numTopics);
+        out.writeInt(this.topicMask);
+        out.writeInt(this.topicBits);
+        out.writeInt(this.numTypes);
+        out.writeObject(this.alpha);
+        out.writeDouble(this.alphaSum);
+        out.writeDouble(this.beta);
+        out.writeDouble(this.betaSum);
+        out.writeObject(this.typeTopicCounts);
+        out.writeObject(this.tokensPerTopic);
+        out.writeObject(this.docLengthCounts);
+        out.writeObject(this.topicDocCounts);
+        out.writeInt(this.numIterations);
+        out.writeInt(this.burninPeriod);
+        out.writeInt(this.saveSampleInterval);
+        out.writeInt(this.optimizeInterval);
+        out.writeInt(this.showTopicsInterval);
+        out.writeInt(this.wordsPerTopic);
+        out.writeInt(this.saveStateInterval);
+        out.writeObject(this.stateFilename);
+        out.writeInt(this.saveModelInterval);
+        out.writeObject(this.modelFilename);
+        out.writeInt(this.randomSeed);
+        out.writeObject(this.formatter);
+        out.writeBoolean(this.printLogLikelihood);
+        out.writeInt(this.numThreads);
+    }
+
+    private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
+        int version = in.readInt();
+        this.data = (ArrayList)in.readObject();
+        this.alphabet = (Alphabet)in.readObject();
+        this.topicAlphabet = (LabelAlphabet)in.readObject();
+        this.numTopics = in.readInt();
+        this.topicMask = in.readInt();
+        this.topicBits = in.readInt();
+        this.numTypes = in.readInt();
+        this.alpha = (double[])((double[])in.readObject());
+        this.alphaSum = in.readDouble();
+        this.beta = in.readDouble();
+        this.betaSum = in.readDouble();
+        this.typeTopicCounts = (int[][])((int[][])in.readObject());
+        this.tokensPerTopic = (int[])((int[])in.readObject());
+        this.docLengthCounts = (int[])((int[])in.readObject());
+        this.topicDocCounts = (int[][])((int[][])in.readObject());
+        this.numIterations = in.readInt();
+        this.burninPeriod = in.readInt();
+        this.saveSampleInterval = in.readInt();
+        this.optimizeInterval = in.readInt();
+        this.showTopicsInterval = in.readInt();
+        this.wordsPerTopic = in.readInt();
+        this.saveStateInterval = in.readInt();
+        this.stateFilename = (String)in.readObject();
+        this.saveModelInterval = in.readInt();
+        this.modelFilename = (String)in.readObject();
+        this.randomSeed = in.readInt();
+        this.formatter = (NumberFormat)in.readObject();
+        this.printLogLikelihood = in.readBoolean();
+        this.numThreads = in.readInt();
+    }
 }

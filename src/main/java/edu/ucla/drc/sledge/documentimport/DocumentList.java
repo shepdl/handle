@@ -67,7 +67,7 @@ public class DocumentList extends TreeView<Document> {
                 TreeItem<Document> selectedValue = (TreeItem<Document>)newValue;
                 selectedDocument.set(selectedValue.getValue());
             }
-        } );
+        });
 
         this.setOnDragOver((DragEvent event) -> {
             if (event.getDragboard().hasFiles()) {

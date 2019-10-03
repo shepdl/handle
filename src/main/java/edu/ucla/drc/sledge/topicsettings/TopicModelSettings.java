@@ -5,14 +5,17 @@ import cc.mallet.types.Alphabet;
 import cc.mallet.types.IDSorter;
 import edu.ucla.drc.sledge.ProjectModel;
 import javafx.application.Platform;
+import javafx.beans.property.ObjectProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
+import javafx.util.Callback;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -54,7 +57,7 @@ public class TopicModelSettings extends VBox {
     private ScrollPane topicScrollPane;
 
     private boolean running;
-    private TopicModel topicModel;
+    private TopicModel topicModel = new TopicModel(20);
     private List topWords;
     private ProjectModel projectModel;
     private Consumer<TopicModel> onClose;
@@ -62,18 +65,33 @@ public class TopicModelSettings extends VBox {
     @FXML
     private Button closeButton;
 
+    public EventHandler<MouseEvent> getCloseButtonNextStep() {
+        return closeButtonNextStep.get();
+    }
+
+    public ObjectProperty<EventHandler<MouseEvent>> closeButtonNextStepProperty() {
+        return closeButtonNextStep;
+    }
+
+    public void setCloseButtonNextStep(EventHandler<MouseEvent> closeButtonNextStep) {
+        this.closeButtonNextStep.set(closeButtonNextStep);
+    }
+
+    @FXML
+    private ObjectProperty<EventHandler<MouseEvent>> closeButtonNextStep;
 
     public TopicModelSettings() {
+        super();
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("TopicModelSettings.fxml"));
         fxmlLoader.setRoot(this);
         fxmlLoader.setController(this);
 
         try {
             fxmlLoader.load();
-            topicModel = new TopicModel(20);
         } catch (IOException e) {
             e.printStackTrace();
         }
+        topicModel = new TopicModel(20);
     }
 
     @FXML
@@ -94,6 +112,7 @@ public class TopicModelSettings extends VBox {
         threadsField.textProperty().addListener(new IntegerValidator(threadsField));
         int availableProcessors = Runtime.getRuntime().availableProcessors();
         threadsField.setText(Integer.toString(availableProcessors));
+        updateFields();
     }
 
     private void updateFields() {
@@ -110,7 +129,6 @@ public class TopicModelSettings extends VBox {
         topicModel.setNumThreads(availableProcessors);
 
         runButton.setVisible(true);
-//        jobProgressBar.setVisible(true);
     }
 
     public void setup(ProjectModel projectModel, Consumer<TopicModel> onClose) {
@@ -124,9 +142,13 @@ public class TopicModelSettings extends VBox {
             topicModel.cancel();
             runButton.setText("Run");
         } else {
-            runButton.setText("Stop");
-            jobProgressBar.setVisible(true);
-            executeJob();
+            if (topicModel.isComplete()) {
+                onClose.accept(topicModel);
+            } else {
+                runButton.setText("Stop");
+                jobProgressBar.setVisible(true);
+                executeJob();
+            }
         }
     }
 
@@ -189,9 +211,9 @@ public class TopicModelSettings extends VBox {
                 );
                 if (completedIterations == topicModel.numIterations) {
                     jobProgressBar.setVisible(false);
-                    runButton.setVisible(false);
+//                    runButton.setVisible(false);
                     running = false;
-                    closeButton.setText("Save");
+                    runButton.setText("Save");
                 }
             }
         });
@@ -221,6 +243,7 @@ public class TopicModelSettings extends VBox {
 
     public void closeButtonHandler (MouseEvent event) {
         onClose.accept(topicModel);
+//        this.getParent().fireEvent(new TopicModelSettingsModalWindow.CloseEvent());
     }
 
 }

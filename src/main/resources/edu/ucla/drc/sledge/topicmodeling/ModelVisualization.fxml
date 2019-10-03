@@ -12,46 +12,30 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 
-<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.ucla.drc.sledge.topicmodeling.ModelVisualization">
+<?import javafx.scene.text.Text?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.Tab?>
+<?import edu.ucla.drc.sledge.topicmodeling.ModelSummaryTab?>
+<?import edu.ucla.drc.sledge.topicmodeling.DocumentTopicReport?>
+<?import javafx.scene.control.ScrollPane?>
+<fx:root prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1"
+         type="AnchorPane"
+>
 
-    <GridPane>
-        <BubbleChart fx:id="topicDistance" title="Topic Distance" GridPane.columnIndex="0" GridPane.rowIndex="0">
-            <xAxis>
-                <NumberAxis label="Component 1" />
-            </xAxis>
-            <yAxis>
-                <NumberAxis label="Component 2" />
-            </yAxis>
-        </BubbleChart>
+    <TextField fx:id="topicModelName"/>
 
-        <LineChart fx:id="topWords" title="Topic" GridPane.columnIndex="1" GridPane.rowIndex="0">
-            <xAxis>
-                <NumberAxis label="Counts" side="LEFT" />
-            </xAxis>
-            <yAxis>
-                <CategoryAxis label="Words" />
-            </yAxis>
-        </LineChart>
+    <TabPane visible="false" fx:id="topicDetails">
+        <Tab text="All" closable="false">
+            <ScrollPane fx:id="allTopicsPane" />
+        </Tab>
+        <Tab text="Summary" closable="false">
+            <ModelSummaryTab fx:id="modelSummary"/>
+        </Tab>
+        <Tab text="Docs" closable="false">
+            <DocumentTopicReport fx:id="documentSummaryViewer"/>
+        </Tab>
+    </TabPane>
 
-        <FlowPane alignment="TOP_RIGHT" GridPane.columnIndex="1" GridPane.rowIndex="1">
-            <Button fx:id="exportModelButton" onMouseClicked="#exportModel">
-                Export Model
-            </Button>
-            <Button fx:id="exportTopicsButton" onMouseClicked="#exportTopics">
-                Export Topics
-            </Button>
-         <opaqueInsets>
-            <Insets />
-         </opaqueInsets>
-        </FlowPane>
-      <columnConstraints>
-         <ColumnConstraints />
-         <ColumnConstraints />
-      </columnConstraints>
-      <rowConstraints>
-         <RowConstraints />
-         <RowConstraints />
-      </rowConstraints>
-    </GridPane>
 
-</AnchorPane>
+</fx:root>

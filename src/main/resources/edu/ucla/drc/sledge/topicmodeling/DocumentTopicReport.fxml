@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import javafx.scene.chart.BarChart?>
+<?import javafx.scene.chart.CategoryAxis?>
+<?import javafx.scene.chart.NumberAxis?>
+<?import javafx.scene.chart.PieChart?>
+<fx:root xmlns="http://javafx.com/javafx"
+         xmlns:fx="http://javafx.com/fxml"
+         type="BorderPane"
+         prefHeight="400.0" prefWidth="600.0">
+
+
+    <left>
+        <TreeView fx:id="documentList" showRoot="false"/>
+    </left>
+
+    <center>
+        <VBox>
+            <PieChart fx:id="compositionChart" labelLineLength="10" legendSide="BOTTOM" />
+            <!--
+            <BarChart fx:id="documentSummary">
+                <xAxis>
+                    <CategoryAxis label="" />
+                </xAxis>
+                <yAxis>
+                    <NumberAxis label="Count" />
+                </yAxis>
+            </BarChart>
+            -->
+            <!--<Button fx:id="exportChartButton" visible="false" onMouseClicked="#exportChartButtonHandler" text="Export" />-->
+            <Button fx:id="exportChartButton" visible="false" text="Export" />
+        </VBox>
+    </center>
+
+</fx:root>

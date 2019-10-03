@@ -93,6 +93,5 @@
         <ScrollPane fx:id="topicScrollPane" hbarPolicy="NEVER" prefWidth="300" />
     </TitledPane>
 
-    <Button fx:id="closeButton" onMouseClicked="#closeButtonHandler">Close</Button>
 
 </fx:root>

@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import javafx.scene.chart.BubbleChart?>
+<?import javafx.scene.chart.NumberAxis?>
+<?import javafx.scene.chart.LineChart?>
+<?import javafx.scene.chart.CategoryAxis?>
+<?import javafx.geometry.Insets?>
+<fx:root xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            prefHeight="400.0" prefWidth="600.0" type="AnchorPane">
+
+    <GridPane>
+        <BubbleChart fx:id="topicDistance" title="Topic Distance" GridPane.columnIndex="0" GridPane.rowIndex="0">
+            <xAxis>
+                <NumberAxis label="Component 1" />
+            </xAxis>
+            <yAxis>
+                <NumberAxis label="Component 2" />
+            </yAxis>
+        </BubbleChart>
+
+        <LineChart fx:id="topWords" title="Topic" GridPane.columnIndex="1" GridPane.rowIndex="0">
+            <xAxis>
+                <NumberAxis label="Counts" side="LEFT" />
+            </xAxis>
+            <yAxis>
+                <CategoryAxis label="Words" />
+            </yAxis>
+        </LineChart>
+
+        <FlowPane alignment="TOP_RIGHT" GridPane.columnIndex="1" GridPane.rowIndex="1">
+            <Button fx:id="exportModelButton" onMouseClicked="#exportModel">
+                Export Model
+            </Button>
+            <Button fx:id="exportTopicsButton" onMouseClicked="#exportTopics">
+                Export Topics
+            </Button>
+            <opaqueInsets>
+                <Insets />
+            </opaqueInsets>
+        </FlowPane>
+        <columnConstraints>
+            <ColumnConstraints />
+            <ColumnConstraints />
+        </columnConstraints>
+        <rowConstraints>
+            <RowConstraints />
+            <RowConstraints />
+        </rowConstraints>
+    </GridPane>
+</fx:root>

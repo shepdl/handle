@@ -9,8 +9,8 @@ import javafx.stage.Stage;
 
 public class SledgeApp extends Application {
 
-    @FXML private HBox documentList;
-    @FXML private HBox topicSetsList;
+//    @FXML private HBox documentList;
+//    @FXML private HBox topicSetsList;
 
     private Stage rootStage;
 
