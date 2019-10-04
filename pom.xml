@@ -59,7 +59,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-<!--                            <mainClass>edu.ucla.drc.sledge.SledgeApp</mainClass>-->
+                            <mainClass>edu.ucla.drc.sledge.SledgeApp</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
