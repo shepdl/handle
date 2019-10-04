@@ -1,6 +1,7 @@
 package edu.ucla.drc.sledge.topicmodeling;
 
 import cc.mallet.topics.TopicModel;
+import cc.mallet.types.LabelSequence;
 import edu.ucla.drc.sledge.Document;
 import edu.ucla.drc.sledge.LoadsFxml;
 import edu.ucla.drc.sledge.ProjectModel;
@@ -14,18 +15,23 @@ import javafx.fxml.FXML;
 import javafx.scene.SnapshotParameters;
 import javafx.scene.chart.BarChart;
 import javafx.scene.chart.PieChart;
-import javafx.scene.control.Button;
-import javafx.scene.control.SelectionMode;
-import javafx.scene.control.TreeItem;
-import javafx.scene.control.TreeView;
+import javafx.scene.control.*;
 import javafx.scene.image.WritableImage;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.FileChooser;
+import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFFactory;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbookType;
 
 import javax.imageio.ImageIO;
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
+import java.net.URI;
 
 public class DocumentTopicReport extends BorderPane implements LoadsFxml {
 
@@ -37,6 +43,7 @@ public class DocumentTopicReport extends BorderPane implements LoadsFxml {
     @FXML BarChart<String, Double> documentSummary;
     @FXML private PieChart compositionChart;
     @FXML private Button exportChartButton;
+    @FXML private Button exportDocumentTopicsReportButton;
 
     public DocumentTopicReport () {
         loadFxml();
@@ -53,6 +60,7 @@ public class DocumentTopicReport extends BorderPane implements LoadsFxml {
         });
 
         exportChartButton.addEventHandler(MouseEvent.MOUSE_CLICKED, this::exportChartButonHandler);
+        exportDocumentTopicsReportButton.addEventHandler(MouseEvent.MOUSE_CLICKED, this::exportDocumentTopicsReportButton);
     }
 
     public void setModel (ProjectModel model) {
@@ -106,4 +114,59 @@ public class DocumentTopicReport extends BorderPane implements LoadsFxml {
         }
     }
 
+    public void exportDocumentTopicsReportButton(MouseEvent event) {
+        event.consume();
+        System.out.println("Click export document topic report button");
+
+        FileChooser.ExtensionFilter filter = new FileChooser.ExtensionFilter("Microsoft Excel File (*.xlsx)", "*.xlsx");
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.getExtensionFilters().add(filter);
+        fileChooser.setTitle("Select output file");
+        File file = fileChooser.showSaveDialog(getScene().getWindow());
+        if (file == null) {
+            return;
+        }
+        Workbook workbook = new XSSFWorkbook();
+//        workbook = new XSSFWorkbook(XSSFFactory.getInstance());
+
+        Sheet sheet = workbook.createSheet("Document Topics Report");
+        Row headerRow = sheet.createRow(0);
+        Cell indexCell = headerRow.createCell(0);
+        indexCell.setCellValue("Index");
+        Cell filenameCell = headerRow.createCell(1);
+        filenameCell.setCellValue("Filename");
+        for (int i = 0; i < topicModel.numTopics; i++) {
+            int cellIndex = i + 2;
+            Cell topicNameCell = headerRow.createCell(cellIndex);
+            topicNameCell.setCellValue("Topic " + i);
+        }
+
+        double[][] documentTopics = topicModel.getDocumentTopics(true, false);
+        for (int docIndex = 0; docIndex < topicModel.data.size(); docIndex++) {
+            int rowCounter = 1 + docIndex;
+            Row dataRow = sheet.createRow(rowCounter);
+            Cell docIndexCell = dataRow.createCell(0);
+            docIndexCell.setCellValue(docIndex);
+            Cell docFilenameCell = dataRow.createCell(1);
+            URI filenameUri = (URI)topicModel.data.get(docIndex).instance.getName();
+            String filename = filenameUri.toString();
+            docFilenameCell.setCellValue(filename);
+            for (int topicIndex = 0; topicIndex < topicModel.numTopics; topicIndex++) {
+                Cell dataCell = dataRow.createCell(topicIndex + 2);
+                dataCell.setCellValue(documentTopics[docIndex][topicIndex]);
+            }
+
+            try {
+                FileOutputStream fileOut = new FileOutputStream(file);
+                workbook.write(fileOut);
+                fileOut.close();
+//                workbook.close();
+//                workbook.close();
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
 }

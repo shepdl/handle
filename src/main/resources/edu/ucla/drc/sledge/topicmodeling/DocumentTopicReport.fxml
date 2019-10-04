@@ -34,7 +34,12 @@
             </BarChart>
             -->
             <!--<Button fx:id="exportChartButton" visible="false" onMouseClicked="#exportChartButtonHandler" text="Export" />-->
-            <Button fx:id="exportChartButton" visible="false" text="Export" />
+            <Button fx:id="exportDocumentTopicsReportButton" BorderPane.alignment="CENTER_RIGHT">
+                Export document report
+            </Button>
+            <Button fx:id="exportChartButton" visible="false" text="Export" >
+                Export topic image
+            </Button>
         </VBox>
     </center>
 

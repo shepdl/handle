@@ -21,8 +21,8 @@
     </center>
 
     <bottom>
-        <Button fx:id="exportDocumentTopicsButton" BorderPane.alignment="CENTER_RIGHT">
-            Export
+        <Button fx:id="exportDocumentTopicsReportButon" BorderPane.alignment="CENTER_RIGHT">
+            Export data
         </Button>
     </bottom>
 
