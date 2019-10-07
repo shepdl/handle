@@ -8,7 +8,9 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 
 import java.io.IOException;
@@ -18,6 +20,8 @@ import java.util.List;
 import java.util.Map;
 
 public class WordCountTable extends TableView<WordCountEntry> {
+
+    @FXML private TableColumn countColumn;
 
     public WordCountTable () {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("WordCountTable.fxml"));
@@ -34,6 +38,7 @@ public class WordCountTable extends TableView<WordCountEntry> {
     public void setData (ObjectProperty<Document> selectedDocument) {
         selectedDocument.addListener((ObservableValue<? extends Document> observable, Document oldValue, Document newValue) -> {
             setItems(countWords(newValue.getIngested()));
+            sort();
         });
     }
 

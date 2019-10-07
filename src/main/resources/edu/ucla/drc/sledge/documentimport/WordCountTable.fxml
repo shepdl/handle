@@ -18,11 +18,15 @@
                 <PropertyValueFactory property="word"/>
             </cellValueFactory>
         </TableColumn>
-        <TableColumn text="Count" sortType="DESCENDING">
+        <TableColumn text="Count" sortType="DESCENDING" fx:id="countColumn">
             <cellValueFactory>
                 <PropertyValueFactory property="count"/>
             </cellValueFactory>
         </TableColumn>
     </columns>
+
+    <sortOrder>
+        <fx:reference source="countColumn" />
+    </sortOrder>
 
 </fx:root>
