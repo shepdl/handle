@@ -43,20 +43,6 @@ public class TopicModelsTab extends BorderPane implements LoadsFxml {
         this.model = model;
         topicModelSettings.setProjectModel(model);
         topicModelsList.setData(model.getTopicModels(), selectedTopicModel);
-        /*
-        model.getTopicModels().addListener((ListChangeListener.Change<? extends TopicModel> c) -> {
-            while (c.next()) {
-                if (c.wasAdded()) {
-                    c.getAddedSubList().forEach(topicModel -> {
-                        model.getTopicModels().add(topicModel);
-                    });
-                } else if (c.wasRemoved()) {
-                    model.getTopicModels().removeAll(c.getRemoved());
-                }
-            }
-        });
-        */
-//        topicModelSettings.setup(model);
         topicModelsList.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
         topicModelsList.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<TreeItem<TopicModel>>() {
             @Override

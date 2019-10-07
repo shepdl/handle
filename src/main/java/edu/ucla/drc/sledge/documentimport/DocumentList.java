@@ -2,6 +2,7 @@ package edu.ucla.drc.sledge.documentimport;
 
 import cc.mallet.types.Instance;
 import edu.ucla.drc.sledge.Document;
+import edu.ucla.drc.sledge.ProjectModel;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -9,15 +10,18 @@ import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.control.SelectionMode;
-import javafx.scene.control.TreeItem;
-import javafx.scene.control.TreeView;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.*;
 import javafx.scene.input.DragEvent;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.TransferMode;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 
 public class DocumentList extends TreeView<Document> {
 
@@ -25,6 +29,7 @@ public class DocumentList extends TreeView<Document> {
     private ObservableList<Document> documents;
 
     private final TreeItem rootTreeItem = new TreeItem("Files");
+    private ProjectModel projectModel;
 
     public DocumentList () {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("DocumentList.fxml"));
@@ -39,8 +44,9 @@ public class DocumentList extends TreeView<Document> {
 
     }
 
-    public void setData (ObservableList<Document> documents, ObjectProperty<Document> selectedDocument) {
-        this.documents = documents;
+    public void setData (ProjectModel model, ObjectProperty<Document> selectedDocument) {
+        this.projectModel = model;
+        this.documents = model.getDocuments();
         this.selectedDocument = selectedDocument;
 
         this.documents.addListener((ListChangeListener.Change<? extends Document> c) -> {
@@ -78,15 +84,43 @@ public class DocumentList extends TreeView<Document> {
 
         this.setOnDragDropped((DragEvent event) -> {
             Dragboard db = event.getDragboard();
-            for (File file : db.getFiles()) {
-                Document doc = new Document(file, null);
-                documents.add(doc);
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("ImportWarningDialog.fxml"));
+            if (!projectModel.getTopicModels().isEmpty()) {
+                Parent root;
+                try {
+                    root = (Parent)loader.load();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    return;
+                }
+                ImportWarningDialog controller = loader.getController();
+                Scene scene = new Scene(root, 300, 200);
+                Stage stage = new Stage();
+                controller.setCallbacks((nullEvent) -> {
+                    // Clear topic model
+                    this.projectModel.getTopicModels().clear();
+                    // Add files
+                    addFiles(db.getFiles(), event);
+                    stage.hide();
+                }, (nullEvent) -> stage.hide());
+                stage.initModality(Modality.APPLICATION_MODAL);
+                stage.setTitle("Confirm erasing models");
+                stage.setScene(scene);
+                stage.show();
+            } else {
+                addFiles(db.getFiles(), event);
             }
-
-            event.setDropCompleted(true);
-            event.consume();
         });
 
+    }
 
+    private void addFiles (List<File> files, DragEvent event) {
+        for (File file : files) {
+            Document doc = new Document(file, null);
+            documents.add(doc);
+        }
+
+        event.setDropCompleted(true);
+        event.consume();
     }
 }

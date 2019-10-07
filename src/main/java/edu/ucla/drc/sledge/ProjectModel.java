@@ -1,6 +1,7 @@
 package edu.ucla.drc.sledge;
 
 import cc.mallet.pipe.Pipe;
+import cc.mallet.topics.TopicModel;
 import cc.mallet.types.Instance;
 import cc.mallet.types.InstanceList;
 import edu.ucla.drc.sledge.documentimport.ImportPipeBuilder;
@@ -128,7 +129,11 @@ public class ProjectModel {
         return instances;
     }
 
-    private ObservableList topicJobs;
+    private ObservableList<TopicModel> topicModels = FXCollections.observableArrayList();
+
+    public ObservableList<TopicModel> getTopicModels () {
+        return topicModels;
+    }
 
     @org.jetbrains.annotations.NotNull
     @org.jetbrains.annotations.Contract(value = " -> new", pure = true)

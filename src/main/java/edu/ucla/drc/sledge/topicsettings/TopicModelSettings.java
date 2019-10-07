@@ -183,13 +183,14 @@ public class TopicModelSettings extends VBox {
         topicResultsPane.setExpanded(true);
         topicResultsPane.setVisible(true);
         GridPane pane = new GridPane();
-        int widthLimit = 3;
+        int widthLimit = 4;
         int widthCounter = 0;
         int heightCounter = 0;
+        List<TopicDocumentContainerSummary> topicSummary = topicModel.getSummary();
         for (Topic topic : topics) {
 
             TopicSummary summary = new TopicSummary();
-            summary.setData(topic, topicModel.getSummary().get(topic.getId()));
+            summary.setData(topicModel, topic, topicSummary.get(topic.getId()));
 
             pane.add(summary, widthCounter, heightCounter);
             widthCounter += 1;

@@ -1,22 +1,30 @@
 package edu.ucla.drc.sledge.topicmodeling;
 
 import cc.mallet.topics.TopicModel;
+import edu.ucla.drc.sledge.Document;
 import edu.ucla.drc.sledge.topicsettings.Topic;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.control.SelectionMode;
-import javafx.scene.control.TreeCell;
-import javafx.scene.control.TreeItem;
-import javafx.scene.control.TreeView;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.TextFieldTreeCell;
+import javafx.scene.input.MouseButton;
+import javafx.scene.input.MouseEvent;
 import javafx.util.Callback;
+import javafx.util.StringConverter;
+import javafx.util.converter.DefaultStringConverter;
 
+import javax.print.Doc;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 public class TopicModelsList extends TreeView<TopicModel> {
 
@@ -25,24 +33,26 @@ public class TopicModelsList extends TreeView<TopicModel> {
 
     private final TreeItem rootItem = new TreeItem("Topic Models");
 
+    private ContextMenu modelClickMenu;
+
     public TopicModelsList () {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("TopicModelsList.fxml"));
         fxmlLoader.setRoot(this);
         fxmlLoader.setController(this);
-//
         try {
             fxmlLoader.load();
         } catch (IOException e) {
             e.printStackTrace();
         }
 
+
         // TODO: correct this so that it sets the event handler correctly
-//        this.setCellFactory(new Callback<TreeView<TopicModel>, TreeCell<TopicModel>>() {
-//            @Override
-//            public TreeCell<TopicModel> call(TreeView<TopicModel> param) {
-//                return new TopicModelCell();
-//            }
-//        });
+        this.setCellFactory(new Callback<TreeView<TopicModel>, TreeCell<TopicModel>>() {
+            @Override
+            public TreeCell<TopicModel> call(TreeView<TopicModel> param) {
+                return new TopicModelCell();
+            }
+        });
     }
 
     public void setData (ObservableList<TopicModel> topicModels, ObjectProperty<TopicModel> selectedTopicModel) {
@@ -56,17 +66,19 @@ public class TopicModelsList extends TreeView<TopicModel> {
                         TreeItem<TopicModel> treeItem = new TreeItem<>(topicModel);
                         rootItem.getChildren().add(treeItem);
                     });
+                } else if (c.wasRemoved()) {
+                    // NOTE: this is really inefficient as it's a linear search of a list multiple
+                    // times, but there are unlikely to be enough topic models for this to be a problem
+                    List<TopicModel> removedTopicModels = new ArrayList<>(c.getRemoved());
+                    List<TopicModel> cellsToRemove = rootItem.getChildren().filtered((object) -> {
+                        TreeItem<TopicModel> cell = (TreeItem<TopicModel>) object;
+                        return removedTopicModels.contains(cell.getValue());
+                    });
+                    boolean status = rootItem.getChildren().removeAll(cellsToRemove);
                 }
             }
         });
 
-//        this.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
-//        this.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<TreeItem<TopicModel>>() {
-//            @Override
-//            public void changed(ObservableValue<? extends TreeItem<TopicModel>> observableValue, TreeItem<TopicModel> oldValue, TreeItem<TopicModel> newValue) {
-//                selectedTopicModel.set(newValue.getValue());
-//            }
-//        });
     }
 
     @FXML
@@ -81,10 +93,41 @@ public class TopicModelsList extends TreeView<TopicModel> {
         });
     }
 
-    private static class TopicModelCell extends TextFieldTreeCell<TopicModel> {
+    private class TopicModelCell extends TextFieldTreeCell<TopicModel> {
+
+        private class StringConverter extends javafx.util.StringConverter<TopicModel> {
+
+            @Override
+            public String toString(TopicModel topicModel) {
+                return topicModel.getTitle();
+            }
+
+            @Override
+            public TopicModel fromString(String s) {
+                return item;
+            }
+        }
+
+        private TopicModel item;
+
+        public TopicModelCell () {
+            super(new javafx.util.StringConverter<TopicModel>() {
+                @Override
+                public String toString(TopicModel topicModel) {
+                    return topicModel.getTitle();
+                }
+
+                @Override
+                public TopicModel fromString(String s) {
+                    return null;
+                }
+            });
+        }
 
         @Override
         public void updateItem (TopicModel item, boolean empty) {
+            this.item = item;
+            super.updateItem(item, empty);
             if (empty) {
                 setText(null);
                 setGraphic(null);
@@ -102,7 +145,40 @@ public class TopicModelsList extends TreeView<TopicModel> {
                     stringBuilder.append(")");
                 }
                 setText(stringBuilder.toString());
+
+                ContextMenu modelClickMenu = new ContextMenu();
+                MenuItem renameItem = new MenuItem("Rename");
+                renameItem.setOnAction((event) -> {
+                    System.out.println("Editing ...");
+                    item.setTitle("This was renamed");
+                    startEdit();
+                });
+                onEditCommitProperty().addListener((ev) -> {
+                    this.updateItem(item, empty);
+                });
+
+                MenuItem deleteItem = new MenuItem("Delete");
+                deleteItem.setOnAction((event) -> {
+                    topicModels.remove(item);
+//                    topicModels.removeAll(item);
+                    System.out.println("Delete");
+                });
+
+                modelClickMenu.getItems().addAll(renameItem, deleteItem);
+                setContextMenu(modelClickMenu);
             }
+        }
+
+        @Override
+        public boolean equals (Object o) {
+            if (!(o instanceof TopicModelCell)) {
+                return false;
+            }
+            TopicModelCell cell = (TopicModelCell)o;
+            if (cell.item == null) {
+                return item == cell.item;
+            }
+            return cell.item.equals(item);
         }
     }
 }

@@ -47,7 +47,7 @@ public class DocumentImport extends BorderPane {
     public void setModel (ProjectModel model) {
         this.model = model;
         SimpleObjectProperty<Document> selectedDocument = new SimpleObjectProperty<Document>();
-        documentList.setData(model.getDocuments(), selectedDocument);
+        documentList.setData(model, selectedDocument);
         documentView.setData(selectedDocument);
         countsTable.setData(selectedDocument);
     }
