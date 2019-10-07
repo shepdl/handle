@@ -12,7 +12,7 @@ import javafx.util.Callback;
 import java.util.function.Consumer;
 
 public class TopicModelSettingsModalWindow {
-    private final Consumer<TopicModel> callback;
+    private Consumer<TopicModel> callback;
     private final ProjectModel model;
 
     @FXML private TopicModelSettings settingsPane;
@@ -21,10 +21,8 @@ public class TopicModelSettingsModalWindow {
     // Contains the new stage and scene
     // Constructed by parent window and then calls a callback on closing
     
-    public TopicModelSettingsModalWindow (Consumer<TopicModel> closeCallback, ProjectModel model) {
-        this.callback = closeCallback;
+    public TopicModelSettingsModalWindow (ProjectModel model) {
         this.model = model;
-//        settingsPane.addEventHandler(CLOSE_WINDOW, this::closeButtonHandler);
     }
 
     @FXML
@@ -34,6 +32,11 @@ public class TopicModelSettingsModalWindow {
     public void closeButtonHandler (CloseEvent event) {
         event.consume();
         this.window.close();
+    }
+
+    public void setCloseHandler (Consumer<TopicModel> closeCallback) {
+        this.callback = closeCallback;
+        settingsPane.setup(this.model, this.callback);
     }
 
     public static class CloseEvent extends Event {

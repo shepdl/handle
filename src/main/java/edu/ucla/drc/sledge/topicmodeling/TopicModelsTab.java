@@ -10,6 +10,7 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -34,8 +35,6 @@ public class TopicModelsTab extends BorderPane implements LoadsFxml {
     private ProjectModel model;
     private SimpleObjectProperty<TopicModel> selectedTopicModel = new SimpleObjectProperty<>();
 
-    private ObservableList<TopicModel> topicModels = FXCollections.observableArrayList();
-
     public TopicModelsTab () {
         loadFxml();
     }
@@ -43,7 +42,20 @@ public class TopicModelsTab extends BorderPane implements LoadsFxml {
     public void setModel (ProjectModel model) {
         this.model = model;
         topicModelSettings.setProjectModel(model);
-        topicModelsList.setData(topicModels, selectedTopicModel);
+        topicModelsList.setData(model.getTopicModels(), selectedTopicModel);
+        /*
+        model.getTopicModels().addListener((ListChangeListener.Change<? extends TopicModel> c) -> {
+            while (c.next()) {
+                if (c.wasAdded()) {
+                    c.getAddedSubList().forEach(topicModel -> {
+                        model.getTopicModels().add(topicModel);
+                    });
+                } else if (c.wasRemoved()) {
+                    model.getTopicModels().removeAll(c.getRemoved());
+                }
+            }
+        });
+        */
 //        topicModelSettings.setup(model);
         topicModelsList.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
         topicModelsList.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<TreeItem<TopicModel>>() {
@@ -65,11 +77,16 @@ public class TopicModelsTab extends BorderPane implements LoadsFxml {
     public void addTopicModel (MouseEvent event) {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("TopicModelSettingsModalWindow.fxml"));
         try {
-            TopicModelSettingsModalWindow controller = new TopicModelSettingsModalWindow(this::topicModelComplete, model);
+            TopicModelSettingsModalWindow controller = new TopicModelSettingsModalWindow(model);
             loader.setController(controller);
             Parent root = (Parent) loader.load();
-            Scene scene = new Scene(root, 400, 800);
+            Scene scene = new Scene(root, 800, 800);
             Stage stage = new Stage();
+            controller.setCloseHandler((newTopicModel) -> {
+                    model.getTopicModels().add(newTopicModel);
+                    stage.hide();
+                }
+            );
             stage.initModality(Modality.APPLICATION_MODAL);
             stage.setTitle("New topic model");
             stage.setScene(scene);
@@ -77,10 +94,6 @@ public class TopicModelsTab extends BorderPane implements LoadsFxml {
         } catch (IOException ex) {
             ex.printStackTrace();
         }
-    }
-
-    private void topicModelComplete(TopicModel model) {
-        topicModels.add(model);
     }
 
 }
