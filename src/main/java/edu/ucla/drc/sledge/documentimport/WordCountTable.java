@@ -4,14 +4,17 @@ import cc.mallet.types.FeatureSequence;
 import cc.mallet.types.Instance;
 import cc.mallet.types.TokenSequence;
 import edu.ucla.drc.sledge.Document;
+import edu.ucla.drc.sledge.ProjectModel;
+import javafx.beans.binding.Bindings;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -22,6 +25,7 @@ import java.util.Map;
 public class WordCountTable extends TableView<WordCountEntry> {
 
     @FXML private TableColumn countColumn;
+    private ProjectModel model;
 
     public WordCountTable () {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("WordCountTable.fxml"));
@@ -33,9 +37,29 @@ public class WordCountTable extends TableView<WordCountEntry> {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+        setRowFactory((TableView<WordCountEntry> tableView) -> {
+            final TableRow<WordCountEntry> row = new TableRow<>();
+            final ContextMenu menu = new ContextMenu();
+            final MenuItem addStopwordItem = new MenuItem("Add as stopword");
+            menu.getItems().add(addStopwordItem);
+            addStopwordItem.setOnAction(new EventHandler<ActionEvent>() {
+                @Override
+                public void handle(ActionEvent actionEvent) {
+                    model.addStopword(row.getItem().getWord());
+                    tableView.getItems().remove(row.getItem());
+                }
+            });
+
+            row.contextMenuProperty().bind(
+                Bindings.when(row.emptyProperty()).then((ContextMenu)null).otherwise(menu)
+            );
+            return row;
+        });
     }
 
-    public void setData (ObjectProperty<Document> selectedDocument) {
+    public void setData (ProjectModel model, ObjectProperty<Document> selectedDocument) {
+        this.model = model;
         selectedDocument.addListener((ObservableValue<? extends Document> observable, Document oldValue, Document newValue) -> {
             setItems(countWords(newValue.getIngested()));
             sort();

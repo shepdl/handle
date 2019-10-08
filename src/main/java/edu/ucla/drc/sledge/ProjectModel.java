@@ -81,20 +81,29 @@ public class ProjectModel {
         documents.addListener(new ListChangeListener<Document>() {
             @Override
             public void onChanged(Change<? extends Document> c) {
-                instances = new InstanceList(getPipe());
-                DocumentIterator iterator = new DocumentIterator(documents);
-                instances.addThruPipe(iterator);
-                for (int i = 0; i < documents.size(); i++) {
-                    documents.get(i).setIngested(instances.get(i));
-                }
+                reimportDocuments();
             }
         });
+    }
+
+    private void reimportDocuments () {
+        instances = new InstanceList(getPipe());
+        DocumentIterator iterator = new DocumentIterator(documents);
+        instances.addThruPipe(iterator);
+        for (int i = 0; i < documents.size(); i++) {
+            documents.get(i).setIngested(instances.get(i));
+        }
     }
 
     private ImportFileSettings importFileSettings = ImportFileSettings.withDefaults();
 
     public Set<String> getStopwords() {
         return stopwords;
+    }
+
+    public void addStopword(String word) {
+        stopwords.add(word);
+        reimportDocuments();
     }
 
     public void setStopwords(Set<String> stopwords) {
