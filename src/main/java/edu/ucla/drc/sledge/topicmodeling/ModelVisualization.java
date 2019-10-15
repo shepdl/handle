@@ -46,6 +46,10 @@ public class ModelVisualization extends AnchorPane implements LoadsFxml {
 
     public void setTopicModel (TopicModel model) {
         topicModelName.setText(model.getTitle());
+        topicModelName.textProperty().addListener((observable, oldValue, newValue) -> {
+            model.setTitle(newValue);
+        });
+        updateAllTopicsPane(model);
         modelSummary.setData(model);
         documentSummaryViewer.selectTopicModel(model);
         topicDetails.setVisible(true);
@@ -57,7 +61,6 @@ public class ModelVisualization extends AnchorPane implements LoadsFxml {
         Alphabet alphabet = model.getAlphabet();
 
         List<TreeSet<IDSorter>> sortedWords = model.getSortedWords();
-        List<Topic> topics = new ArrayList<>();
         for (int i = 0; i < sortedWords.size(); i++) {
             Topic topic = new Topic(i);
             Iterator items = sortedWords.get(i).iterator();
@@ -69,13 +72,11 @@ public class ModelVisualization extends AnchorPane implements LoadsFxml {
             }
 
             TopicSummary summary = new TopicSummary();
-            summary.setData(topic, model.getSummary().get(topic.getId()));
+            summary.setData(model, topic, model.getSummary().get(topic.getId()));
 
             pane.getChildren().add(summary);
-
         }
         allTopicsPane.setContent(pane);
-
 
     }
 

@@ -19,23 +19,25 @@
 <?import edu.ucla.drc.sledge.topicmodeling.ModelSummaryTab?>
 <?import edu.ucla.drc.sledge.topicmodeling.DocumentTopicReport?>
 <?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.layout.VBox?>
 <fx:root prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1"
          type="AnchorPane"
 >
 
-    <TextField fx:id="topicModelName"/>
+    <VBox>
+        <TextField fx:id="topicModelName"/>
 
-    <TabPane visible="false" fx:id="topicDetails">
-        <Tab text="All" closable="false">
-            <ScrollPane fx:id="allTopicsPane" />
-        </Tab>
-        <Tab text="Summary" closable="false">
-            <ModelSummaryTab fx:id="modelSummary"/>
-        </Tab>
-        <Tab text="Docs" closable="false">
-            <DocumentTopicReport fx:id="documentSummaryViewer"/>
-        </Tab>
-    </TabPane>
-
+        <TabPane visible="false" fx:id="topicDetails">
+            <Tab text="All" closable="false">
+                <ScrollPane fx:id="allTopicsPane" />
+            </Tab>
+            <Tab text="Summary" closable="false">
+                <ModelSummaryTab fx:id="modelSummary"/>
+            </Tab>
+            <Tab text="Docs" closable="false">
+                <DocumentTopicReport fx:id="documentSummaryViewer"/>
+            </Tab>
+        </TabPane>
+    </VBox>
 
 </fx:root>

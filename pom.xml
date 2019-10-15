@@ -35,6 +35,11 @@
             <artifactId>poi-scratchpad</artifactId>
             <version>4.1.0</version>
         </dependency>
+        <dependency>
+            <groupId>com.github.haifengl</groupId>
+            <artifactId>smile-core</artifactId>
+            <version>1.5.3</version>
+        </dependency>
     </dependencies>
 
     <properties>
