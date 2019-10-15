@@ -50,7 +50,6 @@ public class DocumentTopicReport extends BorderPane implements LoadsFxml {
     }
 
     @FXML void initialize () {
-        System.out.println("Initializing Document Topics Report");
         documentList.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
         documentList.setRoot(rootTreeItem);
         documentList.getSelectionModel().selectedItemProperty().addListener((observableValue, documentTreeItem, selectedItem) -> {
@@ -59,7 +58,7 @@ public class DocumentTopicReport extends BorderPane implements LoadsFxml {
             }
         });
 
-        exportChartButton.addEventHandler(MouseEvent.MOUSE_CLICKED, this::exportChartButonHandler);
+        exportChartButton.addEventHandler(MouseEvent.MOUSE_CLICKED, this::exportChartButtonHandler);
         exportDocumentTopicsReportButton.addEventHandler(MouseEvent.MOUSE_CLICKED, this::exportDocumentTopicsReportButton);
     }
 
@@ -87,7 +86,7 @@ public class DocumentTopicReport extends BorderPane implements LoadsFxml {
         ObservableList<PieChart.Data> data = FXCollections.observableArrayList();
 
         for (int i = 0; i < topicWeights.length; i++) {
-            data.add(new PieChart.Data("Topic " + i, topicWeights[i]));
+            data.add(new PieChart.Data(topicModel.topicTitles[i], topicWeights[i]));
         }
         compositionChart.setData(data);
         exportChartButton.setVisible(true);
@@ -98,7 +97,8 @@ public class DocumentTopicReport extends BorderPane implements LoadsFxml {
         // Set event listener
     }
 
-    public void exportChartButonHandler (MouseEvent event) {
+    public void exportChartButtonHandler (MouseEvent event) {
+        event.consume();
         FileChooser.ExtensionFilter filter = new FileChooser.ExtensionFilter("PNG image (*.png)", "*.png");
         FileChooser fileChooser = new FileChooser();
         fileChooser.getExtensionFilters().add(filter);
@@ -116,7 +116,6 @@ public class DocumentTopicReport extends BorderPane implements LoadsFxml {
 
     public void exportDocumentTopicsReportButton(MouseEvent event) {
         event.consume();
-        System.out.println("Click export document topic report button");
 
         FileChooser.ExtensionFilter filter = new FileChooser.ExtensionFilter("Microsoft Excel File (*.xlsx)", "*.xlsx");
         FileChooser fileChooser = new FileChooser();
@@ -127,10 +126,9 @@ public class DocumentTopicReport extends BorderPane implements LoadsFxml {
             return;
         }
         Workbook workbook = new XSSFWorkbook();
-//        workbook = new XSSFWorkbook(XSSFFactory.getInstance());
 
-        Sheet sheet = workbook.createSheet("Document Topics Report");
-        Row headerRow = sheet.createRow(0);
+        Sheet dtrWorksheet = workbook.createSheet("Document Topics Report");
+        Row headerRow = dtrWorksheet.createRow(0);
         Cell indexCell = headerRow.createCell(0);
         indexCell.setCellValue("Index");
         Cell filenameCell = headerRow.createCell(1);
@@ -138,13 +136,13 @@ public class DocumentTopicReport extends BorderPane implements LoadsFxml {
         for (int i = 0; i < topicModel.numTopics; i++) {
             int cellIndex = i + 2;
             Cell topicNameCell = headerRow.createCell(cellIndex);
-            topicNameCell.setCellValue("Topic " + i);
+            topicNameCell.setCellValue(topicModel.topicTitles[i]);
         }
 
         double[][] documentTopics = topicModel.getDocumentTopics(true, false);
         for (int docIndex = 0; docIndex < topicModel.data.size(); docIndex++) {
             int rowCounter = 1 + docIndex;
-            Row dataRow = sheet.createRow(rowCounter);
+            Row dataRow = dtrWorksheet.createRow(rowCounter);
             Cell docIndexCell = dataRow.createCell(0);
             docIndexCell.setCellValue(docIndex);
             Cell docFilenameCell = dataRow.createCell(1);
@@ -155,18 +153,39 @@ public class DocumentTopicReport extends BorderPane implements LoadsFxml {
                 Cell dataCell = dataRow.createCell(topicIndex + 2);
                 dataCell.setCellValue(documentTopics[docIndex][topicIndex]);
             }
+        }
 
-            try {
-                FileOutputStream fileOut = new FileOutputStream(file);
-                workbook.write(fileOut);
-                fileOut.close();
-//                workbook.close();
-//                workbook.close();
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
+        Sheet topicWordsSheet = workbook.createSheet("Topic Keys");
+        Row topicWordHeaderRow = topicWordsSheet.createRow(0);
+        Cell topicIndexCell = topicWordHeaderRow.createCell(0);
+        topicIndexCell.setCellValue("Topic ID");
+        Cell topicTitleCell = topicWordHeaderRow.createCell(1);
+        topicTitleCell.setCellValue("Title");
+        Cell wordHeaderCell = topicWordHeaderRow.createCell(2);
+        wordHeaderCell.setCellValue("Words");
+        int wordCount = 10;
+        Object[][] topWords = topicModel.getTopWords(wordCount);
+        for (int topicIndex = 0; topicIndex < topicModel.numTopics; topicIndex++) {
+            Row dataRow = topicWordsSheet.createRow(topicIndex + 1);
+            Cell idCell = dataRow.createCell(0);
+            idCell.setCellValue(topicIndex);
+            Cell titleCell = dataRow.createCell(1);
+            titleCell.setCellValue(topicModel.topicTitles[topicIndex]);
+            for (int i = 0; i < wordCount; i++) {
+                Cell wordCell = dataRow.createCell(i + 2);
+                wordCell.setCellValue((String)topWords[topicIndex][i]);
             }
+        }
+
+        try {
+            FileOutputStream fileOut = new FileOutputStream(file);
+            workbook.write(fileOut);
+            fileOut.close();
+            workbook.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 }
