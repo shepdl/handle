@@ -13,13 +13,23 @@
             fx:controller="edu.ucla.drc.sledge.SledgeAppRoot"
             prefHeight="600.0" prefWidth="800.0"
 >
+    <VBox>
+        <MenuBar fx:id="applicationMenu">
+            <Menu text="Project">
+                <MenuItem text="New" onAction="#newProject" />
+                <MenuItem text="Load" onAction="#loadProject" />
+                <MenuItem text="Save" onAction="#saveProject" />
+            </Menu>
+        </MenuBar>
 
-    <TabPane>
-        <Tab text="Documents" closable="false">
-            <DocumentImport fx:id="documentImport" />
-        </Tab>
-        <Tab text="Topic Models" closable="false">
-            <TopicModelsTab fx:id="topicModels"/>
-        </Tab>
-    </TabPane>
+        <TabPane>
+            <Tab text="Documents" closable="false">
+                <DocumentImport fx:id="documentImport"/>
+            </Tab>
+            <Tab text="Topic Models" closable="false">
+                <TopicModelsTab fx:id="topicModels"/>
+            </Tab>
+        </TabPane>
+    </VBox>
+
 </AnchorPane>

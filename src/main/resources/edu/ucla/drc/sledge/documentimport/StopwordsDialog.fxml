@@ -14,19 +14,23 @@
 
     <VBox>
 
-    <TableView fx:id="stopwordsTable" onDragOver="#setTransferMode" onDragDropped="#dropFile">
-        <columns>
-            <TableColumn text="Actions">
-                <cellValueFactory>
-                    <PropertyValueFactory property="dummy"/>
-                </cellValueFactory>
-            </TableColumn>
-        </columns>
+        <ComboBox fx:id="defaultStopwordsComboBox" onAction="#addWordsFromFile">
+        </ComboBox>
 
-    </TableView>
+        <TableView fx:id="stopwordsTable" onDragOver="#setTransferMode" onDragDropped="#dropFile">
+            <columns>
+                <TableColumn text="Actions">
+                    <cellValueFactory>
+                        <PropertyValueFactory property="dummy"/>
+                    </cellValueFactory>
+                </TableColumn>
+            </columns>
 
-    <Button fx:id="saveButton" onMouseClicked="#saveStopwords">Save</Button>
-    <Button fx:id="cancelButton">Cancel</Button>
+        </TableView>
+        <HBox>
+            <Button fx:id="saveButton" onMouseClicked="#saveStopwords">Save</Button>
+            <Button fx:id="cancelButton">Cancel</Button>
+        </HBox>
 
 
     </VBox>

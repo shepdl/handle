@@ -7,6 +7,7 @@ public class TopicDocumentContainerSummary {
 
     private List<TopicDocumentSummary> items = new ArrayList<>();
     private int id;
+    private String name;
 
     public TopicDocumentContainerSummary (int id) {
         this.id = id;

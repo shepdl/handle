@@ -19,12 +19,6 @@ public class ProjectModel {
 
     private String name;
 
-    public File getStorageRoot() {
-        return storageRoot;
-    }
-
-    private File storageRoot;
-
     public ObservableList<Document> getDocuments() {
         return documents;
     }
@@ -33,16 +27,6 @@ public class ProjectModel {
 
     public ImportFileSettings getImportFileSettings() {
         return importFileSettings;
-    }
-
-    private ObservableBooleanValue isImporting;
-
-    public Boolean getIsImporting() {
-        return isImporting.get();
-    }
-
-    public InstanceList getInstances() {
-        return instances;
     }
 
     private InstanceList instances;
@@ -148,6 +132,18 @@ public class ProjectModel {
     @org.jetbrains.annotations.Contract(value = " -> new", pure = true)
     public static ProjectModel blank () {
         return new ProjectModel();
+    }
+
+    public ProjectExportBuilder export () {
+        return new ProjectExportBuilder(
+                name, documents, importFileSettings, instances, stopwords, topicModels
+        );
+    }
+
+    public static ProjectModel fromBuilder (ProjectExportBuilder builder) {
+        ProjectModel model = new ProjectModel();
+
+        return model;
     }
 
 }

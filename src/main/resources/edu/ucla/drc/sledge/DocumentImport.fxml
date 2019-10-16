@@ -10,6 +10,7 @@
 <?import edu.ucla.drc.sledge.documentimport.DocumentList?>
 <?import edu.ucla.drc.sledge.documentimport.DocumentTextView?>
 <?import edu.ucla.drc.sledge.documentimport.WordCountTable?>
+<?import org.fxmisc.richtext.StyleClassedTextArea?>
 <fx:root xmlns="http://javafx.com/javafx"
          xmlns:fx="http://javafx.com/fxml"
          type="BorderPane"
@@ -33,6 +34,7 @@
 
     <center>
         <DocumentTextView fx:id="documentView"/>
+        <!--<StyleClassedTextArea fx:id="styledDocumentView" wrapText="true" />-->
     </center>
 
     <right>

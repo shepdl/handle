@@ -1,0 +1,4 @@
+.stop-word {
+    -fx-fill: red;
+    -fx-strikethrough: true;
+}

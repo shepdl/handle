@@ -1,9 +1,12 @@
 package edu.ucla.drc.sledge;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.regex.Pattern;
 
-public class ImportFileSettings {
+public class ImportFileSettings implements Serializable {
+
+    private final static long SerialVersionUID = 1;
 
     private boolean preserveCase = true;
 

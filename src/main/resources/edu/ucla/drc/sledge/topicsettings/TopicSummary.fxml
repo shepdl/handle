@@ -15,6 +15,7 @@
          >
 
     <TextField fx:id="titleField"/>
+    <!--<Label fx:id="titleField" />-->
     <LineChart fx:id="wordDistributionChart" legendVisible="false" maxWidth="100">
         <xAxis>
             <CategoryAxis label=""/>
