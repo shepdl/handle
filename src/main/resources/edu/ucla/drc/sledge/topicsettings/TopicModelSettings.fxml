@@ -65,7 +65,7 @@
 
     <GridPane alignment="CENTER">
         <GridPane alignment="CENTER" hgap="10" prefWidth="822.0" vgap="10" VBox.vgrow="ALWAYS">
-            <Button fx:id="runButton" alignment="CENTER" onMouseClicked="#runButtonClicked" text="Run" GridPane.columnIndex="0" GridPane.rowIndex="0">
+            <Button fx:id="runButton" alignment="CENTER" prefWidth="100" onMouseClicked="#runButtonClicked" text="Run" GridPane.columnIndex="0" GridPane.rowIndex="0">
                 <GridPane.margin>
                     <Insets />
                 </GridPane.margin>
