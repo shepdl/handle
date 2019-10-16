@@ -26,7 +26,7 @@
             </yAxis>
         </BubbleChart>
 
-        <StackedBarChart fx:id="topWords" GridPane.columnIndex="1" GridPane.rowIndex="0" titleSide="BOTTOM">
+        <StackedBarChart fx:id="topWords" GridPane.columnIndex="1" GridPane.rowIndex="0" titleSide="TOP">
             <xAxis>
                 <CategoryAxis label="Words" fx:id="wordsAxis" side="BOTTOM"/>
             </xAxis>
@@ -40,7 +40,10 @@
                 Export Model
             </Button>
             <Button fx:id="exportTopicsButton" onMouseClicked="#exportTopics">
-                Export Topics
+                Export Topic Similarity Graph
+            </Button>
+            <Button fx:id="exportSingleTopicButton" onMouseClicked="#exportSingleTopic" visible="false">
+                Export Topic
             </Button>
             <opaqueInsets>
                 <Insets />

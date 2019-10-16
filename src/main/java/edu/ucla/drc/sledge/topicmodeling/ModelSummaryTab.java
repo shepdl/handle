@@ -4,15 +4,18 @@ import cc.mallet.topics.TopicModel;
 import cc.mallet.types.Alphabet;
 import cc.mallet.types.IDSorter;
 import edu.ucla.drc.sledge.LoadsFxml;
-import edu.ucla.drc.sledge.topicsettings.Topic;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.SnapshotParameters;
-import javafx.scene.chart.*;
+import javafx.scene.chart.BubbleChart;
+import javafx.scene.chart.CategoryAxis;
+import javafx.scene.chart.StackedBarChart;
+import javafx.scene.chart.XYChart;
+import javafx.scene.control.Button;
+import javafx.scene.control.Tooltip;
 import javafx.scene.image.WritableImage;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
@@ -22,7 +25,10 @@ import smile.mds.MDS;
 
 import javax.imageio.ImageIO;
 import java.io.*;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.TreeSet;
 
 public class ModelSummaryTab extends AnchorPane implements LoadsFxml {
     private TopicModel model;
@@ -30,6 +36,9 @@ public class ModelSummaryTab extends AnchorPane implements LoadsFxml {
     @FXML private BubbleChart topicDistance;
     @FXML private StackedBarChart topWords;
     @FXML private CategoryAxis wordsAxis;
+    @FXML private Button exportSingleTopicButton;
+
+    private int selectedTopicIndex = -1;
 
     public ModelSummaryTab () {
         loadFxml();
@@ -72,12 +81,34 @@ public class ModelSummaryTab extends AnchorPane implements LoadsFxml {
         }
     }
 
+    public void exportSingleTopic (MouseEvent mouseEvent) {
+        if (selectedTopicIndex != -1) {
+            FileChooser.ExtensionFilter filter = new FileChooser.ExtensionFilter("Image file (*.png)", "*.png");
+            FileChooser fileChooser = new FileChooser();
+            fileChooser.getExtensionFilters().add(filter);
+            fileChooser.setTitle("Select output file");
+            File file = fileChooser.showSaveDialog(getScene().getWindow());
+            if (file != null) {
+                try {
+                    WritableImage image = topWords.snapshot(new SnapshotParameters(), null);
+                    ImageIO.write(SwingFXUtils.fromFXImage(image, null), "png", file);
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
     public void setData (TopicModel model) {
         this.model = model;
         update();
     }
 
     private void update () {
+        exportSingleTopicButton.setVisible(false);
+        selectedTopicIndex = -1;
         topicDistance.getData().clear();
         XYChart.Series<Double, Double> series = new XYChart.Series<>();
         // TODO: suppress series name
@@ -91,9 +122,9 @@ public class ModelSummaryTab extends AnchorPane implements LoadsFxml {
         int counter = 0;
         int limit = 10;
         Iterator items = sortedWords.iterator();
-        List<BarChart.Data> dataList = new ArrayList<>();
 
         topWords.getData().clear();
+        topWords.setTitle(model.topicTitles[topicIndex]);
         XYChart.Series<String, Number> wordCountSeries = new StackedBarChart.Series<>();
         wordCountSeries.setName("Topic");
         XYChart.Series<String, Number> totalCountsSeries = new StackedBarChart.Series<>();
@@ -119,11 +150,8 @@ public class ModelSummaryTab extends AnchorPane implements LoadsFxml {
             totalCountsSeries.getData().add(new StackedBarChart.Data<String, Number>(title, totalCount));
         }
         topWords.getData().addAll(wordCountSeries, totalCountsSeries);
-    }
-
-    private void showSelectedTopicGraph (MouseEvent event) {
-        // Get topic ID from item clicked
-        // Update topic word graph
+        exportSingleTopicButton.setVisible(true);
+        selectedTopicIndex = topicIndex;
     }
 
     private void generateTopicSimilarityGraph (TopicModel model) {
@@ -149,9 +177,9 @@ public class ModelSummaryTab extends AnchorPane implements LoadsFxml {
         for (int i = 0; i < coordinates.length; i++) {
             BubbleChart.Data<Number, Number> datum = new BubbleChart.Data<>(coordinates[i][0] * 100, coordinates[i][1] * 100);
             final int outsideTopicId = i;
-            datum.nodeProperty().addListener(((observableValue, oldValue, newValue) -> {
+            datum.nodeProperty().addListener(((observableValue, oldValue, bubble) -> {
                 final int topicId = outsideTopicId;
-                newValue.setOnMouseClicked(new EventHandler<MouseEvent>() {
+                bubble.setOnMouseClicked(new EventHandler<MouseEvent>() {
                     @Override
                     public void handle (MouseEvent event) {
                         showTopic(topicId);
@@ -164,6 +192,10 @@ public class ModelSummaryTab extends AnchorPane implements LoadsFxml {
         ObservableList<BubbleChart.Series<Number, Number>> seriesList = FXCollections.observableArrayList();
         seriesList.add(series);
         topicDistance.setData(seriesList);
+        for (int i = 0; i < series.getData().size(); i++) {
+            BubbleChart.Data<Number, Number> datum = series.getData().get(i);
+            Tooltip.install(datum.getNode(), new Tooltip(model.topicTitles[i]));
+        }
     }
 
 }

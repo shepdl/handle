@@ -38,6 +38,7 @@ public class TopicModel extends Thread implements Serializable {
     public int topicBits;
 
     public int numTypes;
+    public String[] topicTitles;
     public int totalTokens;
 
     public double[] alpha;     // Dirichlet(alpha,alpha,...) is the distribution over topics
@@ -156,6 +157,11 @@ public class TopicModel extends Thread implements Serializable {
         Arrays.fill(alpha, getAlphaSum() / numTopics);
 
         tokensPerTopic = new int[numTopics];
+
+        topicTitles = new String[numTopics];
+        for (int i = 0; i < numTopics; i++) {
+            topicTitles[i] = "Untitled topic " + i;
+        }
     }
 
     public ArrayList<TopicAssignment> getData() {

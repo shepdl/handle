@@ -1,10 +1,12 @@
 package edu.ucla.drc.sledge.topicsettings;
 
+import cc.mallet.topics.TopicModel;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
@@ -17,6 +19,7 @@ public class TopicSummary extends VBox {
     @FXML private TextField titleField;
     @FXML private LineChart<String, Number> wordDistributionChart;
     @FXML private Button detailsButton;
+    private TopicModel topicModel;
     private Topic topic;
     private TopicDocumentContainerSummary summary;
 
@@ -36,7 +39,8 @@ public class TopicSummary extends VBox {
         detailsButton.setOnMouseClicked(this::showDetails);
     }
 
-    public void setData (Topic topic, TopicDocumentContainerSummary summary) {
+    public void setData (TopicModel topicModel, Topic topic, TopicDocumentContainerSummary summary) {
+        this.topicModel = topicModel;
         this.topic = topic;
         this.summary = summary;
 
@@ -48,15 +52,19 @@ public class TopicSummary extends VBox {
             titleBuilder.append("Topic " + topic.getId());
         }
         if (topic.getTopWords().size() > 1) {
-            titleBuilder.append("/");
+            titleBuilder.append(" ");
             titleBuilder.append(topic.getTopWords().get(1));
         }
         if (topic.getTopWords().size() > 2) {
-            titleBuilder.append("/");
+            titleBuilder.append(" ");
             titleBuilder.append(topic.getTopWords().get(2));
         }
 
         titleField.setText(titleBuilder.toString());
+        topicModel.topicTitles[topic.getId()] = titleBuilder.toString();
+        titleField.textProperty().addListener((observable, oldValue, newValue) -> {
+            topicModel.topicTitles[topic.getId()] = newValue;
+        });
 
         for (int i = 0; i < topic.getTopWords().size() && i < 10; i++) {
             series.getData().add(
