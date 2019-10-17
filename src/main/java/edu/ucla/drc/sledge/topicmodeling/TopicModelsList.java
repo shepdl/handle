@@ -112,14 +112,17 @@ public class TopicModelsList extends TreeView<TopicModel> {
 
         public TopicModelCell () {
             super(new javafx.util.StringConverter<TopicModel>() {
+                private TopicModel model;
                 @Override
                 public String toString(TopicModel topicModel) {
+                    model = topicModel;
                     return topicModel.getTitle();
                 }
 
                 @Override
                 public TopicModel fromString(String s) {
-                    return null;
+                    model.setTitle(s);
+                    return model;
                 }
             });
         }

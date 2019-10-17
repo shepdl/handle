@@ -20,16 +20,45 @@
 <?import edu.ucla.drc.sledge.topicmodeling.DocumentTopicReport?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableRow?>
+<?import javafx.scene.control.TableCell?>
+<?import javafx.collections.FXCollections?>
+<?import javafx.scene.text.TextFlow?>
+<?import java.net.URL?>
+<?import javafx.scene.layout.HBox?>
 <fx:root prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1"
          type="AnchorPane"
 >
 
     <VBox>
-        <TextField fx:id="topicModelName"/>
+        <TextField fx:id="topicModelName" />
 
         <TabPane visible="false" fx:id="topicDetails">
             <Tab text="All" closable="false">
-                <ScrollPane fx:id="allTopicsPane" />
+                <VBox>
+                    <HBox>
+                        <TextFlow>
+                            <Text styleClass="settings-label">topics:</Text>
+                            <Text fx:id="topicCountText"/>
+                            <Text styleClass="settings-label">alpha:</Text>
+                            <Text fx:id="alphaValueText"/>
+                            <Text styleClass="settings-label">beta:</Text>
+                            <Text fx:id="betaValueText"/>
+                            <Text styleClass="settings-label">iterations:</Text>
+                            <Text fx:id="iterationsCountText" />
+                            <Text styleClass="settings-label">optimize interval:</Text>
+                            <Text fx:id="optimizeIntervalText" />
+                            <Text styleClass="settings-label">Burn-in period:</Text>
+                            <Text fx:id="burnInPeriodText" />
+                            <Text styleClass="settings-label">Random seed:</Text>
+                            <Text fx:id="randomSeedText" />
+                        </TextFlow>
+                    </HBox>
+                    <ScrollPane fx:id="allTopicsPane" />
+                </VBox>
             </Tab>
             <Tab text="Summary" closable="false">
                 <ModelSummaryTab fx:id="modelSummary"/>
@@ -38,6 +67,9 @@
                 <DocumentTopicReport fx:id="documentSummaryViewer"/>
             </Tab>
         </TabPane>
+        <stylesheets>
+            <URL value="@topic-settings.css" />
+        </stylesheets>
     </VBox>
 
 </fx:root>

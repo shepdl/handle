@@ -7,12 +7,16 @@ import edu.ucla.drc.sledge.LoadsFxml;
 import edu.ucla.drc.sledge.ProjectModel;
 import edu.ucla.drc.sledge.topicsettings.Topic;
 import edu.ucla.drc.sledge.topicsettings.TopicSummary;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.scene.control.ScrollPane;
-import javafx.scene.control.TabPane;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.FlowPane;
+import javafx.scene.text.Text;
+import javafx.scene.text.TextFlow;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -23,21 +27,35 @@ import java.util.TreeSet;
 public class ModelVisualization extends AnchorPane implements LoadsFxml {
 
     @FXML private TextField topicModelName;
+    @FXML private TableView topicSettingsTable;
     @FXML private ScrollPane allTopicsPane;
     @FXML private ModelSummaryTab modelSummary;
     @FXML private DocumentTopicReport documentSummaryViewer;
     @FXML private TabPane topicDetails;
     private ProjectModel model;
+    private TopicModel selectedTopicModel;
+
+    @FXML private Text topicCountText;
+    @FXML private Text alphaValueText;
+    @FXML private Text betaValueText;
+    @FXML private Text iterationsCountText;
+    @FXML private Text optimizeIntervalText;
+    @FXML private Text burnInPeriodText;
+    @FXML private Text randomSeedText;
 
     public ModelVisualization () {
         loadFxml();
+        topicModelName.setOnKeyPressed(new EventHandler<KeyEvent>() {
+            @Override
+            public void handle(KeyEvent keyEvent) {
+                if (keyEvent.getCode().equals(KeyCode.ENTER)) {
+                    selectedTopicModel.setTitle(topicModelName.getText());
+                }
+            }
+        });
+//        getScene().getStylesheets().add(getClass().getResource("@topic-settings.css").toExternalForm());
+        getStylesheets().add(getClass().getResource("topic-settings.css").toExternalForm());
     }
-
-//    public void setData (ObjectProperty<TopicModel> selectedTopicModel) {
-//        selectedTopicModel.addListener((ObservableValue<? extends TopicModel> observable, TopicModel oldValue, TopicModel newValue) -> {
-//            modelSummaryTab.setData(newValue);
-//        });
-//    }
 
     void setProjectModel (ProjectModel model) {
         this.model = model;
@@ -45,10 +63,8 @@ public class ModelVisualization extends AnchorPane implements LoadsFxml {
     }
 
     public void setTopicModel (TopicModel model) {
+        selectedTopicModel = model;
         topicModelName.setText(model.getTitle());
-        topicModelName.textProperty().addListener((observable, oldValue, newValue) -> {
-            model.setTitle(newValue);
-        });
         updateAllTopicsPane(model);
         modelSummary.setData(model);
         documentSummaryViewer.selectTopicModel(model);
@@ -59,6 +75,14 @@ public class ModelVisualization extends AnchorPane implements LoadsFxml {
         FlowPane pane = new FlowPane();
 
         Alphabet alphabet = model.getAlphabet();
+
+        topicCountText.setText(Integer.toString(model.numTopics));
+        alphaValueText.setText(Double.toString(model.getAlphaSum()));
+        betaValueText.setText(Double.toString(model.getBeta()));
+        iterationsCountText.setText(Integer.toString(model.numIterations));
+        optimizeIntervalText.setText(Integer.toString(model.optimizeInterval));
+        burnInPeriodText.setText(Integer.toString(model.burninPeriod));
+        randomSeedText.setText(Integer.toString(model.randomSeed));
 
         List<TreeSet<IDSorter>> sortedWords = model.getSortedWords();
         for (int i = 0; i < sortedWords.size(); i++) {
