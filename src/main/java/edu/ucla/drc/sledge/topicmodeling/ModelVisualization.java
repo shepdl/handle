@@ -93,6 +93,7 @@ public class ModelVisualization extends AnchorPane implements LoadsFxml {
             while (count < limit && items.hasNext()) {
                 IDSorter item = (IDSorter) items.next();
                 topic.addTopWord((String) alphabet.lookupObject(item.getID()), item.getWeight());
+                count++;
             }
 
             TopicSummary summary = new TopicSummary();
