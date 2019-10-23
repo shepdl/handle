@@ -117,7 +117,7 @@ public class ProjectModel {
         DocumentIterator iterator = new DocumentIterator(documents);
         instances.addThruPipe(iterator);
         for (int i = 0; i < documents.size(); i++) {
-            documents.get(i).setIngested(instances.get(i));
+//            documents.get(i).setIngested(instances.get(i));
         }
         return instances;
     }
