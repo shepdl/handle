@@ -18,16 +18,10 @@
         </ComboBox>
 
         <TableView fx:id="stopwordsTable" onDragOver="#setTransferMode" onDragDropped="#dropFile">
-            <columns>
-                <TableColumn text="Actions">
-                    <cellValueFactory>
-                        <PropertyValueFactory property="dummy"/>
-                    </cellValueFactory>
-                </TableColumn>
-            </columns>
-
         </TableView>
+
         <HBox>
+            <Button onMouseClicked="#clearStopwords">Clear list</Button>
             <Button fx:id="saveButton" onMouseClicked="#saveStopwords">Save</Button>
             <Button fx:id="cancelButton">Cancel</Button>
         </HBox>

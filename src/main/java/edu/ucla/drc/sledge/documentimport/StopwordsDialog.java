@@ -120,4 +120,13 @@ public class StopwordsDialog {
         event.setDropCompleted(true);
         event.consume();
     }
+
+    @FXML
+    public void clearStopwords(MouseEvent mouseEvent) {
+        mouseEvent.consume();
+//        stopwordsTable.getItems().clear();
+        stopwordsList.clear();
+        model.setStopwords(new HashSet<String>());
+    }
+
 }
