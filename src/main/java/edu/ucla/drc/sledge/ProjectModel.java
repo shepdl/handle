@@ -105,7 +105,7 @@ public class ProjectModel {
         return builder.complete();
     }
 
-    public Pipe getFeaturePipe () {
+    private Pipe getFeaturePipe() {
         ImportPipeBuilder builder = new ImportPipeBuilder();
         builder.addSettings(importFileSettings);
         builder.addStopwords(new ArrayList<>(stopwords));
