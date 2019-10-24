@@ -1,0 +1,5 @@
+.stopword {
+    -fx-strikethrough: true;
+    -fx-font-family: sans-serif;
+    -fx-font-weight: bolder;
+}                                                                                      j

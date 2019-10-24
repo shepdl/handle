@@ -12,9 +12,6 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import org.fxmisc.richtext.StyleClassedTextArea;
-import org.fxmisc.richtext.model.ReadOnlyStyledDocument;
-import org.fxmisc.richtext.model.ReadOnlyStyledDocumentBuilder;
 
 import java.io.IOException;
 
@@ -25,7 +22,6 @@ public class DocumentImport extends BorderPane {
     @FXML public Button settingsButton;
 
     @FXML private DocumentTextView documentView;
-    @FXML private StyleClassedTextArea styledDocumentView;
 
     @FXML private WordCountTable countsTable;
     @FXML public Button stopwordsButton;
@@ -47,7 +43,6 @@ public class DocumentImport extends BorderPane {
 
     @FXML
     public void initialize () {
-//        styledDocumentView.getStylesheets().add(getClass().getResource("imported-document.css").toString());
     }
 
     public void setModel (ProjectModel model) {

@@ -34,12 +34,12 @@
 
     <center>
         <DocumentTextView fx:id="documentView"/>
-        <!--<StyleClassedTextArea fx:id="styledDocumentView" wrapText="true" />-->
+<!--        <StyleClassedTextArea fx:id="styledDocumentView" wrapText="true" />-->
     </center>
 
     <right>
         <VBox prefWidth="200">
-            <WordCountTable fx:id="countsTable"></WordCountTable>
+            <WordCountTable fx:id="countsTable"/>
         </VBox>
     </right>
 
