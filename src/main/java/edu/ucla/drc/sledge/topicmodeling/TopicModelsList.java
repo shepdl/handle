@@ -87,6 +87,9 @@ public class TopicModelsList extends TreeView<TopicModel> {
         this.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<TreeItem<TopicModel>>() {
             @Override
             public void changed(ObservableValue<? extends TreeItem<TopicModel>> observable, TreeItem<TopicModel> oldValue, TreeItem<TopicModel> newValue) {
+                if (newValue == null) {
+                    return;
+                }
                 TreeItem<TopicModel> selectedValue = (TreeItem<TopicModel>) newValue;
                 selectedTopicModel.set(selectedValue.getValue());
             }
@@ -163,8 +166,6 @@ public class TopicModelsList extends TreeView<TopicModel> {
                 MenuItem deleteItem = new MenuItem("Delete");
                 deleteItem.setOnAction((event) -> {
                     topicModels.remove(item);
-//                    topicModels.removeAll(item);
-                    System.out.println("Delete");
                 });
 
                 modelClickMenu.getItems().addAll(renameItem, deleteItem);

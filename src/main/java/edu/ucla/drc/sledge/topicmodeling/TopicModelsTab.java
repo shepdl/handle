@@ -47,6 +47,10 @@ public class TopicModelsTab extends BorderPane implements LoadsFxml {
         topicModelsList.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<TreeItem<TopicModel>>() {
             @Override
             public void changed(ObservableValue<? extends TreeItem<TopicModel>> observableValue, TreeItem<TopicModel> oldValue, TreeItem<TopicModel> newValue) {
+                if (newValue == null) {
+                    topicModelSettings.setVisible(false);
+                    return;
+                }
                 topicModelSettings.setVisible(true);
                 topicModelSettings.setTopicModel(newValue.getValue());
             }
