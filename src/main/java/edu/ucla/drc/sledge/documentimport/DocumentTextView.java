@@ -1,6 +1,7 @@
 package edu.ucla.drc.sledge.documentimport;
 
 import cc.mallet.types.*;
+import cc.mallet.util.Strings;
 import edu.ucla.drc.sledge.Document;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.value.ObservableValue;
@@ -47,36 +48,46 @@ public class DocumentTextView extends AnchorPane {
             List<ReadOnlyStyledDocument> document = new ArrayList<>();
             List<String> styles = new ArrayList<>();
             styles.add(".stopword");
-            List<Integer> positions = new ArrayList<>();
+            List<Integer> startPositions = new ArrayList<>();
+            List<Integer> endPositions = new ArrayList<>();
             int textWidth = 0;
+            documentTextPane.clear();
             for (int i = 0; i < ts.size(); i++) {
                 Token token = (Token)ts.get(i);
-                builder.append(ts.get(i).getText());
-                int wordLength = ts.get(i).getText().length() + 1;
-                textWidth += wordLength + 1;
-                if (token.hasProperty(FeatureSequenceWithBigrams.deletionMark)) {
-                    builder.append(" ");
-                    String text = ts.get(i).getText();
-                    for (int j = 0; j < 8; j++) {
-                        builder.append("-");
-                    }
-//                    builder.append("stopword");
-//                    positions.add(textWidth);
-//                    positions.add(textWidth - ts.get(i).getText().length());
+                int wordLength = ts.get(i).getText().length();
+                String wordToAdd;
+                if (token.hasProperty(TokenSequenceMarkStopwords.IsStopword)) {
+                    startPositions.add(textWidth);
+                    endPositions.add(textWidth + wordLength);
+                    wordToAdd = new String(new char[wordLength]).replace("\0", "-");
+                } else {
+                    wordToAdd= token.getText();
                 }
+//                builder.append(ts.get(i).getText());
+                builder.append(wordToAdd);
                 builder.append(" ");
+                textWidth += wordLength + 1;
                 if (i > 0 && i % 10 == 0) {
 //                    builder.append("\n");
-                    textWidth += 1;
+//                    textWidth += 1;
+                    documentTextPane.appendText(builder.toString());
+                    builder = new StringBuilder();
+                    for (int j = 0; j < startPositions.size(); j++) {
+//                        documentTextPane.setStyleClass(startPositions.get(j), endPositions.get(j), "stopword");
+                    }
+                    startPositions.clear();
+                    endPositions.clear();
                 }
 
 //                textWidth += wordLength + 1;
             }
-            documentTextPane.clear();
             documentTextPane.appendText(builder.toString());
-            for (Integer i : positions) {
-                documentTextPane.setStyleClass(i, i + 8, "stopword");
+            for (int i = 0; i < startPositions.size(); i++) {
+//                documentTextPane.setStyleClass(startPositions.get(i), endPositions.get(i), "stopword");
             }
+//            for (Integer i : startPositions) {
+//                documentTextPane.setStyleClass(i, i + 8, "stopword");
+//            }
             documentTextPane.moveTo(0); // If we don't do this, it will scroll to the end
 //            this.setText(builder.toString());
         });

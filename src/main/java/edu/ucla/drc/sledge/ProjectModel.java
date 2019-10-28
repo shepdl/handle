@@ -50,6 +50,7 @@ public class ProjectModel {
             Document document = documents.get(index);
             index++;
             URI uri = document.getFile().toURI();
+            // TODO: filter stopwords here, possibly, or adapt to required output?
             try {
                 return new Instance(
                         document.getTextContent(), null, uri, null

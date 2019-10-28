@@ -1,0 +1,10 @@
+.default-color0.stacked-bar-chart {
+    -fx-background-color: #FF0000;
+    -fx-fill-color: #FF0000;
+}
+
+.default-color1.stacked-bar-chart {
+    -fx-background-color: #00FF00;
+    -fx-fill-color: #FF0000;
+}
+

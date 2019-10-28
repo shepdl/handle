@@ -34,9 +34,20 @@ public class ModelSummaryTab extends AnchorPane implements LoadsFxml {
     private TopicModel model;
 
     @FXML private BubbleChart topicDistance;
+    private BubbleChart.Series<Number, Number> series;
+    private ObservableList<BubbleChart.Series<Number, Number>> seriesList = FXCollections.observableArrayList();
+
     @FXML private StackedBarChart topWords;
     @FXML private CategoryAxis wordsAxis;
+    private XYChart.Series<String, Number> wordCountSeries = new StackedBarChart.Series<>();
+    private XYChart.Series<String, Number> totalCountsSeries = new StackedBarChart.Series<>();
+
     @FXML private Button exportSingleTopicButton;
+
+    @FXML
+    private void initialize () {
+        getStylesheets().add(getClass().getResource("topic-count-chart.css").toExternalForm());
+    }
 
     private int selectedTopicIndex = -1;
 
@@ -109,8 +120,8 @@ public class ModelSummaryTab extends AnchorPane implements LoadsFxml {
     private void update () {
         exportSingleTopicButton.setVisible(false);
         selectedTopicIndex = -1;
-        topicDistance.getData().clear();
-        XYChart.Series<Double, Double> series = new XYChart.Series<>();
+//        topicDistance.getData().clear();
+//        XYChart.Series<Double, Double> series = new XYChart.Series<>();
         // TODO: suppress series name
         // TODO: suppress labels
         generateTopicSimilarityGraph(model);
@@ -123,11 +134,12 @@ public class ModelSummaryTab extends AnchorPane implements LoadsFxml {
         int limit = 10;
         Iterator items = sortedWords.iterator();
 
+        topWords.setVisible(false);
         topWords.getData().clear();
         topWords.setTitle(model.topicTitles[topicIndex]);
-        XYChart.Series<String, Number> wordCountSeries = new StackedBarChart.Series<>();
+        StackedBarChart.Series<String, Number> wordCountSeries = new StackedBarChart.Series<>();
         wordCountSeries.setName("Topic");
-        XYChart.Series<String, Number> totalCountsSeries = new StackedBarChart.Series<>();
+        StackedBarChart.Series<String, Number> totalCountsSeries = new StackedBarChart.Series<>();
         totalCountsSeries.setName("Total");
         wordsAxis.getCategories().clear();
         List<IDSorter> categoryLabels = new ArrayList<>();
@@ -152,6 +164,7 @@ public class ModelSummaryTab extends AnchorPane implements LoadsFxml {
         topWords.getData().addAll(wordCountSeries, totalCountsSeries);
         exportSingleTopicButton.setVisible(true);
         selectedTopicIndex = topicIndex;
+        topWords.setVisible(true);
     }
 
     private void generateTopicSimilarityGraph (TopicModel model) {
@@ -161,6 +174,17 @@ public class ModelSummaryTab extends AnchorPane implements LoadsFxml {
         // 2. Calculate similarities
         double[][] wordTotals = model.getTopicWords(true, false);
         double[][] similarities = new double[model.numTopics][model.numTopics];
+
+        if (seriesList.isEmpty()) {
+            series = new BubbleChart.Series<>();
+            seriesList.add(series);
+            topicDistance.setData(seriesList);
+//            topicDistance.getData().clear();
+        }
+
+        List<XYChart.Data<Number, Number>> chartData = series.getData();
+        chartData.clear();
+
 
         JensenShannonDistance distanceCalculator = new JensenShannonDistance();
         for (int i = 0; i < model.numTopics; i++) {
@@ -173,7 +197,7 @@ public class ModelSummaryTab extends AnchorPane implements LoadsFxml {
         // 3. Use MDS (multi-dimensional scaling) to scale points down to 2 dimensions
         MDS scale = new MDS(similarities);
         double[][] coordinates = scale.getCoordinates();
-        BubbleChart.Series<Number, Number> series = new BubbleChart.Series<>();
+//        BubbleChart.Series<Number, Number> series = new BubbleChart.Series<>();
         for (int i = 0; i < coordinates.length; i++) {
             BubbleChart.Data<Number, Number> datum = new BubbleChart.Data<>(coordinates[i][0] * 100, coordinates[i][1] * 100);
             final int outsideTopicId = i;
@@ -186,14 +210,18 @@ public class ModelSummaryTab extends AnchorPane implements LoadsFxml {
                     }
                 });
             }));
-            series.getData().add(datum);
+//            series.getData().add(datum);
+            chartData.add(datum);
         }
-        topicDistance.getData().clear();
-        ObservableList<BubbleChart.Series<Number, Number>> seriesList = FXCollections.observableArrayList();
-        seriesList.add(series);
-        topicDistance.setData(seriesList);
-        for (int i = 0; i < series.getData().size(); i++) {
-            BubbleChart.Data<Number, Number> datum = series.getData().get(i);
+//        ObservableList<BubbleChart.Series<Number, Number>> seriesList = FXCollections.observableArrayList();
+//        seriesList.add(series);
+//        topicDistance.setData(seriesList);
+
+
+//        for (int i = 0; i < series.getData().size(); i++) {
+        for (int i = 0; i < chartData.size(); i++) {
+//            BubbleChart.Data<Number, Number> datum = series.getData().get(i);
+            XYChart.Data<Number, Number> datum = chartData.get(i);
             Tooltip.install(datum.getNode(), new Tooltip(model.topicTitles[i]));
         }
     }

@@ -4,6 +4,7 @@ import cc.mallet.pipe.*;
 import edu.ucla.drc.sledge.ImportFileSettings;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 public class ImportPipeBuilder {
@@ -46,8 +47,9 @@ public class ImportPipeBuilder {
         }
         pipes.add(new CharSequence2TokenSequence(settings.getTokenRegexPattern()));
 
-        TokenSequenceRemoveStopwords stopwordFilter = new TokenSequenceRemoveStopwords(settings.preserveCase(), true);
-        stopwordFilter.addStopWords(stopwords.toArray(new String[0]));
+//        TokenSequenceRemoveStopwords stopwordFilter = new TokenSequenceRemoveStopwords(settings.preserveCase(), true);
+        TokenSequenceMarkStopwords stopwordFilter = new TokenSequenceMarkStopwords(new HashSet<>(stopwords));
+//        stopwordFilter.addStopWords(stopwords.toArray(new String[0]));
         pipes.add(stopwordFilter);
 
         this.pipe = new SerialPipes(pipes);
@@ -62,9 +64,11 @@ public class ImportPipeBuilder {
             pipes.add(new CharSequenceLowercase());
         }
         pipes.add(new CharSequence2TokenSequence(settings.getTokenRegexPattern()));
-        TokenSequenceRemoveStopwords stopwordFilter = new TokenSequenceRemoveStopwords(settings.preserveCase(), true);
-        stopwordFilter.addStopWords(stopwords.toArray(new String[0]));
-        pipes.add(stopwordFilter);
+//        TokenSequenceRemoveStopwords stopwordFilter = new TokenSequenceRemoveStopwords(settings.preserveCase(), true);
+        pipes.add(new TokenSequenceMarkStopwords(new HashSet<>(stopwords)));
+//        stopwordFilter.addStopWords(stopwords.toArray(new String[0]));
+//        pipes.add(stopwordFilter);
+        pipes.add(new ActuallyRemoveStopwordsPipe());
         pipes.add(new TokenSequence2FeatureSequence());
 
         this.pipe = new SerialPipes(pipes);

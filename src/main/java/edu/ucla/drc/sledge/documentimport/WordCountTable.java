@@ -74,6 +74,9 @@ public class WordCountTable extends TableView<WordCountEntry> {
         for (int i = 0; i < fs.size(); i++) {
 //            String word = (String)fs.get(i);
             String word = fs.get(i).getText();
+            if (fs.get(i).hasProperty(TokenSequenceMarkStopwords.IsStopword)) {
+                continue;
+            }
             if (!counts.containsKey(word)) {
                 counts.put(word, 0);
             }
