@@ -1,10 +1,9 @@
 package edu.ucla.drc.sledge.documentimport;
 
-import cc.mallet.types.FeatureSequence;
 import cc.mallet.types.Instance;
 import cc.mallet.types.TokenSequence;
 import edu.ucla.drc.sledge.Document;
-import edu.ucla.drc.sledge.ProjectModel;
+import edu.ucla.drc.sledge.project.ProjectModel;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.value.ObservableValue;

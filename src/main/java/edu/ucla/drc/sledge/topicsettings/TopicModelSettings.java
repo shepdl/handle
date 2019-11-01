@@ -3,7 +3,7 @@ package edu.ucla.drc.sledge.topicsettings;
 import cc.mallet.topics.TopicModel;
 import cc.mallet.types.Alphabet;
 import cc.mallet.types.IDSorter;
-import edu.ucla.drc.sledge.ProjectModel;
+import edu.ucla.drc.sledge.project.ProjectModel;
 import javafx.application.Platform;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.value.ChangeListener;
@@ -15,7 +15,6 @@ import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
-import javafx.util.Callback;
 
 import java.io.IOException;
 import java.util.ArrayList;

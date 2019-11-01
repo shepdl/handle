@@ -2,16 +2,11 @@ package edu.ucla.drc.sledge.topicmodeling;
 
 import cc.mallet.topics.TopicModel;
 import edu.ucla.drc.sledge.LoadsFxml;
-import edu.ucla.drc.sledge.ProjectModel;
-import edu.ucla.drc.sledge.topicsettings.TopicModelSettings;
+import edu.ucla.drc.sledge.project.ProjectModel;
 import edu.ucla.drc.sledge.topicsettings.TopicModelSettingsModalWindow;
-import edu.ucla.drc.sledge.topicsettings.TopicSummary;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-import javafx.collections.FXCollections;
-import javafx.collections.ListChangeListener;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;

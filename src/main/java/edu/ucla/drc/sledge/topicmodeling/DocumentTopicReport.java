@@ -1,12 +1,9 @@
 package edu.ucla.drc.sledge.topicmodeling;
 
 import cc.mallet.topics.TopicModel;
-import cc.mallet.types.LabelSequence;
 import edu.ucla.drc.sledge.Document;
 import edu.ucla.drc.sledge.LoadsFxml;
-import edu.ucla.drc.sledge.ProjectModel;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
+import edu.ucla.drc.sledge.project.ProjectModel;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
@@ -20,14 +17,11 @@ import javafx.scene.image.WritableImage;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.FileChooser;
-import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
-import org.apache.poi.xssf.usermodel.XSSFFactory;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.apache.poi.xssf.usermodel.XSSFWorkbookType;
 
 import javax.imageio.ImageIO;
 import java.io.*;

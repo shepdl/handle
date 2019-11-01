@@ -1,10 +1,12 @@
-package edu.ucla.drc.sledge;
+package edu.ucla.drc.sledge.project;
 
 import cc.mallet.topics.TopicModel;
 import cc.mallet.types.Instance;
 import cc.mallet.types.InstanceList;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
+import edu.ucla.drc.sledge.Document;
+import edu.ucla.drc.sledge.ImportFileSettings;
 import javafx.beans.property.ObjectProperty;
 
 import javax.xml.stream.XMLOutputFactory;

@@ -1,7 +1,7 @@
 package edu.ucla.drc.sledge.documentimport;
 
 
-import edu.ucla.drc.sledge.ProjectModel;
+import edu.ucla.drc.sledge.project.ProjectModel;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;

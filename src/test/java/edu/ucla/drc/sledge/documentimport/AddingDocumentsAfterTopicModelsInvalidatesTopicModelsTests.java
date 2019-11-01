@@ -1,14 +1,9 @@
 package edu.ucla.drc.sledge.documentimport;
 
 import cc.mallet.topics.TopicModel;
-import com.sun.javafx.scene.input.DragboardHelper;
-import edu.ucla.drc.sledge.ProjectModel;
-import gnu.trove.THashSet;
-import javafx.application.Platform;
+import edu.ucla.drc.sledge.project.ProjectModel;
 import javafx.beans.property.SimpleObjectProperty;
-import javafx.event.EventType;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.ButtonType;

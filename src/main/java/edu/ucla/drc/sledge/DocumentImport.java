@@ -1,7 +1,7 @@
 package edu.ucla.drc.sledge;
 
-import cc.mallet.types.*;
 import edu.ucla.drc.sledge.documentimport.*;
+import edu.ucla.drc.sledge.project.ProjectModel;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;

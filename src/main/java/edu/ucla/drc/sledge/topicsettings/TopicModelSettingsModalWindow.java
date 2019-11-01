@@ -1,13 +1,11 @@
 package edu.ucla.drc.sledge.topicsettings;
 
 import cc.mallet.topics.TopicModel;
-import edu.ucla.drc.sledge.ProjectModel;
+import edu.ucla.drc.sledge.project.ProjectModel;
 import javafx.event.Event;
 import javafx.event.EventType;
 import javafx.fxml.FXML;
-import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
-import javafx.util.Callback;
 
 import java.util.function.Consumer;
 

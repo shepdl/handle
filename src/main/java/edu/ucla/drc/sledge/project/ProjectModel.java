@@ -1,18 +1,15 @@
-package edu.ucla.drc.sledge;
+package edu.ucla.drc.sledge.project;
 
 import cc.mallet.pipe.Pipe;
 import cc.mallet.topics.TopicModel;
-import cc.mallet.types.Instance;
 import cc.mallet.types.InstanceList;
+import edu.ucla.drc.sledge.Document;
+import edu.ucla.drc.sledge.ImportFileSettings;
 import edu.ucla.drc.sledge.documentimport.ImportPipeBuilder;
-import javafx.beans.value.ObservableBooleanValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.net.URI;
 import java.util.*;
 
 public class ProjectModel {
@@ -30,37 +27,6 @@ public class ProjectModel {
     }
 
     private InstanceList instances;
-
-    private static class DocumentIterator implements Iterator<Instance> {
-
-        private final List<Document> documents;
-        private int index = 0;
-
-        public DocumentIterator(List<Document> documents) {
-            this.documents = documents;
-        }
-
-        @Override
-        public boolean hasNext() {
-            return index < documents.size();
-        }
-
-        @Override
-        public Instance next() {
-            Document document = documents.get(index);
-            index++;
-            URI uri = document.getFile().toURI();
-            // TODO: filter stopwords here, possibly, or adapt to required output?
-            try {
-                return new Instance(
-                        document.getTextContent(), null, uri, null
-                );
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            }
-            return null;
-        }
-    }
 
     public ProjectModel () {
         documents.addListener(new ListChangeListener<Document>() {
@@ -97,8 +63,6 @@ public class ProjectModel {
 
     private Set<String> stopwords = new HashSet<>();
 
-    private Pipe importPipe;
-
     public Pipe getPipe () {
         ImportPipeBuilder builder = new ImportPipeBuilder();
         builder.addSettings(importFileSettings);
@@ -129,8 +93,6 @@ public class ProjectModel {
         return topicModels;
     }
 
-    @org.jetbrains.annotations.NotNull
-    @org.jetbrains.annotations.Contract(value = " -> new", pure = true)
     public static ProjectModel blank () {
         return new ProjectModel();
     }
@@ -143,7 +105,6 @@ public class ProjectModel {
 
     public static ProjectModel fromBuilder (ProjectExportBuilder builder) {
         ProjectModel model = new ProjectModel();
-
         return model;
     }
 
