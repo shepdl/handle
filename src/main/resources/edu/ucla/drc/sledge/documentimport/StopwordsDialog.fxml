@@ -23,7 +23,7 @@
         <HBox>
             <Button onMouseClicked="#clearStopwords">Clear list</Button>
             <Button fx:id="saveButton" onMouseClicked="#saveStopwords">Save</Button>
-            <Button fx:id="cancelButton">Cancel</Button>
+            <Button fx:id="cancelButton" onMouseClicked="#cancelEditing">Cancel</Button>
         </HBox>
 
 

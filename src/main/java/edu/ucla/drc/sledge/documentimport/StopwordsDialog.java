@@ -6,42 +6,23 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import javafx.scene.input.DragEvent;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.TransferMode;
 
 import java.io.*;
-import java.net.URISyntaxException;
 import java.util.*;
 
 public class StopwordsDialog {
 
-    private static class StopwordsFile {
-        private final File file;
-
-        public StopwordsFile (File file) {
-            this.file = file;
-        }
-
-        public File getFile () {
-            return file;
-        }
-
-        public String toString () {
-            return this.file.getName();
-        }
-
-    }
-
-    @FXML TableView stopwordsTable;
+    @FXML TableView<String> stopwordsTable;
     @FXML Button saveButton;
     @FXML Button cancelButton;
-    @FXML ComboBox<StopwordsFile> defaultStopwordsComboBox;
+    @FXML ComboBox<StopwordSource> defaultStopwordsComboBox;
+
+    Alert confirmAlert;
 
     private ProjectModel model;
 
@@ -51,27 +32,14 @@ public class StopwordsDialog {
     private void initialize () {
         File stopwordsDirectory = new File(getClass().getResource("default-stopwords/").getFile());
         for (File file : stopwordsDirectory.listFiles()) {
-            defaultStopwordsComboBox.getItems().add(new StopwordsFile(file));
+            defaultStopwordsComboBox.getItems().add(new StopwordFile(file));
         }
     }
 
     @FXML
     private void addWordsFromFile (ActionEvent event) {
-        StopwordsFile file = defaultStopwordsComboBox.getValue();
-        try {
-            BufferedReader reader = new BufferedReader(new FileReader(file.getFile()));
-            String line = reader.readLine();
-            List<String> newStopwords = new ArrayList<>();
-            while (line != null) {
-                newStopwords.add(line);
-                line = reader.readLine();
-            }
-            stopwordsList.addAll(newStopwords);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        StopwordSource sourceFile = defaultStopwordsComboBox.getValue();
+        stopwordsList.addAll(sourceFile.provideWords());
     }
 
     public void setModel (ProjectModel model) {
@@ -122,11 +90,25 @@ public class StopwordsDialog {
     }
 
     @FXML
-    public void clearStopwords(MouseEvent mouseEvent) {
+    private void clearStopwords(MouseEvent mouseEvent) {
         mouseEvent.consume();
-//        stopwordsTable.getItems().clear();
         stopwordsList.clear();
         model.setStopwords(new HashSet<String>());
     }
 
+    @FXML
+    private void cancelEditing(MouseEvent mouseEvent) {
+        mouseEvent.consume();
+        Set<String> tableWords = new HashSet<String>(stopwordsTable.getItems());
+        Set<String> projectWords = model.getStopwords();
+        if (!tableWords.equals(projectWords)) {
+            confirmAlert = new Alert(Alert.AlertType.CONFIRMATION);
+            confirmAlert.setTitle("Stopwords have changed");
+            confirmAlert.setHeaderText("Are you sure you want to discard your changes?");
+            Optional<ButtonType> result = confirmAlert.showAndWait();
+            if (result.isPresent() && result.get() == ButtonType.CANCEL) {
+                return;
+            }
+        }
+    }
 }
