@@ -12,7 +12,7 @@ import java.util.Set;
 public class TokenSequenceMarkStopwords extends Pipe {
 
     private final boolean caseSensitive;
-    private HashSet<String> stoplist;
+    private HashSet<String> stoplist = new HashSet<>();
 
     public static String IsStopword = "IsStopword";
 
@@ -23,6 +23,10 @@ public class TokenSequenceMarkStopwords extends Pipe {
     public TokenSequenceMarkStopwords (boolean caseSensitive, Set<String> stoplist) {
         this(caseSensitive);
         this.stoplist = new HashSet<>(stoplist);
+    }
+
+    public Set<String> getStopwords () {
+        return (HashSet<String>)stoplist.clone();
     }
 
     public TokenSequenceMarkStopwords(Set<String> stoplist) {
