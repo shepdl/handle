@@ -1,6 +1,7 @@
 package edu.ucla.drc.sledge;
 
 import edu.ucla.drc.sledge.documentimport.*;
+import edu.ucla.drc.sledge.documentimport.stopwords.StopwordsDialog;
 import edu.ucla.drc.sledge.project.ProjectModel;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.fxml.FXML;
@@ -17,7 +18,7 @@ import java.io.IOException;
 
 public class DocumentImport extends BorderPane {
 
-    @FXML private DocumentList documentList;
+    @FXML private DocumentListComponent documentList;
 
     @FXML public Button settingsButton;
 

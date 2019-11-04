@@ -2,6 +2,8 @@ package edu.ucla.drc.sledge.documentimport;
 
 import cc.mallet.pipe.*;
 import edu.ucla.drc.sledge.ImportFileSettings;
+import edu.ucla.drc.sledge.documentimport.stopwords.ActuallyRemoveStopwordsPipe;
+import edu.ucla.drc.sledge.documentimport.stopwords.TokenSequenceMarkStopwords;
 
 import java.util.ArrayList;
 import java.util.HashSet;

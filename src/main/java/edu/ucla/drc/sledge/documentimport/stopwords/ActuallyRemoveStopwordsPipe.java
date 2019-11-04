@@ -1,9 +1,10 @@
-package edu.ucla.drc.sledge.documentimport;
+package edu.ucla.drc.sledge.documentimport.stopwords;
 
 import cc.mallet.pipe.Pipe;
 import cc.mallet.types.Instance;
 import cc.mallet.types.Token;
 import cc.mallet.types.TokenSequence;
+import edu.ucla.drc.sledge.documentimport.stopwords.TokenSequenceMarkStopwords;
 
 public class ActuallyRemoveStopwordsPipe extends Pipe {
 

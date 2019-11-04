@@ -116,7 +116,7 @@ public class DocumentListComponent extends TreeView<Document> {
                 invalidFiles.add(file.getName());
                 continue;
             }
-            Document doc = new Document(file, null);
+            Document doc = new Document(file);
             documents.add(doc);
         }
 

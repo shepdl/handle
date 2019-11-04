@@ -1,4 +1,4 @@
-package edu.ucla.drc.sledge.documentimport;
+package edu.ucla.drc.sledge.documentimport.stopwords;
 
 import cc.mallet.pipe.Pipe;
 import cc.mallet.types.Instance;

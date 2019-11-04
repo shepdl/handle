@@ -1,20 +1,15 @@
 package edu.ucla.drc.sledge.documentimport;
 
 import cc.mallet.types.*;
-import cc.mallet.util.Strings;
 import edu.ucla.drc.sledge.Document;
+import edu.ucla.drc.sledge.documentimport.stopwords.TokenSequenceMarkStopwords;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.value.ObservableValue;
-import javafx.css.Styleable;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.control.TextArea;
 import javafx.scene.layout.AnchorPane;
-import org.apache.poi.util.StringUtil;
 import org.fxmisc.richtext.ReadOnlyStyledDocument;
 import org.fxmisc.richtext.StyleClassedTextArea;
-import org.fxmisc.richtext.StyledDocument;
-import org.openxmlformats.schemas.drawingml.x2006.chart.CTExtensionList;
 
 import java.io.IOException;
 import java.util.ArrayList;

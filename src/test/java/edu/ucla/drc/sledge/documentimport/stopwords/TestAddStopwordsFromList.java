@@ -1,4 +1,4 @@
-package edu.ucla.drc.sledge.documentimport;
+package edu.ucla.drc.sledge.documentimport.stopwords;
 
 
 import edu.ucla.drc.sledge.project.ProjectModel;

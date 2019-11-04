@@ -16,11 +16,6 @@ public class Document {
     private String textContent;
     private Instance instance;
 
-    public Document(File file, String textContent) {
-        this.file = file;
-        this.textContent = textContent;
-    }
-
     public Document (File file) {
         this.file = file;
     }

@@ -3,6 +3,7 @@ package edu.ucla.drc.sledge.documentimport;
 import cc.mallet.types.Instance;
 import cc.mallet.types.TokenSequence;
 import edu.ucla.drc.sledge.Document;
+import edu.ucla.drc.sledge.documentimport.stopwords.TokenSequenceMarkStopwords;
 import edu.ucla.drc.sledge.project.ProjectModel;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.ObjectProperty;

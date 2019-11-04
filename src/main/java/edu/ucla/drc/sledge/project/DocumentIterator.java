@@ -8,7 +8,7 @@ import java.net.URI;
 import java.util.Iterator;
 import java.util.List;
 
-class DocumentIterator implements Iterator<Instance> {
+public class DocumentIterator implements Iterator<Instance> {
 
     private final List<Document> documents;
     private int index = 0;

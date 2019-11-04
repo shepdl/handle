@@ -115,7 +115,7 @@ public class DocumentList extends TreeView<Document> {
 
     private void addFiles (List<File> files, DragEvent event) {
         for (File file : files) {
-            Document doc = new Document(file, null);
+            Document doc = new Document(file);
             documents.add(doc);
         }
 

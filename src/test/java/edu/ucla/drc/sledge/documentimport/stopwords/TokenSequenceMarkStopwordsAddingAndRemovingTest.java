@@ -1,5 +1,6 @@
-package edu.ucla.drc.sledge.documentimport;
+package edu.ucla.drc.sledge.documentimport.stopwords;
 
+import edu.ucla.drc.sledge.documentimport.stopwords.TokenSequenceMarkStopwords;
 import org.junit.Before;
 import org.junit.Test;
 
