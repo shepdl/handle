@@ -1,8 +1,8 @@
 package edu.ucla.drc.sledge.documentimport;
 
 import cc.mallet.types.*;
-import edu.ucla.drc.sledge.Document;
 import edu.ucla.drc.sledge.documentimport.stopwords.TokenSequenceMarkStopwords;
+import edu.ucla.drc.sledge.documents.Document;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
@@ -38,6 +38,9 @@ public class DocumentTextView extends AnchorPane {
     public void setData (ObjectProperty<Document> selectedDocument) {
         selectedDocument.addListener((ObservableValue<? extends Document> observable, Document oldValue, Document newValue) -> {
             StringBuilder builder = new StringBuilder();
+
+            return;
+            /*
             Instance instance = newValue.getIngested();
             TokenSequence ts = (TokenSequence)instance.getData();
             List<ReadOnlyStyledDocument> document = new ArrayList<>();
@@ -85,6 +88,7 @@ public class DocumentTextView extends AnchorPane {
 //            }
             documentTextPane.moveTo(0); // If we don't do this, it will scroll to the end
 //            this.setText(builder.toString());
+             */
         });
 
     }

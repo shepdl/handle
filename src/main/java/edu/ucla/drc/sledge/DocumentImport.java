@@ -2,6 +2,7 @@ package edu.ucla.drc.sledge;
 
 import edu.ucla.drc.sledge.documentimport.*;
 import edu.ucla.drc.sledge.documentimport.stopwords.StopwordsDialog;
+import edu.ucla.drc.sledge.documents.Document;
 import edu.ucla.drc.sledge.project.ProjectModel;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.fxml.FXML;
@@ -48,7 +49,7 @@ public class DocumentImport extends BorderPane {
 
     public void setModel (ProjectModel model) {
         this.model = model;
-        SimpleObjectProperty<Document> selectedDocument = new SimpleObjectProperty<Document>();
+        SimpleObjectProperty<Document> selectedDocument = new SimpleObjectProperty<>();
         documentList.setData(model, selectedDocument);
         documentView.setData(selectedDocument);
         countsTable.setData(model, selectedDocument);

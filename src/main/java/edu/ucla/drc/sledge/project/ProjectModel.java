@@ -3,9 +3,9 @@ package edu.ucla.drc.sledge.project;
 import cc.mallet.pipe.Pipe;
 import cc.mallet.topics.TopicModel;
 import cc.mallet.types.InstanceList;
-import edu.ucla.drc.sledge.Document;
 import edu.ucla.drc.sledge.ImportFileSettings;
 import edu.ucla.drc.sledge.documentimport.ImportPipeBuilder;
+import edu.ucla.drc.sledge.documents.Document;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
@@ -42,7 +42,7 @@ public class ProjectModel {
         DocumentIterator iterator = new DocumentIterator(documents);
         instances.addThruPipe(iterator);
         for (int i = 0; i < documents.size(); i++) {
-            documents.get(i).setIngested(instances.get(i));
+//            documents.get(i).setIngested(instances.get(i));
         }
     }
 

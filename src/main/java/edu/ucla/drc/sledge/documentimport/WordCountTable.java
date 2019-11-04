@@ -2,8 +2,8 @@ package edu.ucla.drc.sledge.documentimport;
 
 import cc.mallet.types.Instance;
 import cc.mallet.types.TokenSequence;
-import edu.ucla.drc.sledge.Document;
 import edu.ucla.drc.sledge.documentimport.stopwords.TokenSequenceMarkStopwords;
+import edu.ucla.drc.sledge.documents.Document;
 import edu.ucla.drc.sledge.project.ProjectModel;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.ObjectProperty;
@@ -61,7 +61,7 @@ public class WordCountTable extends TableView<WordCountEntry> {
     public void setData (ProjectModel model, ObjectProperty<Document> selectedDocument) {
         this.model = model;
         selectedDocument.addListener((ObservableValue<? extends Document> observable, Document oldValue, Document newValue) -> {
-            setItems(countWords(newValue.getIngested()));
+//            setItems(countWords(newValue.getContent());
             sort();
         });
     }

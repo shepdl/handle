@@ -1,6 +1,7 @@
 package edu.ucla.drc.sledge;
 
 import cc.mallet.topics.TopicModel;
+import edu.ucla.drc.sledge.documents.Document;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;

@@ -1,8 +1,8 @@
 package edu.ucla.drc.sledge.topicmodeling;
 
 import cc.mallet.topics.TopicModel;
-import edu.ucla.drc.sledge.Document;
 import edu.ucla.drc.sledge.LoadsFxml;
+import edu.ucla.drc.sledge.documents.Document;
 import edu.ucla.drc.sledge.project.ProjectModel;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;

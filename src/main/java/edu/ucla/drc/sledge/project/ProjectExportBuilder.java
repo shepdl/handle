@@ -5,9 +5,8 @@ import cc.mallet.types.Instance;
 import cc.mallet.types.InstanceList;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
-import edu.ucla.drc.sledge.Document;
 import edu.ucla.drc.sledge.ImportFileSettings;
-import javafx.beans.property.ObjectProperty;
+import edu.ucla.drc.sledge.documents.Document;
 
 import javax.xml.stream.XMLOutputFactory;
 import javax.xml.stream.XMLStreamException;
@@ -47,7 +46,9 @@ public class ProjectExportBuilder implements Serializable {
         this.name = name;
 //        this.documents = documents;
         this.documents = documents.stream().map((doc) -> {
-            return new DocumentExporter(doc.getFile(), doc.getIngested());
+            // TODO: fix
+            return new DocumentExporter(null, null);
+//            return new DocumentExporter(doc.getFile(), doc.getIngested());
         }).collect(Collectors.toList());
         this.importFileSettings = importFileSettings;
         this.instances = instances;

@@ -1,6 +1,7 @@
 package edu.ucla.drc.sledge.documentimport;
 
-import edu.ucla.drc.sledge.Document;
+import edu.ucla.drc.sledge.documents.Document;
+import edu.ucla.drc.sledge.documents.DocumentFactory;
 import edu.ucla.drc.sledge.project.ProjectModel;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.fxml.FXMLLoader;
@@ -92,8 +93,9 @@ public class AddDocumentTest extends ApplicationTest {
             e.printStackTrace();
             fail("IOException when creating files");
         }
+        DocumentFactory factory = new DocumentFactory();
         for (File inFile: inFiles) {
-            project.getDocuments().add(new Document(inFile));
+            project.getDocuments().add(factory.adaptDocument(inFile));
         }
         controller.setData(project, selectedDocument);
         controller.prepareToAddFiles(inFiles);

@@ -1,6 +1,7 @@
 package edu.ucla.drc.sledge.documentimport;
 
-import edu.ucla.drc.sledge.Document;
+import edu.ucla.drc.sledge.documents.Document;
+import edu.ucla.drc.sledge.documents.DocumentFactory;
 import edu.ucla.drc.sledge.project.ProjectModel;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.value.ChangeListener;
@@ -116,7 +117,8 @@ public class DocumentListComponent extends TreeView<Document> {
                 invalidFiles.add(file.getName());
                 continue;
             }
-            Document doc = new Document(file);
+            DocumentFactory factory = new DocumentFactory();
+            Document doc = factory.adaptDocument(file);
             documents.add(doc);
         }
 

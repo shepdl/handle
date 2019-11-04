@@ -1,7 +1,7 @@
 package edu.ucla.drc.sledge.project;
 
 import cc.mallet.types.Instance;
-import edu.ucla.drc.sledge.Document;
+import edu.ucla.drc.sledge.documents.Document;
 
 import java.io.FileNotFoundException;
 import java.net.URI;
@@ -26,11 +26,10 @@ public class DocumentIterator implements Iterator<Instance> {
     public Instance next() {
         Document document = documents.get(index);
         index++;
-        URI uri = document.getFile().toURI();
-        // TODO: filter stopwords here, possibly, or adapt to required output?
+        URI uri = document.getUri();
         try {
             return new Instance(
-                    document.getTextContent(), null, uri, null
+                    document.getContent(), null, uri, null
             );
         } catch (FileNotFoundException e) {
             e.printStackTrace();
