@@ -32,7 +32,6 @@ public class DocumentImport extends BorderPane {
 
     private ProjectModel model;
 
-
     public DocumentImport () {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("DocumentImport.fxml"));
         fxmlLoader.setRoot(this);

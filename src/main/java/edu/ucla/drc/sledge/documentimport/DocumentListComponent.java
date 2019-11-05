@@ -52,21 +52,31 @@ public class DocumentListComponent extends TreeView<Document> {
             }
         });
 
-        setCellFactory((TreeView<Document>  treeView) -> {
-            final TreeCell<Document> cell = new TreeCell<>();
+        setCellFactory((TreeView<Document> treeView) -> {
+            final TreeCell<Document> cell = new TreeCell<Document>() {
+                @Override
+                protected void updateItem (Document document, boolean empty) {
+                    super.updateItem(document, empty);
+                    if (document == null || empty) {
+                        setGraphic(null);
+                    } else {
+                        setText(document.getName());
+                    }
+                }
+            };
+
             final ContextMenu menu = new ContextMenu();
             final MenuItem removeDocumentItem = new MenuItem("Remove");
-
-            // TODO: How do we set the text of the cell?
             menu.getItems().add(removeDocumentItem);
             removeDocumentItem.setOnAction(event -> {
+                treeView.getSelectionModel().getSelectedItem();
                 model.getDocuments().remove(cell.getItem());
-                treeView.getRoot().getChildren().remove(cell.getItem());
+                treeView.getRoot().getChildren().remove(treeView.getSelectionModel().getSelectedItem());
             });
-
             cell.contextMenuProperty().bind(
-                Bindings.when(cell.emptyProperty()).then((ContextMenu)null).otherwise(menu)
+                    Bindings.when(cell.emptyProperty()).then((ContextMenu)null).otherwise(menu)
             );
+
             return cell;
         });
     }
@@ -74,6 +84,7 @@ public class DocumentListComponent extends TreeView<Document> {
     @FXML
     public void initialize () {
         this.setRoot(rootTreeItem);
+        this.setShowRoot(false);
         this.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
         this.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<TreeItem<Document>>() {
             @Override

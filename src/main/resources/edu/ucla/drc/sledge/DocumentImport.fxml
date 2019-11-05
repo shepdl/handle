@@ -20,7 +20,7 @@
     <left>
         <VBox prefWidth="200">
 
-            <DocumentListComponent fx:id="documentList"/>
+            <DocumentListComponent fx:id="documentList" showRoot="false"/>
 
             <GridPane vgap="10" hgap="10">
                 <Button fx:id="settingsButton" onMouseClicked="#showSettingsPane" GridPane.columnIndex="0" GridPane.rowIndex="0">

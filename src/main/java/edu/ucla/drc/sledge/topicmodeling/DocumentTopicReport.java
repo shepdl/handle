@@ -52,6 +52,16 @@ public class DocumentTopicReport extends BorderPane implements LoadsFxml {
             }
         });
 
+        documentList.setCellFactory((TreeView<Document> treeView) -> new TreeCell<Document>() {
+            @Override
+            protected void updateItem (Document document, boolean empty) {
+                super.updateItem(document, empty);
+                if (document != null || !empty) {
+                    setText(document.getName());
+                }
+            }
+        });
+
         exportChartButton.addEventHandler(MouseEvent.MOUSE_CLICKED, this::exportChartButtonHandler);
         exportDocumentTopicsReportButton.addEventHandler(MouseEvent.MOUSE_CLICKED, this::exportDocumentTopicsReportButton);
     }

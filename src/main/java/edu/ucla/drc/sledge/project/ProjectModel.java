@@ -32,7 +32,7 @@ public class ProjectModel {
         documents.addListener(new ListChangeListener<Document>() {
             @Override
             public void onChanged(Change<? extends Document> c) {
-                reimportDocuments();
+//                reimportDocuments();
             }
         });
     }
@@ -54,7 +54,7 @@ public class ProjectModel {
 
     public void addStopword(String word) {
         stopwords.add(word);
-        reimportDocuments();
+//        reimportDocuments();
     }
 
     public void setStopwords(Set<String> stopwords) {

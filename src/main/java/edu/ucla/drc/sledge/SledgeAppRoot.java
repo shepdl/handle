@@ -53,7 +53,7 @@ public class SledgeAppRoot extends AnchorPane {
     }
 
     public void saveProject(ActionEvent actionEvent) {
-        FileChooser.ExtensionFilter filter = new FileChooser.ExtensionFilter("Handle Project", "*.handle");
+        FileChooser.ExtensionFilter filter = new FileChooser.ExtensionFilter("Handle Project", "*.hand");
         FileChooser chooser = new FileChooser();
         chooser.getExtensionFilters().add(filter);
         chooser.setTitle("Select file to save");
