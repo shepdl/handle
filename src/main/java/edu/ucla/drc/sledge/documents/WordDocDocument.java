@@ -12,7 +12,7 @@ import java.net.URI;
 class WordDocDocument implements Document {
 
     private final File file;
-    private String content;
+    private String content = "";
 
     WordDocDocument(File file) {
         this.file = file;

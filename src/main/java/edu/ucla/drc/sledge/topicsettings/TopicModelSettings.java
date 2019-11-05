@@ -45,6 +45,8 @@ public class TopicModelSettings extends VBox {
     @FXML
     private TextField threadsField;
 
+    private List<TextField> fields = new ArrayList<>();
+
     @FXML
     private ProgressBar jobProgressBar;
     @FXML
@@ -112,6 +114,15 @@ public class TopicModelSettings extends VBox {
         int availableProcessors = Runtime.getRuntime().availableProcessors();
         threadsField.setText(Integer.toString(availableProcessors));
         updateFields();
+
+        fields.add(numTopicsField);
+        fields.add(alphaField);
+        fields.add(betaField);
+        fields.add(randomSeedField);
+        fields.add(iterationsField);
+        fields.add(optimizeIntervalField);
+        fields.add(burinInPeriodField);
+        fields.add(threadsField);
     }
 
     private void updateFields() {
@@ -123,7 +134,6 @@ public class TopicModelSettings extends VBox {
         iterationsField.setText(Integer.toString(topicModel.numIterations));
         optimizeIntervalField.setText(Integer.toString(topicModel.optimizeInterval));
         burinInPeriodField.setText(Integer.toString(topicModel.burninPeriod));
-        numTopicsField.setText(Integer.toString(topicModel.getNumTopics()));
         int availableProcessors = Runtime.getRuntime().availableProcessors();
         topicModel.setNumThreads(availableProcessors);
 
@@ -144,10 +154,24 @@ public class TopicModelSettings extends VBox {
             if (topicModel.isComplete()) {
                 onClose.accept(topicModel);
             } else {
+                disableEditingSettings();
                 runButton.setText("Stop");
                 jobProgressBar.setVisible(true);
                 executeJob();
             }
+        }
+    }
+
+    private void disableEditingSettings () {
+        Alert intellectualHonestyAlert = new Alert(Alert.AlertType.ERROR);
+        intellectualHonestyAlert.setHeaderText("Can't edit settings after starting a topic model");
+        intellectualHonestyAlert.setContentText("Create a new topic model with those settings instead.");
+
+        for (TextField field : fields) {
+            field.setEditable(false);
+            field.setOnMouseClicked((event) -> {
+                intellectualHonestyAlert.show();
+            });
         }
     }
 

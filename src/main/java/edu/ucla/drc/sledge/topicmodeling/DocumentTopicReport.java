@@ -43,7 +43,8 @@ public class DocumentTopicReport extends BorderPane implements LoadsFxml {
         loadFxml();
     }
 
-    @FXML void initialize () {
+    @FXML
+    void initialize () {
         documentList.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
         documentList.setRoot(rootTreeItem);
         documentList.getSelectionModel().selectedItemProperty().addListener((observableValue, documentTreeItem, selectedItem) -> {
@@ -57,7 +58,11 @@ public class DocumentTopicReport extends BorderPane implements LoadsFxml {
             protected void updateItem (Document document, boolean empty) {
                 super.updateItem(document, empty);
                 if (document != null || !empty) {
-                    setText(document.getName());
+                    try {
+                        setText(document.getName());
+                    } catch (NullPointerException ex) {
+                        setText("NPE - " + document.getName());
+                    }
                 }
             }
         });

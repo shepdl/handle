@@ -14,7 +14,7 @@ import java.net.URI;
 class WordDocXDocument implements Document {
 
     private final File file;
-    private String content;
+    private String content = "";
 
     WordDocXDocument(File file) {
         this.file = file;
@@ -36,12 +36,12 @@ class WordDocXDocument implements Document {
 
     @Override
     public String getName() {
-        return null;
+        return file.getName();
     }
 
     @Override
     public URI getUri() {
-        return null;
+        return file.toURI();
     }
 
     @Override
