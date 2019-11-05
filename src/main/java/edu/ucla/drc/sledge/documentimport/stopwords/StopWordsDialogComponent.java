@@ -1,6 +1,7 @@
 package edu.ucla.drc.sledge.documentimport.stopwords;
 
 import edu.ucla.drc.sledge.project.ProjectModel;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -18,6 +19,7 @@ import java.util.*;
 public class StopWordsDialogComponent extends AnchorPane {
 
     @FXML TableView<String> stopwordsTable;
+    @FXML TableColumn<String, String> wordColumn;
     @FXML Button saveButton;
     @FXML Button cancelButton;
     @FXML Button clearStopwordsButton;
@@ -33,6 +35,8 @@ public class StopWordsDialogComponent extends AnchorPane {
         this.project = project;
         mergeNewListWithExistingStopwords(new ListStopwordsList("model", new ArrayList<>(project.getStopwords())));
         clearStopwordsButton.setOnMouseClicked(this::clearStopwordsButtonClickHandler);
+
+        wordColumn.setCellValueFactory(data -> new SimpleStringProperty(data.getValue()));
 
         Callback<ListView<StopwordSource>, ListCell<StopwordSource>> cellFactory = new Callback<ListView<StopwordSource>, ListCell<StopwordSource>>() {
             @Override

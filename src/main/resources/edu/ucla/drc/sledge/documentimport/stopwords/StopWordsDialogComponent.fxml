@@ -6,18 +6,22 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
+<?import javafx.scene.control.cell.PropertyValueFactory?>
 <AnchorPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
             fx:controller="edu.ucla.drc.sledge.documentimport.stopwords.StopWordsDialogComponent"
             prefHeight="400.0" prefWidth="600.0">
 
-    <VBox>
+    <VBox
+            AnchorPane.topAnchor="10" AnchorPane.rightAnchor="10"
+            AnchorPane.bottomAnchor="10" AnchorPane.leftAnchor="10"
+    >
         <ComboBox fx:id="defaultStopwordsComboBox" onAction="#addWordsFromDefaultFile"/>
 
-        <TableView fx:id="stopwordsTable" onDragOver="#setTransferMode" onDragDropped="#dropFile">
+        <TableView fx:id="stopwordsTable" onDragOver="#setTransferMode" onDragDropped="#dropFile"
+        >
             <columns>
-                <TableColumn fx:id="wordColumn">
-                </TableColumn>
+                <TableColumn fx:id="wordColumn" text="Word" />
             </columns>
         </TableView>
 

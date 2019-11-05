@@ -65,8 +65,9 @@ public class DocumentTextView extends AnchorPane {
                 if (i > 0 && i % 10 == 0) {
 //                    builder.append("\n");
 //                    textWidth += 1;
-                    documentTextPane.appendText(builder.toString());
-                    builder = new StringBuilder();
+                    // These are the bits that add the text incrementally
+//                    documentTextPane.appendText(builder.toString());
+//                    builder = new StringBuilder();
                     for (int j = 0; j < startPositions.size(); j++) {
 //                        documentTextPane.setStyleClass(startPositions.get(j), endPositions.get(j), "stopword");
                     }
@@ -78,7 +79,7 @@ public class DocumentTextView extends AnchorPane {
             }
             documentTextPane.appendText(builder.toString());
             for (int i = 0; i < startPositions.size(); i++) {
-//                documentTextPane.setStyleClass(startPositions.get(i), endPositions.get(i), "stopword");
+                documentTextPane.setStyleClass(startPositions.get(i), endPositions.get(i), "stopword");
             }
 //            for (Integer i : startPositions) {
 //                documentTextPane.setStyleClass(i, i + 8, "stopword");

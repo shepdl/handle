@@ -7,6 +7,7 @@ import edu.ucla.drc.sledge.documents.Document;
 import edu.ucla.drc.sledge.documents.DocumentFactory;
 import edu.ucla.drc.sledge.project.DocumentIterator;
 import edu.ucla.drc.sledge.project.ProjectModel;
+import javafx.beans.binding.Bindings;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -19,6 +20,8 @@ import javafx.scene.input.Dragboard;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.TransferMode;
 
+import javax.naming.Context;
+import javax.print.Doc;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -47,6 +50,24 @@ public class DocumentListComponent extends TreeView<Document> {
                     });
                 }
             }
+        });
+
+        setCellFactory((TreeView<Document>  treeView) -> {
+            final TreeCell<Document> cell = new TreeCell<>();
+            final ContextMenu menu = new ContextMenu();
+            final MenuItem removeDocumentItem = new MenuItem("Remove");
+
+            // TODO: How do we set the text of the cell?
+            menu.getItems().add(removeDocumentItem);
+            removeDocumentItem.setOnAction(event -> {
+                model.getDocuments().remove(cell.getItem());
+                treeView.getRoot().getChildren().remove(cell.getItem());
+            });
+
+            cell.contextMenuProperty().bind(
+                Bindings.when(cell.emptyProperty()).then((ContextMenu)null).otherwise(menu)
+            );
+            return cell;
         });
     }
 

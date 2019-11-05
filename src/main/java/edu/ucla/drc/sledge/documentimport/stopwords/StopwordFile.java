@@ -36,4 +36,10 @@ public class StopwordFile implements StopwordSource {
         }
         return stopwords;
     }
+
+    @Override
+    public String toString () {
+        return getName();
+    }
+
 }
