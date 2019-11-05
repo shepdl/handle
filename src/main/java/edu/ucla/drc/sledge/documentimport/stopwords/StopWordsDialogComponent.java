@@ -108,8 +108,24 @@ public class StopWordsDialogComponent extends AnchorPane {
 
     @FXML
     private void saveStopwordsButtonClickHandler (MouseEvent mouseEvent) {
-        project.setStopwords(new HashSet<>(stopwordsTable.getItems()));
-        closeHandler.accept(null);
+        if (!project.getTopicModels().isEmpty()) {
+            Alert eraseModelsConfirmationBox = new Alert(Alert.AlertType.CONFIRMATION);
+            eraseModelsConfirmationBox.setTitle("Erase topic models?");
+            eraseModelsConfirmationBox.setHeaderText("Changing your stopwords list will make your existing topic models invalid");
+            eraseModelsConfirmationBox.setContentText("Are you sure you want to change your stopword list and erase your topic models?");
+            eraseModelsConfirmationBox.setOnCloseRequest((DialogEvent event) -> {
+                if (eraseModelsConfirmationBox.getResult() == ButtonType.OK) {
+                    project.getTopicModels().clear();
+                    project.setStopwords(new HashSet<>(stopwordsTable.getItems()));
+                    closeHandler.accept(null);
+                }
+                eraseModelsConfirmationBox.hide();
+            });
+            eraseModelsConfirmationBox.show();
+        } else {
+            project.setStopwords(new HashSet<>(stopwordsTable.getItems()));
+            closeHandler.accept(null);
+        }
     }
 
     @FXML

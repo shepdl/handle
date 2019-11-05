@@ -96,7 +96,7 @@ public class TopicModel extends Thread implements Serializable {
     private boolean complete = false;
 
     public TopicModel(int numberOfTopics) {
-        this(numberOfTopics, numberOfTopics, DEFAULT_BETA);
+        this(numberOfTopics, 5.0, DEFAULT_BETA);
     }
 
     public TopicModel(int numberOfTopics, double alphaSum, double beta) {

@@ -24,6 +24,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.net.URI;
 import java.util.ArrayList;
+import java.util.DuplicateFormatFlagsException;
 import java.util.List;
 
 public class DocumentListComponent extends TreeView<Document> {
@@ -126,15 +127,12 @@ public class DocumentListComponent extends TreeView<Document> {
             eraseModelsConfirmationBox.setTitle("Erase topic models?");
             eraseModelsConfirmationBox.setHeaderText("Adding a new document will make your existing topic models invalid.");
             eraseModelsConfirmationBox.setContentText("Are you sure you want to add the new document and erase your topic models?");
-//            Optional<ButtonType> result = eraseModelsConfirmationBox.showAndWait();
-//            if (result.isPresent() && result.get() == ButtonType.OK) {
-//                projectModel.getTopicModels().clear();
-//                addFiles(files);
-//            }
-            eraseModelsConfirmationBox.getDialogPane().lookupButton(ButtonType.OK).setOnMouseClicked((MouseEvent event) -> {
-                event.consume();
-                projectModel.getTopicModels().clear();
-                addFiles(files);
+            eraseModelsConfirmationBox.setOnCloseRequest((DialogEvent event) -> {
+                if (eraseModelsConfirmationBox.getResult() == ButtonType.OK) {
+                    projectModel.getTopicModels().clear();
+                    addFiles(files);
+                }
+                eraseModelsConfirmationBox.hide();
             });
             eraseModelsConfirmationBox.show();
         }
