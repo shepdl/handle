@@ -50,13 +50,6 @@ public class TopicModelsTab extends BorderPane implements LoadsFxml {
                 topicModelSettings.setTopicModel(newValue.getValue());
             }
         });
-        selectedTopicModel.addListener(new ChangeListener<TopicModel>() {
-            @Override
-            public void changed(ObservableValue<? extends TopicModel> observable, TopicModel oldValue, TopicModel newValue) {
-//                topicModelSettings.setTopicModel(newValue);
-//                topicModelSettings.setTopicModel(newValue);
-            }
-        });
     }
 
     public void addTopicModel (MouseEvent event) {

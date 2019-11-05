@@ -120,10 +120,6 @@ public class ModelSummaryTab extends AnchorPane implements LoadsFxml {
     private void update () {
         exportSingleTopicButton.setVisible(false);
         selectedTopicIndex = -1;
-//        topicDistance.getData().clear();
-//        XYChart.Series<Double, Double> series = new XYChart.Series<>();
-        // TODO: suppress series name
-        // TODO: suppress labels
         generateTopicSimilarityGraph(model);
     }
 

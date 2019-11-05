@@ -34,7 +34,6 @@
 >
 
     <VBox>
-        <TextField fx:id="topicModelName" />
 
         <TabPane visible="false" fx:id="topicDetails">
             <Tab text="All" closable="false">

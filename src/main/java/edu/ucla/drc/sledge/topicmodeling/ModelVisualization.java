@@ -23,7 +23,6 @@ import java.util.TreeSet;
 
 public class ModelVisualization extends AnchorPane implements LoadsFxml {
 
-    @FXML private TextField topicModelName;
     @FXML private TableView topicSettingsTable;
     @FXML private ScrollPane allTopicsPane;
     @FXML private ModelSummaryTab modelSummary;
@@ -42,14 +41,6 @@ public class ModelVisualization extends AnchorPane implements LoadsFxml {
 
     public ModelVisualization () {
         loadFxml();
-        topicModelName.setOnKeyPressed(new EventHandler<KeyEvent>() {
-            @Override
-            public void handle(KeyEvent keyEvent) {
-                if (keyEvent.getCode().equals(KeyCode.ENTER)) {
-                    selectedTopicModel.setTitle(topicModelName.getText());
-                }
-            }
-        });
 //        getScene().getStylesheets().add(getClass().getResource("@topic-settings.css").toExternalForm());
         getStylesheets().add(getClass().getResource("topic-settings.css").toExternalForm());
     }
@@ -61,7 +52,6 @@ public class ModelVisualization extends AnchorPane implements LoadsFxml {
 
     public void setTopicModel (TopicModel model) {
         selectedTopicModel = model;
-        topicModelName.setText(model.getTitle());
         updateAllTopicsPane(model);
         modelSummary.setData(model);
         documentSummaryViewer.selectTopicModel(model);

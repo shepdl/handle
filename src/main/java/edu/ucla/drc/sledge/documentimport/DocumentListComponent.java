@@ -70,8 +70,8 @@ public class DocumentListComponent extends TreeView<Document> {
             menu.getItems().add(removeDocumentItem);
             removeDocumentItem.setOnAction(event -> {
                 treeView.getSelectionModel().getSelectedItem();
-                model.getDocuments().remove(cell.getItem());
                 treeView.getRoot().getChildren().remove(treeView.getSelectionModel().getSelectedItem());
+                model.getDocuments().remove(cell.getItem());
             });
             cell.contextMenuProperty().bind(
                     Bindings.when(cell.emptyProperty()).then((ContextMenu)null).otherwise(menu)
