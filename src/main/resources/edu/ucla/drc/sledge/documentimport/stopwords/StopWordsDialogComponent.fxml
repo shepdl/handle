@@ -29,6 +29,7 @@
             <Button fx:id="clearStopwordsButton" onMouseClicked="#clearStopwordsButtonClickHandler">Clear list</Button>
             <Button fx:id="saveButton" onMouseClicked="#saveStopwordsButtonClickHandler">Save</Button>
             <Button fx:id="cancelButton" onMouseClicked="#cancelButtonClicked">Cancel</Button>
+            <Button fx:id="exportButton" onMouseClicked="#exportButtonClicked">Export</Button>
         </HBox>
 
 

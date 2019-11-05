@@ -5,15 +5,18 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-import javafx.scene.control.cell.ComboBoxListCell;
 import javafx.scene.input.DragEvent;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.TransferMode;
 import javafx.scene.layout.AnchorPane;
+import javafx.stage.FileChooser;
 import javafx.util.Callback;
 
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.*;
 import java.util.function.Consumer;
 
@@ -24,6 +27,7 @@ public class StopWordsDialogComponent extends AnchorPane {
     @FXML Button saveButton;
     @FXML Button cancelButton;
     @FXML Button clearStopwordsButton;
+    @FXML Button exportButton;
 
     @FXML ComboBox<StopwordSource> defaultStopwordsComboBox;
 
@@ -127,6 +131,30 @@ public class StopWordsDialogComponent extends AnchorPane {
             }
         } else {
             closeHandler.accept(null);
+        }
+    }
+
+    @FXML
+    private void exportButtonClicked(MouseEvent mouseEvent) {
+        mouseEvent.consume();
+        FileChooser.ExtensionFilter filter = new FileChooser.ExtensionFilter("Text file", "*.txt");
+        FileChooser chooser = new FileChooser();
+        chooser.getExtensionFilters().add(filter);
+        chooser.setTitle("Select output file");
+        File file = chooser.showSaveDialog(null);
+        if (file != null) {
+            try {
+                BufferedWriter writer = new BufferedWriter(new FileWriter(file));
+                for (String word : stopwordsTable.getItems()) {
+                    writer.append(word);
+                    writer.append("\n");
+                }
+                writer.close();
+            } catch (IOException ex) {
+                Alert unhandledError = new Alert(Alert.AlertType.ERROR);
+                unhandledError.setHeaderText("Error saving file");
+                unhandledError.show();
+            }
         }
     }
 }

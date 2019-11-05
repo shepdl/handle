@@ -101,7 +101,7 @@ public class DocumentTextView extends AnchorPane {
                 } else {
 //                    wordToAdd= token.getText();
                 }
-                wordToAdd= token.getText();
+                wordToAdd = token.getText();
 //                builder.append(ts.get(i).getText());
                 builder.append(wordToAdd);
                 builder.append(" ");
