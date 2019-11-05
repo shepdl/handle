@@ -17,6 +17,7 @@ import org.testfx.framework.junit.ApplicationTest;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.function.Consumer;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
@@ -26,10 +27,16 @@ public class TestAddStopwordsFromList extends ApplicationTest {
 
     private StopWordsDialogComponent controller;
     private ProjectModel project;
+    private Consumer nullCallback = new Consumer() {
+        @Override
+        public void accept(Object o) {
+            return;
+        }
+    };
 
     @Test
     public void listIsEmptyOnInitializationWithBlankModel () {
-        controller.initialize(project, new ListStopwordListSource());
+        controller.initialize(project, new ListStopwordListSource(), nullCallback);
         clickOn(controller.saveButton);
         List<String> items = controller.stopwordsTable.getItems();
         assertThat(items, hasSize(0));
@@ -43,7 +50,7 @@ public class TestAddStopwordsFromList extends ApplicationTest {
         initialStopwords.add("apple");
         initialStopwords.add("cherry");
         project.setStopwords(initialStopwords);
-        controller.initialize(project, new ListStopwordListSource());
+        controller.initialize(project, new ListStopwordListSource(), nullCallback);
         List<String> items = controller.stopwordsTable.getItems();
         assertThat(items, hasSize(3));
         assertThat(items.get(0), equalTo("apple"));
@@ -63,7 +70,7 @@ public class TestAddStopwordsFromList extends ApplicationTest {
         initialStopwords.add("apple");
         initialStopwords.add("cherry");
         project.setStopwords(initialStopwords);
-        controller.initialize(project, new ListStopwordListSource());
+        controller.initialize(project, new ListStopwordListSource(), nullCallback);
         List<String> items = controller.stopwordsTable.getItems();
         assertThat(items, hasSize(3));
         assertThat(items.get(0), equalTo("apple"));
@@ -79,7 +86,7 @@ public class TestAddStopwordsFromList extends ApplicationTest {
     @Test
     public void addAllWordsFromNewList () {
         StopwordSource source = new ListStopwordsList("my-stopwords-list.txt", "apples bananas");
-        controller.initialize(project, new ListStopwordListSource());
+        controller.initialize(project, new ListStopwordListSource(), nullCallback);
         controller.mergeNewListWithExistingStopwords(source);
         assertThat(controller.stopwordsTable.getItems(), contains("apples", "bananas"));
         clickOn(controller.saveButton);
@@ -92,7 +99,7 @@ public class TestAddStopwordsFromList extends ApplicationTest {
         ListStopwordListSource stopwordListSource = new ListStopwordListSource();
         stopwordListSource.add("First List", "apple banana cherry");
         stopwordListSource.add("Second List", "tree peach pie");
-        controller.initialize(project, stopwordListSource);
+        controller.initialize(project, stopwordListSource, nullCallback);
         clickOn(controller.defaultStopwordsComboBox);
         write("First");
         push(KeyCode.DOWN);
@@ -113,7 +120,7 @@ public class TestAddStopwordsFromList extends ApplicationTest {
         initialStopwords.add("apple");
         initialStopwords.add("cherry");
         project.setStopwords(initialStopwords);
-        controller.initialize(project, new ListStopwordListSource());
+        controller.initialize(project, new ListStopwordListSource(), nullCallback);
         clickOn(controller.clearStopwordsButton, MouseButton.PRIMARY);
         List<String> items = controller.stopwordsTable.getItems();
         assertThat(items, hasSize(0));
@@ -131,7 +138,7 @@ public class TestAddStopwordsFromList extends ApplicationTest {
         initialStopwords.add("apple");
         initialStopwords.add("cherry");
         project.setStopwords(initialStopwords);
-        controller.initialize(project, new ListStopwordListSource());
+        controller.initialize(project, new ListStopwordListSource(), nullCallback);
         clickOn(controller.clearStopwordsButton);
         List<String> items = controller.stopwordsTable.getItems();
         assertThat(items, hasSize(0));
@@ -148,7 +155,7 @@ public class TestAddStopwordsFromList extends ApplicationTest {
         initialStopwords.add("apple");
         initialStopwords.add("cherry");
         project.setStopwords(initialStopwords);
-        controller.initialize(project, new ListStopwordListSource());
+        controller.initialize(project, new ListStopwordListSource(), nullCallback);
         clickOn(controller.clearStopwordsButton);
         List<String> items = controller.stopwordsTable.getItems();
         assertThat(items, hasSize(0));
@@ -162,7 +169,7 @@ public class TestAddStopwordsFromList extends ApplicationTest {
         ListStopwordListSource stopwordListSource = new ListStopwordListSource();
         stopwordListSource.add("First List", "apple banana cherry");
         stopwordListSource.add("Second List", "tree peach pie");
-        controller.initialize(project, stopwordListSource);
+        controller.initialize(project, stopwordListSource, nullCallback);
         assertThat(controller.defaultStopwordsComboBox.getItems(), hasSize(2));
         assertThat(controller.defaultStopwordsComboBox.getItems().get(0).getName(), equalTo("First List"));
         assertThat(controller.defaultStopwordsComboBox.getItems().get(1).getName(), equalTo("Second List"));
@@ -173,7 +180,7 @@ public class TestAddStopwordsFromList extends ApplicationTest {
         ListStopwordListSource stopwordListSource = new ListStopwordListSource();
         stopwordListSource.add("First List", "apple banana cherry");
         stopwordListSource.add("Second List", "tree peach pie");
-        controller.initialize(project, stopwordListSource);
+        controller.initialize(project, stopwordListSource, nullCallback);
         clickOn(controller.defaultStopwordsComboBox);
         write("First");
         push(KeyCode.DOWN);
@@ -188,7 +195,7 @@ public class TestAddStopwordsFromList extends ApplicationTest {
         ListStopwordListSource stopwordListSource = new ListStopwordListSource();
         stopwordListSource.add("First List", "apple banana cherry");
         stopwordListSource.add("Second List", "tree peach pie");
-        controller.initialize(project, stopwordListSource);
+        controller.initialize(project, stopwordListSource, nullCallback);
         clickOn(controller.defaultStopwordsComboBox);
         write("First");
         push(KeyCode.DOWN);

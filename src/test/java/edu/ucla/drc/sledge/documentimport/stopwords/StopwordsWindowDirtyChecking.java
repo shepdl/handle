@@ -16,6 +16,7 @@ import org.testfx.framework.junit.ApplicationTest;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.function.Consumer;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
@@ -24,6 +25,12 @@ public class StopwordsWindowDirtyChecking extends ApplicationTest {
 
     private StopWordsDialogComponent controller;
     private ProjectModel project;
+    private Consumer nullCallback = new Consumer() {
+        @Override
+        public void accept(Object o) {
+            return;
+        }
+    };
 
     @Test
     public void confirmationNotShownIfCancelButtonClickedAndStopwordsHaveNotChanged () {
@@ -89,7 +96,7 @@ public class StopwordsWindowDirtyChecking extends ApplicationTest {
         initialStopwords.add("kumquat");
         initialStopwords.add("orange");
         project.setStopwords(initialStopwords);
-        controller.initialize(project, stopwordListSource);
+        controller.initialize(project, stopwordListSource, nullCallback);
     }
 
     @After

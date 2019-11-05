@@ -87,11 +87,12 @@ public class DocumentImport extends BorderPane {
             StopwordListsSource source = new StopwordsDirectory(
                     new File(getClass().getResource("documentimport/stopwords/lists/").getPath())
             );
-            controller.initialize(model, source);
-//            controller.setModel(model);
 
             Scene scene = new Scene(root);
             Stage stage = new Stage();
+            controller.initialize(model, source, (Object o) -> {
+                stage.close();
+            });
             stage.initModality(Modality.APPLICATION_MODAL);
             stage.setTitle("Stopwords");
             stage.setScene(scene);

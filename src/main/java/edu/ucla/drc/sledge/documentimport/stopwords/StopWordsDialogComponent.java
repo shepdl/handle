@@ -15,6 +15,7 @@ import javafx.util.Callback;
 
 import java.io.File;
 import java.util.*;
+import java.util.function.Consumer;
 
 public class StopWordsDialogComponent extends AnchorPane {
 
@@ -27,12 +28,13 @@ public class StopWordsDialogComponent extends AnchorPane {
     @FXML ComboBox<StopwordSource> defaultStopwordsComboBox;
 
     private ProjectModel project;
+    private Consumer closeHandler;
 
     Alert confirmAlert;
 
-    @FXML
-    public void initialize (ProjectModel project, StopwordListsSource stopwordsSource) {
+    public void initialize (ProjectModel project, StopwordListsSource stopwordsSource, Consumer closeHandler) {
         this.project = project;
+        this.closeHandler = closeHandler;
         mergeNewListWithExistingStopwords(new ListStopwordsList("model", new ArrayList<>(project.getStopwords())));
         clearStopwordsButton.setOnMouseClicked(this::clearStopwordsButtonClickHandler);
 
@@ -103,6 +105,7 @@ public class StopWordsDialogComponent extends AnchorPane {
     @FXML
     private void saveStopwordsButtonClickHandler (MouseEvent mouseEvent) {
         project.setStopwords(new HashSet<>(stopwordsTable.getItems()));
+        closeHandler.accept(null);
     }
 
     @FXML
@@ -118,8 +121,12 @@ public class StopWordsDialogComponent extends AnchorPane {
             if (result.isPresent()) {
                 if (result.get() == ButtonType.CANCEL) {
                     return;
+                } else {
+                    closeHandler.accept(null);
                 }
             }
+        } else {
+            closeHandler.accept(null);
         }
     }
 }

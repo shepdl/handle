@@ -16,6 +16,7 @@
     <StyleClassedTextArea fx:id="documentTextPane" wrapText="true"
                           AnchorPane.leftAnchor="10" AnchorPane.rightAnchor="10"
                           AnchorPane.topAnchor="10" AnchorPane.bottomAnchor="10"
+                          editable="false"
     />
 
 </fx:root>
