@@ -102,6 +102,13 @@ public class DocumentTopicReport extends BorderPane implements LoadsFxml {
     }
 
     private void update() {
+        TreeItem<Document> selectedItem = documentList.getSelectionModel().getSelectedItem();
+        if (selectedItem != null) {
+            Document selectedDocument = selectedItem.getValue();
+            if (selectedDocument != null) {
+                updateChart(selectedDocument);
+            }
+        }
         // Set topic list
         // Set event listener
     }

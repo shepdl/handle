@@ -175,7 +175,6 @@ public class ModelSummaryTab extends AnchorPane implements LoadsFxml {
             series = new BubbleChart.Series<>();
             seriesList.add(series);
             topicDistance.setData(seriesList);
-//            topicDistance.getData().clear();
         }
 
         List<XYChart.Data<Number, Number>> chartData = series.getData();
@@ -193,7 +192,6 @@ public class ModelSummaryTab extends AnchorPane implements LoadsFxml {
         // 3. Use MDS (multi-dimensional scaling) to scale points down to 2 dimensions
         MDS scale = new MDS(similarities);
         double[][] coordinates = scale.getCoordinates();
-//        BubbleChart.Series<Number, Number> series = new BubbleChart.Series<>();
         for (int i = 0; i < coordinates.length; i++) {
             BubbleChart.Data<Number, Number> datum = new BubbleChart.Data<>(coordinates[i][0] * 100, coordinates[i][1] * 100);
             final int outsideTopicId = i;
@@ -206,17 +204,9 @@ public class ModelSummaryTab extends AnchorPane implements LoadsFxml {
                     }
                 });
             }));
-//            series.getData().add(datum);
             chartData.add(datum);
         }
-//        ObservableList<BubbleChart.Series<Number, Number>> seriesList = FXCollections.observableArrayList();
-//        seriesList.add(series);
-//        topicDistance.setData(seriesList);
-
-
-//        for (int i = 0; i < series.getData().size(); i++) {
         for (int i = 0; i < chartData.size(); i++) {
-//            BubbleChart.Data<Number, Number> datum = series.getData().get(i);
             XYChart.Data<Number, Number> datum = chartData.get(i);
             Tooltip.install(datum.getNode(), new Tooltip(model.topicTitles[i]));
         }
