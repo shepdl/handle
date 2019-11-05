@@ -33,7 +33,7 @@ public class DocumentTopicReport extends BorderPane implements LoadsFxml {
     private TopicModel topicModel;
 
     @FXML TreeView<Document> documentList;
-    private final TreeItem rootTreeItem = new TreeItem("Documents");
+    private final TreeItem rootTreeItem = new TreeItem("Drag and drop some files here");
     @FXML BarChart<String, Double> documentSummary;
     @FXML private PieChart compositionChart;
     @FXML private Button exportChartButton;
@@ -109,8 +109,6 @@ public class DocumentTopicReport extends BorderPane implements LoadsFxml {
                 updateChart(selectedDocument);
             }
         }
-        // Set topic list
-        // Set event listener
     }
 
     public void exportChartButtonHandler (MouseEvent event) {

@@ -108,7 +108,6 @@ public class AddingDocumentsAfterTopicModelsInvalidatesTopicModelsTests extends 
         }
         interact(() -> {
             controller.prepareToAddFiles(newFiles);
-            System.out.println(controller.eraseModelsConfirmationBox.getDialogPane().lookupButton(ButtonType.OK));
             clickOn(controller.eraseModelsConfirmationBox.getDialogPane().lookupButton(ButtonType.OK));
             assertThat(project.getTopicModels(), hasSize(0));
             assertThat(project.getDocuments(), hasSize(6));

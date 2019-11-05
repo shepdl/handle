@@ -1,10 +1,10 @@
 package edu.ucla.drc.sledge.documentimport;
 
-import cc.mallet.pipe.Pipe;
 import cc.mallet.types.Instance;
 import cc.mallet.types.InstanceList;
 import edu.ucla.drc.sledge.documents.Document;
 import edu.ucla.drc.sledge.documents.DocumentFactory;
+import edu.ucla.drc.sledge.documents.DocumentRoot;
 import edu.ucla.drc.sledge.project.DocumentIterator;
 import edu.ucla.drc.sledge.project.ProjectModel;
 import javafx.beans.binding.Bindings;
@@ -20,9 +20,9 @@ import javafx.scene.input.Dragboard;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.TransferMode;
 
-import javax.naming.Context;
-import javax.print.Doc;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,7 +31,10 @@ public class DocumentListComponent extends TreeView<Document> {
     private ObjectProperty<Instance> selectedDocument;
     private ObservableList<Document> documents;
 
-    private final TreeItem rootTreeItem = new TreeItem("Files");
+    private final TreeItem<Document> rootTreeItem = new TreeItem<Document>(new DocumentRoot());
+
+    private final DocumentFactory documentFactory = new DocumentFactory();
+
     private ProjectModel projectModel;
     Alert eraseModelsConfirmationBox;
     Alert invalidFilesBox = new Alert(Alert.AlertType.ERROR);
@@ -45,6 +48,7 @@ public class DocumentListComponent extends TreeView<Document> {
             while (c.next()) {
                 if (c.wasAdded()) {
                     c.getAddedSubList().forEach(doc -> {
+                        setShowRoot(false);
                         TreeItem<Document> treeItem = new TreeItem<>(doc);
                         rootTreeItem.getChildren().add(treeItem);
                     });
@@ -84,7 +88,6 @@ public class DocumentListComponent extends TreeView<Document> {
     @FXML
     public void initialize () {
         this.setRoot(rootTreeItem);
-        this.setShowRoot(false);
         this.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
         this.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<TreeItem<Document>>() {
             @Override
@@ -137,29 +140,14 @@ public class DocumentListComponent extends TreeView<Document> {
         }
     }
 
-    private boolean hasValidExtension (File file) {
-        String[] extensions = file.getName().split("\\.");
-        String lastExtension = extensions[extensions.length - 1];
-        switch (lastExtension) {
-            case "text":
-            case "txt":
-            case "doc":
-            case "docx":
-                return true;
-            default:
-                return false;
-        }
-    }
-
     private void addFiles(List<File> files) {
         List<String> invalidFiles = new ArrayList<>();
         for (File file : files) {
-            if (!hasValidExtension(file)) {
+            if (!documentFactory.hasValidExtension(file)) {
                 invalidFiles.add(file.getName());
                 continue;
             }
-            DocumentFactory factory = new DocumentFactory();
-            Document doc = factory.adaptDocument(file);
+            Document doc = documentFactory.adaptDocument(file);
             documents.add(doc);
         }
 

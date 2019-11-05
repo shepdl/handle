@@ -20,10 +20,4 @@
                           editable="false"
     />
 
-    <CodeArea fx:id="codeTextArea" wrapText="true"
-              AnchorPane.leftAnchor="10" AnchorPane.bottomAnchor="10"
-              AnchorPane.rightAnchor="10" AnchorPane.topAnchor="10"
-              editable="false"
-              />
-
 </fx:root>
