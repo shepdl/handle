@@ -4,15 +4,18 @@ import edu.ucla.drc.sledge.project.ProjectModel;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.scene.control.cell.ComboBoxListCell;
 import javafx.scene.input.DragEvent;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.TransferMode;
+import javafx.scene.layout.AnchorPane;
+import javafx.util.Callback;
 
 import java.io.File;
 import java.util.*;
 
-public class StopWordsDialogComponent {
+public class StopWordsDialogComponent extends AnchorPane {
 
     @FXML TableView<String> stopwordsTable;
     @FXML Button saveButton;
@@ -25,10 +28,30 @@ public class StopWordsDialogComponent {
 
     Alert confirmAlert;
 
+    @FXML
     public void initialize (ProjectModel project, StopwordListsSource stopwordsSource) {
         this.project = project;
         mergeNewListWithExistingStopwords(new ListStopwordsList("model", new ArrayList<>(project.getStopwords())));
         clearStopwordsButton.setOnMouseClicked(this::clearStopwordsButtonClickHandler);
+
+        Callback<ListView<StopwordSource>, ListCell<StopwordSource>> cellFactory = new Callback<ListView<StopwordSource>, ListCell<StopwordSource>>() {
+            @Override
+            public ListCell<StopwordSource> call(ListView<StopwordSource> param) {
+                return new ListCell<StopwordSource> () {
+                    @Override
+                    protected void updateItem (StopwordSource item, boolean empty) {
+                        super.updateItem(item, empty);
+                        if (item == null || empty) {
+                            setGraphic(null);
+                        } else {
+                            setText(item.getName());
+                        }
+                    }
+                };
+            }
+        };
+
+        defaultStopwordsComboBox.setCellFactory(cellFactory);
 
         for (StopwordSource source : stopwordsSource.list()) {
             defaultStopwordsComboBox.getItems().add(source);
@@ -88,8 +111,10 @@ public class StopWordsDialogComponent {
             confirmAlert.setTitle("Stopwords have changed");
             confirmAlert.setHeaderText("Are you sure you want to discard your changes?");
             Optional<ButtonType> result = confirmAlert.showAndWait();
-            if (result.isPresent() && result.get() == ButtonType.CANCEL) {
-                return;
+            if (result.isPresent()) {
+                if (result.get() == ButtonType.CANCEL) {
+                    return;
+                }
             }
         }
     }

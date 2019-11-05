@@ -1,7 +1,11 @@
 package edu.ucla.drc.sledge.documentimport;
 
+import cc.mallet.pipe.Pipe;
+import cc.mallet.types.Instance;
+import cc.mallet.types.InstanceList;
 import edu.ucla.drc.sledge.documents.Document;
 import edu.ucla.drc.sledge.documents.DocumentFactory;
+import edu.ucla.drc.sledge.project.DocumentIterator;
 import edu.ucla.drc.sledge.project.ProjectModel;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.value.ChangeListener;
@@ -21,7 +25,7 @@ import java.util.List;
 
 public class DocumentListComponent extends TreeView<Document> {
 
-    private ObjectProperty<Document> selectedDocument;
+    private ObjectProperty<Instance> selectedDocument;
     private ObservableList<Document> documents;
 
     private final TreeItem rootTreeItem = new TreeItem("Files");
@@ -29,7 +33,7 @@ public class DocumentListComponent extends TreeView<Document> {
     Alert eraseModelsConfirmationBox;
     Alert invalidFilesBox = new Alert(Alert.AlertType.ERROR);
 
-    public void setData (ProjectModel model, ObjectProperty<Document> selectedDocument) {
+    public void setData (ProjectModel model, ObjectProperty<Instance> selectedDocument) {
         this.projectModel = model;
         this.documents = model.getDocuments();
         this.selectedDocument = selectedDocument;
@@ -53,7 +57,12 @@ public class DocumentListComponent extends TreeView<Document> {
         this.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<TreeItem<Document>>() {
             @Override
             public void changed(ObservableValue<? extends TreeItem<Document>> observable, TreeItem<Document> oldValue, TreeItem<Document> newValue) {
-                selectedDocument.set(newValue.getValue());
+                List<Document> tempDocs = new ArrayList<>();
+                tempDocs.add(newValue.getValue());
+                InstanceList instances = new InstanceList(projectModel.getPipe());
+                instances.addThruPipe(new DocumentIterator(tempDocs));
+                selectedDocument.set(instances.get(0));
+//                selectedDocument.set(newValue.getValue());
             }
         });
 

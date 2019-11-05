@@ -1,4 +1,4 @@
-package edu.ucla.drc.sledge.documentimport;
+package edu.ucla.drc.sledge.documentimport.wordcounttable;
 
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;

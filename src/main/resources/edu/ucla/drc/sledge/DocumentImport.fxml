@@ -9,7 +9,7 @@
 <?import javafx.scene.control.cell.PropertyValueFactory?>
 <?import edu.ucla.drc.sledge.documentimport.DocumentList?>
 <?import edu.ucla.drc.sledge.documentimport.DocumentTextView?>
-<?import edu.ucla.drc.sledge.documentimport.WordCountTable?>
+<?import edu.ucla.drc.sledge.documentimport.wordcounttable.WordCountTable?>
 <?import org.fxmisc.richtext.StyleClassedTextArea?>
 <?import edu.ucla.drc.sledge.documentimport.DocumentListComponent?>
 <fx:root xmlns="http://javafx.com/javafx"

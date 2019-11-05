@@ -34,13 +34,66 @@ public class DocumentTextView extends AnchorPane {
 //        documentTextPane = new StyleClassedTextArea();
 //        this.getChildren().add(documentTextPane);
     }
+    public void setData (ObjectProperty<Instance> selectedDocument) {
+        selectedDocument.addListener((ObservableValue<? extends Instance> observable, Instance oldValue, Instance newValue) -> {
+            StringBuilder builder = new StringBuilder();
 
+            Instance instance = newValue;
+            TokenSequence ts = (TokenSequence)instance.getData();
+            List<ReadOnlyStyledDocument> document = new ArrayList<>();
+            List<String> styles = new ArrayList<>();
+            styles.add(".stopword");
+            List<Integer> startPositions = new ArrayList<>();
+            List<Integer> endPositions = new ArrayList<>();
+            int textWidth = 0;
+            documentTextPane.clear();
+            for (int i = 0; i < ts.size(); i++) {
+                Token token = (Token)ts.get(i);
+                int wordLength = ts.get(i).getText().length();
+                String wordToAdd;
+                if (token.hasProperty(TokenSequenceMarkStopwords.IsStopword)) {
+                    startPositions.add(textWidth);
+                    endPositions.add(textWidth + wordLength);
+                    wordToAdd = new String(new char[wordLength]).replace("\0", "-");
+                } else {
+                    wordToAdd= token.getText();
+                }
+//                builder.append(ts.get(i).getText());
+                builder.append(wordToAdd);
+                builder.append(" ");
+                textWidth += wordLength + 1;
+                if (i > 0 && i % 10 == 0) {
+//                    builder.append("\n");
+//                    textWidth += 1;
+                    documentTextPane.appendText(builder.toString());
+                    builder = new StringBuilder();
+                    for (int j = 0; j < startPositions.size(); j++) {
+//                        documentTextPane.setStyleClass(startPositions.get(j), endPositions.get(j), "stopword");
+                    }
+                    startPositions.clear();
+                    endPositions.clear();
+                }
+
+//                textWidth += wordLength + 1;
+            }
+            documentTextPane.appendText(builder.toString());
+            for (int i = 0; i < startPositions.size(); i++) {
+//                documentTextPane.setStyleClass(startPositions.get(i), endPositions.get(i), "stopword");
+            }
+//            for (Integer i : startPositions) {
+//                documentTextPane.setStyleClass(i, i + 8, "stopword");
+//            }
+            documentTextPane.moveTo(0); // If we don't do this, it will scroll to the end
+//            this.setText(builder.toString());
+        });
+
+    }
+
+    /*
     public void setData (ObjectProperty<Document> selectedDocument) {
         selectedDocument.addListener((ObservableValue<? extends Document> observable, Document oldValue, Document newValue) -> {
             StringBuilder builder = new StringBuilder();
 
-            return;
-            /*
             Instance instance = newValue.getIngested();
             TokenSequence ts = (TokenSequence)instance.getData();
             List<ReadOnlyStyledDocument> document = new ArrayList<>();
@@ -88,8 +141,9 @@ public class DocumentTextView extends AnchorPane {
 //            }
             documentTextPane.moveTo(0); // If we don't do this, it will scroll to the end
 //            this.setText(builder.toString());
-             */
         });
 
     }
+
+     */
 }

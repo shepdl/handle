@@ -1,5 +1,6 @@
 package edu.ucla.drc.sledge.documentimport;
 
+import cc.mallet.types.Instance;
 import edu.ucla.drc.sledge.documents.Document;
 import edu.ucla.drc.sledge.documents.DocumentFactory;
 import edu.ucla.drc.sledge.project.ProjectModel;
@@ -32,7 +33,7 @@ public class AddDocumentTest extends ApplicationTest {
 
     private DocumentListComponent controller;
     private ProjectModel project;
-    private SimpleObjectProperty<Document> selectedDocument;
+    private SimpleObjectProperty<Instance> selectedDocument;
 
     @Test
     public void addingSingleDocumentAddsDocumentsToProject () {
