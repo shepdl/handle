@@ -15,9 +15,14 @@ public class StopwordsDirectory implements StopwordListsSource {
     @Override
     public List<StopwordSource> list() {
         List<StopwordSource> sources = new ArrayList<>();
-        for (File file : rootDirectory.listFiles()) {
-            sources.add(new StopwordFile(file));
+        try {
+            for (File file : rootDirectory.listFiles()) {
+                sources.add(new StopwordFile(file));
+            }
+        } catch (NullPointerException ex) {
+            System.out.println("Stopwords directory not found");
         }
+
         return sources;
     }
 

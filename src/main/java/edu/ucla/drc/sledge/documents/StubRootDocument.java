@@ -4,7 +4,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.net.URI;
 
-public class DocumentRoot implements Document {
+public class StubRootDocument implements Document {
     @Override
     public String getContent() throws FileNotFoundException {
         return "Empty content";

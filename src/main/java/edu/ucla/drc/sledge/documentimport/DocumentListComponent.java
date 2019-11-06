@@ -4,27 +4,24 @@ import cc.mallet.types.Instance;
 import cc.mallet.types.InstanceList;
 import edu.ucla.drc.sledge.documents.Document;
 import edu.ucla.drc.sledge.documents.DocumentFactory;
-import edu.ucla.drc.sledge.documents.DocumentRoot;
+import edu.ucla.drc.sledge.documents.StubRootDocument;
 import edu.ucla.drc.sledge.project.DocumentIterator;
 import edu.ucla.drc.sledge.project.ProjectModel;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.input.DragEvent;
 import javafx.scene.input.Dragboard;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.input.TransferMode;
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.net.URI;
 import java.util.ArrayList;
-import java.util.DuplicateFormatFlagsException;
 import java.util.List;
 
 public class DocumentListComponent extends TreeView<Document> {
@@ -32,7 +29,7 @@ public class DocumentListComponent extends TreeView<Document> {
     private ObjectProperty<Instance> selectedDocument;
     private ObservableList<Document> documents;
 
-    private final TreeItem<Document> rootTreeItem = new TreeItem<Document>(new DocumentRoot());
+    private final TreeItem<Document> rootTreeItem = new TreeItem<Document>(new StubRootDocument());
 
     private final DocumentFactory documentFactory = new DocumentFactory();
 
@@ -41,6 +38,7 @@ public class DocumentListComponent extends TreeView<Document> {
     Alert invalidFilesBox = new Alert(Alert.AlertType.ERROR);
 
     public void setData (ProjectModel model, ObjectProperty<Instance> selectedDocument) {
+        FXCollections.observableArrayList();
         this.projectModel = model;
         this.documents = model.getDocuments();
         this.selectedDocument = selectedDocument;
