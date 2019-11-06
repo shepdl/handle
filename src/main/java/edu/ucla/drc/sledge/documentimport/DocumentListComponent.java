@@ -119,9 +119,7 @@ public class DocumentListComponent extends TreeView<Document> {
         if (projectModel.getTopicModels().isEmpty()) {
             addFiles(files);
         } else {
-            eraseModelsConfirmationBox = new Alert(
-                    Alert.AlertType.CONFIRMATION
-            );
+            eraseModelsConfirmationBox = new Alert(Alert.AlertType.CONFIRMATION);
             eraseModelsConfirmationBox.setTitle("Erase topic models?");
             eraseModelsConfirmationBox.setHeaderText("Adding a new document will make your existing topic models invalid.");
             eraseModelsConfirmationBox.setContentText("Are you sure you want to add the new document and erase your topic models?");

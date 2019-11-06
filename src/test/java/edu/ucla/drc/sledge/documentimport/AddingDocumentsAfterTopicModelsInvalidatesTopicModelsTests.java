@@ -74,7 +74,6 @@ public class AddingDocumentsAfterTopicModelsInvalidatesTopicModelsTests extends 
         });
     }
 
-    @Ignore
     @Test
     public void cancelingAddingDocumentsDoesNotInvalidateTopicModels () {
         List<File> newFiles = new ArrayList<>();
@@ -88,7 +87,7 @@ public class AddingDocumentsAfterTopicModelsInvalidatesTopicModelsTests extends 
         }
         interact(() -> {
             controller.prepareToAddFiles(newFiles);
-            clickOn(lookup(ButtonType.CANCEL.getText()).queryButton());
+            controller.eraseModelsConfirmationBox.setResult(ButtonType.CANCEL);
             assertThat(project.getTopicModels(), hasSize(1));
             assertThat(project.getDocuments(), hasSize(3));
             assertThat(controller.getRoot().getChildren(), hasSize(3));
@@ -108,7 +107,7 @@ public class AddingDocumentsAfterTopicModelsInvalidatesTopicModelsTests extends 
         }
         interact(() -> {
             controller.prepareToAddFiles(newFiles);
-            clickOn(controller.eraseModelsConfirmationBox.getDialogPane().lookupButton(ButtonType.OK));
+            controller.eraseModelsConfirmationBox.setResult(ButtonType.OK);
             assertThat(project.getTopicModels(), hasSize(0));
             assertThat(project.getDocuments(), hasSize(6));
             assertThat(controller.getRoot().getChildren(), hasSize(6));
