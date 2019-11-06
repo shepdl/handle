@@ -13,6 +13,7 @@ import javafx.scene.control.*;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
@@ -38,8 +39,24 @@ public class WordCountTable extends TableView<WordCountEntry> {
             final MenuItem addStopwordItem = new MenuItem("Add as stopword");
             menu.getItems().add(addStopwordItem);
             addStopwordItem.setOnAction(actionEvent -> {
-                model.addStopword(row.getItem().getWord());
-                tableView.getItems().remove(row.getItem());
+                if (model.getTopicModels().isEmpty()) {
+                    model.addStopword(row.getItem().getWord());
+                    tableView.getItems().remove(row.getItem());
+                } else {
+                    Alert eraseModelsConfirmationBox = new Alert(Alert.AlertType.CONFIRMATION);
+                    eraseModelsConfirmationBox.setTitle("Erase topic models?");
+                    eraseModelsConfirmationBox.setHeaderText("Changing your stopwords list will make your existing topic models invalid");
+                    eraseModelsConfirmationBox.setContentText("Are you sure you want to change your stopword list and erase your topic models?");
+                    eraseModelsConfirmationBox.setOnCloseRequest((DialogEvent event) -> {
+                        if (eraseModelsConfirmationBox.getResult() == ButtonType.OK) {
+                            model.getTopicModels().clear();
+                            model.addStopword(row.getItem().getWord());
+                            tableView.getItems().remove(row.getItem());
+                        }
+                        eraseModelsConfirmationBox.hide();
+                    });
+                    eraseModelsConfirmationBox.show();
+                }
             });
 
             row.contextMenuProperty().bind(

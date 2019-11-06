@@ -39,11 +39,10 @@ public class ProjectExportBuilder implements Serializable {
     @JsonProperty("topicModels")
     private List<TopicModel> topicModels;
 
-    public ProjectExportBuilder(String name, List<Document>documents,
-            ImportFileSettings importFileSettings, InstanceList instances, Set<String> stopwords,
+    public ProjectExportBuilder(List<Document>documents,
+            ImportFileSettings importFileSettings, Set<String> stopwords,
             List<TopicModel> topicModels
     ) {
-        this.name = name;
 //        this.documents = documents;
         this.documents = documents.stream().map((doc) -> {
             // TODO: fix
@@ -51,7 +50,6 @@ public class ProjectExportBuilder implements Serializable {
 //            return new DocumentExporter(doc.getFile(), doc.getIngested());
         }).collect(Collectors.toList());
         this.importFileSettings = importFileSettings;
-        this.instances = instances;
         this.stopwords = stopwords;
         this.topicModels = new ArrayList<>(topicModels);
     }

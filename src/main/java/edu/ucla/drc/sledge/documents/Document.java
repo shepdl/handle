@@ -9,4 +9,15 @@ public interface Document {
     String getName();
     URI getUri();
     File getFile();
+
+    default String getExtension() {
+        String name = getName();
+        int lastPosOfDot = name.lastIndexOf('.');
+        String extension = "";
+        if (lastPosOfDot > 0) {
+            extension = name.substring(lastPosOfDot + 1);
+        }
+        return extension;
+    }
+
 }

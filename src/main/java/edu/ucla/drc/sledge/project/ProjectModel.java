@@ -7,14 +7,11 @@ import edu.ucla.drc.sledge.ImportFileSettings;
 import edu.ucla.drc.sledge.documentimport.ImportPipeBuilder;
 import edu.ucla.drc.sledge.documents.Document;
 import javafx.collections.FXCollections;
-import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 
 import java.util.*;
 
 public class ProjectModel {
-
-    private String name;
 
     public ObservableList<Document> getDocuments() {
         return documents;
@@ -26,26 +23,6 @@ public class ProjectModel {
         return importFileSettings;
     }
 
-    private InstanceList instances;
-
-    public ProjectModel () {
-        documents.addListener(new ListChangeListener<Document>() {
-            @Override
-            public void onChanged(Change<? extends Document> c) {
-//                reimportDocuments();
-            }
-        });
-    }
-
-    private void reimportDocuments () {
-        instances = new InstanceList(getPipe());
-        DocumentIterator iterator = new DocumentIterator(documents);
-        instances.addThruPipe(iterator);
-        for (int i = 0; i < documents.size(); i++) {
-//            documents.get(i).setIngested(instances.get(i));
-        }
-    }
-
     private ImportFileSettings importFileSettings = ImportFileSettings.withDefaults();
 
     public Set<String> getStopwords() {
@@ -54,7 +31,6 @@ public class ProjectModel {
 
     public void addStopword(String word) {
         stopwords.add(word);
-//        reimportDocuments();
     }
 
     public void setStopwords(Set<String> stopwords) {
@@ -81,9 +57,6 @@ public class ProjectModel {
         InstanceList instances = new InstanceList(getFeaturePipe());
         DocumentIterator iterator = new DocumentIterator(documents);
         instances.addThruPipe(iterator);
-        for (int i = 0; i < documents.size(); i++) {
-//            documents.get(i).setIngested(instances.get(i));
-        }
         return instances;
     }
 
@@ -98,9 +71,7 @@ public class ProjectModel {
     }
 
     public ProjectExportBuilder export () {
-        return new ProjectExportBuilder(
-                name, documents, importFileSettings, instances, stopwords, topicModels
-        );
+        return new ProjectExportBuilder(documents, importFileSettings, stopwords, topicModels);
     }
 
     public static ProjectModel fromBuilder (ProjectExportBuilder builder) {
