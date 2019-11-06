@@ -144,11 +144,7 @@ public class TopicModelsList extends TreeView<TopicModel> {
 
                 ContextMenu modelClickMenu = new ContextMenu();
                 MenuItem renameItem = new MenuItem("Rename");
-                renameItem.setOnAction((event) -> {
-                    System.out.println("Editing ...");
-                    item.setTitle("This was renamed");
-                    startEdit();
-                });
+                renameItem.setOnAction((event) -> startEdit());
                 onEditCommitProperty().addListener((ev) -> {
                     this.updateItem(item, empty);
                 });
