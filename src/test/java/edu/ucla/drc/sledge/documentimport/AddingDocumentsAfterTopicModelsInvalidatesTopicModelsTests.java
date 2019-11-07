@@ -1,6 +1,7 @@
 package edu.ucla.drc.sledge.documentimport;
 
 import cc.mallet.topics.TopicModel;
+import edu.ucla.drc.sledge.DragboardMockProxy;
 import edu.ucla.drc.sledge.project.ProjectModel;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.fxml.FXMLLoader;
@@ -12,21 +13,16 @@ import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
-import org.testfx.api.FxRobot;
 import org.testfx.api.FxToolkit;
 import org.testfx.framework.junit.ApplicationTest;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
-import static org.hamcrest.MatcherAssert.*;
-import static org.hamcrest.Matchers.*;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.hasSize;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -35,8 +31,8 @@ public class AddingDocumentsAfterTopicModelsInvalidatesTopicModelsTests extends 
     private DocumentListComponent controller;
     private ProjectModel project;
     private Parent mainNode;
+    private Scene scene;
 
-    @Ignore
     @Test
     public void addingDocumentsWhenTopicModelsHaveBeenGeneratedShowsWarning () {
         List<File> newFiles = new ArrayList<>();
@@ -48,23 +44,23 @@ public class AddingDocumentsAfterTopicModelsInvalidatesTopicModelsTests extends 
             e.printStackTrace();
             fail("IOException when creating files in test method");
         }
-//        Dragboard db = controller.getParent()
-//                .getScene().startDragAndDrop(TransferMode.NONE);
+
         interact(() -> {
             Clipboard clipboard = Clipboard.getSystemClipboard();
             Map<DataFormat, Object> content = new HashMap<>();
             content.put(DataFormat.FILES, newFiles);
-//            db.setContent(content);
             clipboard.setContent(content);
-            System.out.println("Dropping");
-            FxRobot dragger = drag(mainNode, MouseButton.PRIMARY);
-            System.out.println(lookup("#documentList").query());
-//            drag(mainNode).dropTo("#documentList");
-//            dragger.dropTo(mainNode);
-            drag(mainNode);
-            Dragboard db = mainNode.startDragAndDrop(TransferMode.COPY);
+            DragboardMockProxy mock = new DragboardMockProxy(clipboard);
+            DragEvent dragStart = new DragEvent(null, mainNode, DragEvent.DRAG_OVER,
+                    mock.getDragboard(),
+                    0, 0, 0, 0,
+                    TransferMode.COPY,
+                    null, mainNode, null
+            );
+
+            controller.fireEvent(dragStart);
             DragEvent dragEvent = new DragEvent(null, mainNode, DragEvent.DRAG_DROPPED,
-                    db,
+                    mock.getDragboard(),
                     0, 0, 0, 0,
                     TransferMode.COPY,
                     null, mainNode, null
@@ -123,13 +119,12 @@ public class AddingDocumentsAfterTopicModelsInvalidatesTopicModelsTests extends 
         pane.setPrefWidth(600);
         pane.getChildren().add(mainNode);
         mainNode.setId("documentList");
-        Scene scene = new Scene(pane);
+        scene = new Scene(pane);
         stage.setScene(scene);
         stage.show();
         stage.toFront();
         project = ProjectModel.blank();
         controller = loader.getController();
-//        controller.setId();
     }
 
     @Before
