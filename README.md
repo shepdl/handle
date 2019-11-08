@@ -1,4 +1,4 @@
-# HANDLE (*H*euristic *An*alyitical *D*igital *L*anguage *E*nvironment)
+# HANDLE (*H*euristic *An*alytical *D*igital *L*anguage *E*nvironment)
 
 Get a grip on [MALLET](http://mallet.cs.umass.edu/)
 
