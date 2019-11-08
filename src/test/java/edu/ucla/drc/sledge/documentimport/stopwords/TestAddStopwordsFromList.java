@@ -102,7 +102,6 @@ public class TestAddStopwordsFromList extends ApplicationTest {
         controller.initialize(project, stopwordListSource, nullCallback);
         clickOn(controller.defaultStopwordsComboBox);
         write("First");
-        push(KeyCode.DOWN);
         push(KeyCode.ENTER);
 
         StopwordSource userSource = new ListStopwordsList("my-stopwords-list.txt", "grape peach");
@@ -183,7 +182,6 @@ public class TestAddStopwordsFromList extends ApplicationTest {
         controller.initialize(project, stopwordListSource, nullCallback);
         clickOn(controller.defaultStopwordsComboBox);
         write("First");
-        push(KeyCode.DOWN);
         push(KeyCode.ENTER);
 
         List<String> foundStopwords = controller.stopwordsTable.getItems();
@@ -198,7 +196,6 @@ public class TestAddStopwordsFromList extends ApplicationTest {
         controller.initialize(project, stopwordListSource, nullCallback);
         clickOn(controller.defaultStopwordsComboBox);
         write("First");
-        push(KeyCode.DOWN);
         push(KeyCode.ENTER);
 
         clickOn(controller.defaultStopwordsComboBox);
