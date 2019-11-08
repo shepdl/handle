@@ -7,26 +7,23 @@
 <?import javafx.scene.layout.*?>
 
 <?import javafx.scene.control.cell.PropertyValueFactory?>
-<fx:root xmlns="http://javafx.com/javafx"
+<fx:root
+        xmlns="http://javafx.com/javafx"
          xmlns:fx="http://javafx.com/fxml"
          prefHeight="400.0" prefWidth="600.0"
-         type="TableView"
+        type="AnchorPane"
 >
-    <columns>
-        <TableColumn text="Word">
-            <cellValueFactory>
-                <PropertyValueFactory property="word"/>
-            </cellValueFactory>
-        </TableColumn>
-        <TableColumn text="Count" sortType="DESCENDING" fx:id="countColumn">
-            <cellValueFactory>
-                <PropertyValueFactory property="count"/>
-            </cellValueFactory>
-        </TableColumn>
-    </columns>
+    <TableView fx:id="wordTable">
+        <columns>
+            <TableColumn text="Word" fx:id="wordColumn">
+            </TableColumn>
+            <TableColumn text="Count"  fx:id="countColumn">
+            </TableColumn>
+        </columns>
 
-    <sortOrder>
-        <fx:reference source="countColumn" />
-    </sortOrder>
+        <sortOrder>
+            <fx:reference source="wordColumn" />
+        </sortOrder>
+    </TableView>
 
 </fx:root>

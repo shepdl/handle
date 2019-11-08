@@ -1,7 +1,9 @@
 package edu.ucla.drc.sledge.documentimport.wordcounttable;
 
+import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 
 public class WordCountEntry {
 
@@ -15,6 +17,14 @@ public class WordCountEntry {
 
     public String getWord () {
         return word.get();
+    }
+
+    public final StringProperty wordProperty () {
+        return word;
+    }
+
+    public final IntegerProperty countProperty () {
+        return count;
     }
 
     public int getCount () {

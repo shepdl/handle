@@ -66,7 +66,7 @@ public class AddingDocumentsAfterTopicModelsInvalidatesTopicModelsTests extends 
                     null, mainNode, null
             );
             controller.fireEvent(dragEvent);
-                assertTrue(controller.eraseModelsConfirmationBox.isShowing());
+            assertTrue(controller.eraseModelsConfirmationBox.isShowing());
         });
     }
 
