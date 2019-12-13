@@ -3,6 +3,8 @@ package cc.mallet.topics;
 
 import cc.mallet.types.*;
 import cc.mallet.util.Randoms;
+import edu.ucla.drc.sledge.project.ProjectModel;
+import edu.ucla.drc.sledge.topicsettings.Topic;
 import edu.ucla.drc.sledge.topicsettings.TopicDocumentContainerSummary;
 
 import java.io.*;
@@ -239,6 +241,10 @@ public class TopicModel extends Thread implements Serializable {
     public void setSaveSerializedModel(int interval, String filename) {
         this.saveModelInterval = interval;
         this.modelFilename = filename;
+    }
+
+    public void addInstances(ProjectModel projectModel) {
+        addInstances(projectModel.getInstancesForModeling());
     }
 
     public void addInstances(InstanceList training) {
@@ -1776,7 +1782,12 @@ public class TopicModel extends Thread implements Serializable {
         }
     }
 
+    private List<TopicDocumentContainerSummary> summaryReport;
+
     public List<TopicDocumentContainerSummary> getSummary() {
+        if (summaryReport != null) {
+            return summaryReport;
+        }
         ArrayList<TreeSet<IDSorter>> topicSortedDocuments = getTopicDocuments(10.0);
 
         List<TopicDocumentContainerSummary> report = new ArrayList<>();
@@ -1803,6 +1814,8 @@ public class TopicModel extends Thread implements Serializable {
 
             report.add(summary);
         }
+
+        summaryReport = report;
 
         return report;
     }
