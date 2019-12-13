@@ -18,6 +18,12 @@ public class ImportFileSettings implements Serializable {
     public static final Pattern defaultRegex = Pattern.compile("\\p{L}[\\p{L}\\p{P}]+\\p{L}");
     public static final Pattern nonEnglishRegex = Pattern.compile("[\\p{L}\\p{M}]+");
 
+    public enum DocumentIterationSchema {
+        ONE_DOC_PER_FILE, ONE_DOC_PER_LINE
+    };
+
+    private DocumentIterationSchema schema;
+
     public ImportFileSettings (boolean preserveCase, Pattern tokenRegexPattern) {
         this.preserveCase = preserveCase;
         this.tokenRegexPattern = tokenRegexPattern;
@@ -28,6 +34,14 @@ public class ImportFileSettings implements Serializable {
             false,
             defaultRegex
         );
+    }
+
+    public void setIterationSchema (DocumentIterationSchema schema) {
+        this.schema = schema;
+    }
+
+    public DocumentIterationSchema getIterationSchema () {
+        return schema;
     }
 
     public boolean preserveCase() {

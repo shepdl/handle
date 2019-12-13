@@ -1,10 +1,13 @@
 package edu.ucla.drc.sledge.project;
 
 import cc.mallet.pipe.Pipe;
+import cc.mallet.pipe.iterator.CsvIterator;
 import cc.mallet.topics.TopicModel;
+import cc.mallet.types.Instance;
 import cc.mallet.types.InstanceList;
 import edu.ucla.drc.sledge.ImportFileSettings;
 import edu.ucla.drc.sledge.documentimport.ImportPipeBuilder;
+import edu.ucla.drc.sledge.documents.CsvDocumentIterator;
 import edu.ucla.drc.sledge.documents.Document;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -55,7 +58,12 @@ public class ProjectModel {
 
     public InstanceList getInstancesForModeling () {
         InstanceList instances = new InstanceList(getFeaturePipe());
-        DocumentIterator iterator = new DocumentIterator(documents);
+        Iterator<Instance> iterator;
+        if (importFileSettings.getIterationSchema() == ImportFileSettings.DocumentIterationSchema.ONE_DOC_PER_FILE) {
+            iterator = new DocumentIterator(documents);
+        } else {
+            iterator = new CsvDocumentIterator(documents);
+        }
         instances.addThruPipe(iterator);
         return instances;
     }

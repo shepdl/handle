@@ -24,10 +24,9 @@ public class WordCountTable extends AnchorPane implements LoadsFxml {
 
     @FXML private TableColumn<WordCountEntry, String> wordColumn;
     @FXML private TableColumn<WordCountEntry, Number> countColumn;
-    private ProjectModel model;
+    @FXML TableView<WordCountEntry> wordTable;
 
-    @FXML
-    TableView<WordCountEntry> wordTable;
+    private ProjectModel model;
 
     public WordCountTable () {
         loadFxml();
@@ -89,7 +88,7 @@ public class WordCountTable extends AnchorPane implements LoadsFxml {
             }
             wordTable.getItems().clear();
             wordTable.getItems().addAll(wordCountEntries);
-//            wordTable.sort();
+            wordTable.sort();
         });
     }
 

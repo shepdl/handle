@@ -10,6 +10,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.layout.AnchorPane;
 import org.fxmisc.richtext.*;
+import org.fxmisc.richtext.model.ReadOnlyStyledDocument;
 import org.reactfx.Subscription;
 
 import java.io.IOException;

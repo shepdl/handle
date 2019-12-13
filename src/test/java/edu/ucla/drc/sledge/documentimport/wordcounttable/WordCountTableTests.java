@@ -137,15 +137,13 @@ public class WordCountTableTests extends ApplicationTest {
     @Override
     public void start(Stage stage) throws Exception {
         FXMLLoader loader = new FXMLLoader(WordCountTable.class.getResource("WordCountTable.fxml"));
-        WordCountTable table = new WordCountTable();
-        loader.setRoot(table);
         mainNode = loader.load();
         scene = new Scene(mainNode);
         stage.setScene(scene);
         stage.show();
         stage.toFront();
         project = ProjectModel.blank();
-        controller = table;
+        controller = loader.getController();
     }
 
     @Before
