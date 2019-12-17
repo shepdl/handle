@@ -12,6 +12,7 @@ import edu.ucla.drc.sledge.documents.Document;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
+import javax.print.Doc;
 import java.util.*;
 
 public class ProjectModel {
@@ -85,6 +86,37 @@ public class ProjectModel {
     public static ProjectModel fromBuilder (ProjectExportBuilder builder) {
         ProjectModel model = new ProjectModel();
         return model;
+    }
+
+    public interface Exporter {
+        void addDocuments(List<Document> documents);
+        void addSettings(ImportFileSettings settings);
+        void addStopwords(Set<String> stopwords);
+        void addTopicModels(List<TopicModel> topicModels);
+    }
+
+    public void exportTo (Exporter exporter) {
+        exporter.addDocuments(documents);
+        exporter.addSettings(importFileSettings);
+        exporter.addStopwords(stopwords);
+        exporter.addTopicModels(topicModels);
+    }
+
+    public interface Importer {
+        List<Document> provideDocuments();
+        ImportFileSettings provideSettings();
+        Set<String> provideStopwords();
+        List<TopicModel> provideTopicModels();
+    }
+
+    public ProjectModel () {
+    }
+
+    public ProjectModel (Importer importer) {
+        documents = FXCollections.observableArrayList(importer.provideDocuments());
+        importFileSettings = importer.provideSettings();
+        stopwords = importer.provideStopwords();
+        topicModels = FXCollections.observableArrayList(importer.provideTopicModels());
     }
 
 }

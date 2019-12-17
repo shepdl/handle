@@ -19,6 +19,8 @@
                 <MenuItem text="New" onAction="#newProject" />
                 <MenuItem text="Load" onAction="#loadProject" />
                 <MenuItem text="Save" onAction="#saveProject" />
+                <SeparatorMenuItem />
+                <MenuItem text="Quit" onAction="#quit" />
             </Menu>
         </MenuBar>
 
