@@ -83,6 +83,10 @@ public class DocumentTextView extends AnchorPane {
             StringBuilder builder = new StringBuilder();
 
             Instance instance = newValue;
+            documentTextPane.clear();
+            if (instance == null) {
+                return;
+            }
             TokenSequence ts = (TokenSequence)instance.getData();
             List<ReadOnlyStyledDocument> document = new ArrayList<>();
             List<String> styles = new ArrayList<>();
@@ -90,7 +94,6 @@ public class DocumentTextView extends AnchorPane {
             List<Integer> startPositions = new ArrayList<>();
             List<Integer> endPositions = new ArrayList<>();
             int textWidth = 0;
-            documentTextPane.clear();
             for (int i = 0; i < ts.size(); i++) {
                 Token token = (Token)ts.get(i);
                 int wordLength = ts.get(i).getText().length();
