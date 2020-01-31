@@ -22,6 +22,10 @@ class IntegerValidator implements ChangeListener<String> {
 
     @Override
     public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+        if (newValue.isEmpty()) {
+            field.setText("");
+            return;
+        }
         try {
             int parsedValue = Integer.parseInt(newValue);
             field.setText(newValue);
