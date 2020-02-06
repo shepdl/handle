@@ -3,7 +3,6 @@ package edu.ucla.drc.sledge;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import edu.ucla.drc.sledge.project.ProjectExportBuilder;
 import edu.ucla.drc.sledge.project.ProjectModel;
 import edu.ucla.drc.sledge.topicmodeling.TopicModelsTab;
 import javafx.application.Platform;
@@ -61,24 +60,25 @@ public class SledgeAppRoot extends AnchorPane {
         chooser.getExtensionFilters().add(filter);
         chooser.setTitle("Select file to open");
         File file = chooser.showOpenDialog(null);
+        IOHelper ioHelper = new IOHelper();
         if (file != null) {
-            ObjectMapper mapper = new ObjectMapper();
             try {
-                ProjectExportBuilder builder = mapper.readValue(file, ProjectExportBuilder.class);
-                model = builder.toModel();
-                System.out.println(model.getStopwords());
-                System.out.println(model.getDocuments());
+                ProjectModel model = ioHelper.loadModelFromFile(file);
+                this.model = model;
                 documentImport.setModel(model);
                 topicModels.setModel(model);
-            } catch (JsonParseException ex) {
-                Alert alert = new Alert(Alert.AlertType.ERROR);
-                alert.setHeaderText("Error parsing file");
-                alert.setContentText("Could not parse file");
             } catch (IOException e) {
+                e.printStackTrace();
                 Alert alert = new Alert(Alert.AlertType.ERROR);
                 alert.setHeaderText("Error importing file");
                 alert.setContentText("Could not import the file");
+                alert.showAndWait();
+            } catch (IOHelper.InvalidFileFormatException e) {
                 e.printStackTrace();
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setHeaderText("Error parsing file");
+                alert.setContentText("Could not parse file");
+                alert.showAndWait();
             }
         }
     }
@@ -89,20 +89,16 @@ public class SledgeAppRoot extends AnchorPane {
         chooser.getExtensionFilters().add(filter);
         chooser.setTitle("Select file to save");
         File file = chooser.showSaveDialog(null);
+        IOHelper ioHelper = new IOHelper();
         if (file != null) {
-            ProjectExportBuilder builder = model.export();
-//            builder.writeToFile(file);
-            ProjectModel.Exporter exporter = new ProjectExportBuilder.ProjectModelBuilderToJson();
-            model.exportTo(exporter);
-            try (ObjectOutputStream stream = new ObjectOutputStream(new FileOutputStream(file))) {
-                ObjectMapper mapper = new ObjectMapper();
-//                mapper.writerWithDefaultPrettyPrinter().writeValue(file, model.export());
-//                mapper = new ObjectMapper();
-                mapper.writerWithDefaultPrettyPrinter().writeValue(file, exporter);
-//                builder.writeObject(stream);
-//                stream.writeObject(builder);
+            try {
+                ioHelper.saveModelToFile(model, file);
             } catch (IOException e) {
                 e.printStackTrace();
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setHeaderText("Error saving file");
+                alert.setContentText("Error saving file");
+                alert.showAndWait();
             }
         }
     }

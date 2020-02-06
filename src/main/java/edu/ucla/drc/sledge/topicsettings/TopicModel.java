@@ -2022,6 +2022,86 @@ public class TopicModel extends Thread implements Serializable {
         return title;
     }
 
+    public interface Importer {
+        String name();
+        int numTopics();
+        int topicMask();
+        int topicBits();
+        double[] alpha();
+        double alphaSum();
+        double beta();
+        double betaSum();
+        int[][] typeTopicCounts();
+        int[] tokensPerTopic();
+        int[] docLengthCounts();
+        int[][] topicDocCounts();
+        int numIterations();
+        int burnInPeriod();
+        int optimizeInterval();
+        int randomSeed();
+    }
+
+    public TopicModel (Importer importer) {
+        numTopics = importer.numTopics();
+        topicMask = importer.topicMask();
+        topicBits = importer.topicBits();
+        alpha = importer.alpha();
+        alphaSum = importer.alphaSum();
+        beta = importer.beta();
+        betaSum = importer.betaSum();
+        typeTopicCounts = importer.typeTopicCounts();
+        tokensPerTopic = importer.tokensPerTopic();
+        docLengthCounts = importer.docLengthCounts();
+        topicDocCounts = importer.topicDocCounts();
+        numIterations = importer.numIterations();
+        burninPeriod = importer.burnInPeriod();
+        optimizeInterval = importer.optimizeInterval();
+        randomSeed = importer.randomSeed();
+    }
+
+    public void exportTo (Exporter exporter) {
+        exporter.addName(getName());
+        exporter.addNumTopics(numTopics);
+        exporter.addAlphabet(alphabet);
+        exporter.addLabelAlphabet(topicAlphabet);
+        exporter.addTopicMask(topicMask);
+        exporter.addTopicBits(topicBits);
+        exporter.addAlpha(alpha);
+        exporter.addAlphaSum(alphaSum);
+        exporter.addBeta(beta);
+        exporter.addBetaSum(betaSum);
+        exporter.addTypeTopicCounts(typeTopicCounts);
+        exporter.addTokensPerTopic(tokensPerTopic);
+        exporter.addDocLengthCounts(docLengthCounts);
+        exporter.addTopicDocCounts(topicDocCounts);
+        exporter.addNumIterations(numIterations);
+        exporter.addBurnInPeriod(burninPeriod);
+        exporter.addOptimizeInterval(optimizeInterval);
+        exporter.addRandomSeed(randomSeed);
+    }
+
+    public interface Exporter {
+        void addName(String name);
+        // TODO: Alphabet and LabelAlphabet
+        void addNumTopics(int numTopics);
+        void addAlphabet(Alphabet alphabet);
+        void addLabelAlphabet(LabelAlphabet labelAlphabet);
+        void addTopicMask(int topicMask);
+        void addTopicBits(int topicBits);
+        void addAlpha(double[] alpha);
+        void addAlphaSum(double alphaSum);
+        void addBeta(double beta);
+        void addBetaSum(double betaSum);
+        void addTypeTopicCounts(int[][] typeTopicCounts);
+        void addTokensPerTopic(int[] tokensPerTopic);
+        void addDocLengthCounts(int[] docLengthCounts);
+        void addTopicDocCounts(int[][] topicDocCounts);
+        void addNumIterations(int numIterations);
+        void addBurnInPeriod(int burnInPeriod);
+        void addOptimizeInterval(int optimizeInterval);
+        void addRandomSeed(int randomSeed);
+    }
+
     public static class TopicModelSettingsExporter {
 
         @JsonProperty("name")

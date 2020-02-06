@@ -4,8 +4,8 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>edu.ucla.drc.sledge</groupId>
-    <artifactId>sledge-app</artifactId>
+    <groupId>edu.ucla.drc.handle</groupId>
+    <artifactId>handle-app</artifactId>
     <version>1.0-SNAPSHOT</version>
 
     <dependencies>
@@ -108,7 +108,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>edu.ucla.drc.sledge.SledgeApp</mainClass>
+                            <mainClass>edu.ucla.drc.sledge.HandleLauncher</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
@@ -131,7 +131,7 @@
                 <artifactId>javafx-maven-plugin</artifactId>
                 <version>0.0.3</version>
                 <configuration>
-                    <mainClass>edu.ucla.drc.sledge.SledgeApp</mainClass>
+                    <mainClass>edu.ucla.drc.sledge.HandleLauncher</mainClass>
                 </configuration>
             </plugin>
         </plugins>

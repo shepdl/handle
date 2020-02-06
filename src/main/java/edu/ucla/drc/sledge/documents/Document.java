@@ -20,4 +20,25 @@ public interface Document {
         return extension;
     }
 
+    interface Exporter {
+        void addContent (String content);
+        void addName(String name);
+        void addUri(URI uri);
+        void addFile(File file);
+    }
+
+    interface Importer {
+        String provideContent ();
+        String provideName();
+        URI provideUri();
+        File provideFile();
+    }
+
+    default void exportTo (Exporter exporter) throws FileNotFoundException {
+        exporter.addContent(getContent());
+        exporter.addName(getName());
+        exporter.addUri(getUri());
+        exporter.addFile(getFile());
+    }
+
 }

@@ -16,6 +16,12 @@ class TextFileDocument implements Document {
         this.file = file;
     }
 
+    public TextFileDocument (Importer importer) {
+        // Copy file to temporary directory
+        file = importer.provideFile();
+        content = importer.provideContent();
+    }
+
     @Override
     public String getContent() throws FileNotFoundException {
         if (content.isEmpty()) {

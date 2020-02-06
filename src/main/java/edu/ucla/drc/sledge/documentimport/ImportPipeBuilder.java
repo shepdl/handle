@@ -1,6 +1,7 @@
 package edu.ucla.drc.sledge.documentimport;
 
 import cc.mallet.pipe.*;
+import cc.mallet.util.SpacePreservingLexer;
 import edu.ucla.drc.sledge.ImportFileSettings;
 import edu.ucla.drc.sledge.documentimport.stopwords.ActuallyRemoveStopwordsPipe;
 import edu.ucla.drc.sledge.documentimport.stopwords.TokenSequenceMarkStopwords;
@@ -47,7 +48,8 @@ public class ImportPipeBuilder {
         if (!settings.preserveCase()) {
             pipes.add(new CharSequenceLowercase());
         }
-        pipes.add(new CharSequence2TokenSequence(settings.getTokenRegexPattern()));
+//        pipes.add(new CharSequence2TokenSequence(settings.getTokenRegexPattern()));
+        pipes.add(new CharSequence2TokenSequence(new SpacePreservingLexer(settings.getTokenRegexPattern())));
 
 //        TokenSequenceRemoveStopwords stopwordFilter = new TokenSequenceRemoveStopwords(settings.preserveCase(), true);
         TokenSequenceMarkStopwords stopwordFilter = new TokenSequenceMarkStopwords(new HashSet<>(stopwords));
@@ -65,7 +67,9 @@ public class ImportPipeBuilder {
         if (!settings.preserveCase()) {
             pipes.add(new CharSequenceLowercase());
         }
+
         pipes.add(new CharSequence2TokenSequence(settings.getTokenRegexPattern()));
+//        pipes.add(new CharSequence2TokenSequence(new SpacePreservingLexer(settings.getTokenRegexPattern())));
 //        TokenSequenceRemoveStopwords stopwordFilter = new TokenSequenceRemoveStopwords(settings.preserveCase(), true);
         pipes.add(new TokenSequenceMarkStopwords(new HashSet<>(stopwords)));
 //        stopwordFilter.addStopWords(stopwords.toArray(new String[0]));

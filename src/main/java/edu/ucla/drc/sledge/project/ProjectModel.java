@@ -1,7 +1,6 @@
 package edu.ucla.drc.sledge.project;
 
 import cc.mallet.pipe.Pipe;
-import cc.mallet.pipe.iterator.CsvIterator;
 import cc.mallet.topics.TopicModel;
 import cc.mallet.types.Instance;
 import cc.mallet.types.InstanceList;
@@ -12,7 +11,6 @@ import edu.ucla.drc.sledge.documents.Document;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
-import javax.print.Doc;
 import java.util.*;
 
 public class ProjectModel {
@@ -77,15 +75,6 @@ public class ProjectModel {
 
     public static ProjectModel blank () {
         return new ProjectModel();
-    }
-
-    public ProjectExportBuilder export () {
-        return new ProjectExportBuilder(documents, importFileSettings, stopwords, topicModels);
-    }
-
-    public static ProjectModel fromBuilder (ProjectExportBuilder builder) {
-        ProjectModel model = new ProjectModel();
-        return model;
     }
 
     public interface Exporter {

@@ -18,13 +18,17 @@ public class SledgeApp extends Application {
     @Override
     public void start(final Stage primaryStage) throws Exception {
         rootStage = primaryStage;
-        primaryStage.setTitle("Sledge");
+        primaryStage.setTitle("HANDLE");
 
         FXMLLoader loader = new FXMLLoader(getClass().getResource("SledgeAppRoot.fxml"));
         Scene scene = new Scene(loader.load());
         primaryStage.setScene(scene);
         primaryStage.show();
 
+    }
+
+    public static void main (String[] args) {
+        launch(args);
     }
 
 }
