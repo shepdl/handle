@@ -3,7 +3,6 @@ package edu.ucla.drc.sledge.documentimport.wordcounttable;
 import cc.mallet.pipe.*;
 import cc.mallet.types.Instance;
 import cc.mallet.types.InstanceList;
-import cc.mallet.types.TokenSequence;
 import edu.ucla.drc.sledge.documentimport.stopwords.TokenSequenceMarkStopwords;
 import edu.ucla.drc.sledge.project.ProjectModel;
 import javafx.beans.property.ObjectProperty;
@@ -19,7 +18,6 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.testfx.framework.junit.ApplicationTest;
 
-import java.nio.file.Path;
 import java.util.*;
 import java.util.regex.Pattern;
 
@@ -137,6 +135,8 @@ public class WordCountTableTests extends ApplicationTest {
     @Override
     public void start(Stage stage) throws Exception {
         FXMLLoader loader = new FXMLLoader(WordCountTable.class.getResource("WordCountTable.fxml"));
+        AnchorPane pane = new AnchorPane();
+        loader.setRoot(pane);
         mainNode = loader.load();
         scene = new Scene(mainNode);
         stage.setScene(scene);

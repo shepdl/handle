@@ -6,7 +6,7 @@
 
     <groupId>edu.ucla.drc.handle</groupId>
     <artifactId>handle-app</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>0.1-DH2020</version>
 
     <dependencies>
         <dependency>
@@ -95,10 +95,10 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.6.1</version>
+                <version>3.8.1</version>
                 <configuration>
-                    <source>12</source>
-                    <target>12</target>
+                    <source>13</source>
+                    <target>13</target>
                 </configuration>
             </plugin>
             <plugin>

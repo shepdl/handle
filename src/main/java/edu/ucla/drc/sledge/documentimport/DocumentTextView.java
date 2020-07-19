@@ -167,8 +167,8 @@ public class DocumentTextView extends AnchorPane {
                 builder.append(wordToAdd);
                 builder.append(" ");
                 textWidth += wordLength + 1;
-                if (i > 0 && i % 10 == 0) {
-                    builder.append("\n");
+//                if (i > 0 && i % 20 == 0) {
+//                    builder.append("\n");
 //                    textWidth += 1;
                     // These are the bits that add the text incrementally
 //                    documentTextPane.appendText(builder.toString());
@@ -178,7 +178,7 @@ public class DocumentTextView extends AnchorPane {
 //                    }
 //                    startPositions.clear();
 //                    endPositions.clear();
-                }
+//                }
 
 //                textWidth += wordLength + 1;
             }

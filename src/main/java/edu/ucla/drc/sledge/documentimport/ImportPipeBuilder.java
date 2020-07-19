@@ -1,6 +1,7 @@
 package edu.ucla.drc.sledge.documentimport;
 
 import cc.mallet.pipe.*;
+import cc.mallet.util.CharSequenceLexer;
 import cc.mallet.util.SpacePreservingLexer;
 import edu.ucla.drc.sledge.ImportFileSettings;
 import edu.ucla.drc.sledge.documentimport.stopwords.ActuallyRemoveStopwordsPipe;
@@ -50,6 +51,7 @@ public class ImportPipeBuilder {
         }
 //        pipes.add(new CharSequence2TokenSequence(settings.getTokenRegexPattern()));
         pipes.add(new CharSequence2TokenSequence(new SpacePreservingLexer(settings.getTokenRegexPattern())));
+//        pipes.add(new CharSequence2TokenSequence(new CharSequenceLexer(settings.getTokenRegexPattern())));
 
 //        TokenSequenceRemoveStopwords stopwordFilter = new TokenSequenceRemoveStopwords(settings.preserveCase(), true);
         TokenSequenceMarkStopwords stopwordFilter = new TokenSequenceMarkStopwords(new HashSet<>(stopwords));
