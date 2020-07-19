@@ -8,6 +8,7 @@ import cc.mallet.types.TokenSequence;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.regex.Pattern;
 
 public class TokenSequenceMarkStopwords extends Pipe {
 
@@ -15,6 +16,9 @@ public class TokenSequenceMarkStopwords extends Pipe {
     private HashSet<String> stoplist = new HashSet<>();
 
     public static String IsStopword = "IsStopword";
+    public static String IsWhitespace = "IsWhitespace";
+
+    private static Pattern WHITESPACE_PATTERN = Pattern.compile("\\s+");
 
     public TokenSequenceMarkStopwords (boolean caseSensitive) {
         this.caseSensitive = caseSensitive;
@@ -41,6 +45,10 @@ public class TokenSequenceMarkStopwords extends Pipe {
         stoplist.removeAll(stopwordsToRemove);
     }
 
+    static boolean isWhitespace (String word) {
+        return WHITESPACE_PATTERN.matcher(word).matches();
+    }
+
     public Instance pipe (Instance carrier) {
         TokenSequence ts = (TokenSequence)carrier.getData();
         TokenSequence ret = new TokenSequence();
@@ -49,7 +57,9 @@ public class TokenSequenceMarkStopwords extends Pipe {
             if (caseSensitive) {
                 word = word.toLowerCase();
             }
-            if (stoplist.contains(word)) {
+            if (isWhitespace(word)) {
+                token.setProperty(IsWhitespace, true);
+            } else if (stoplist.contains(word)) {
                 token.setProperty(IsStopword, true);
             }
             ret.add(token);

@@ -27,8 +27,21 @@
             <ToggleGroup fx:id="tokenGroup" />
         </fx:define>
 
-        <RadioButton text="Just letters" fx:id="justLettersRadio" toggleGroup="$tokenGroup" />
-        <RadioButton text="All characters between spaces" fx:id="allCharactersRadio" toggleGroup="$tokenGroup"/>
+        <RadioButton text="Letters, unicode marks, and punctuation" fx:id="justLettersRadio" toggleGroup="$tokenGroup" >
+            <tooltip>
+                <!--
+                    The backslash escaping looks inconsistent, but a single backslash at the beginning
+                     causes an "invalid escape sequence" error and renders correctly.
+                -->
+                <Tooltip text="\\p{L}[\p{L}\p{P}]+\p{L}"> </Tooltip>
+            </tooltip>
+
+        </RadioButton>
+        <RadioButton text="All characters between spaces" fx:id="allCharactersRadio" toggleGroup="$tokenGroup">
+            <tooltip>
+                <Tooltip text="[\p{L}\p{M}]+"> </Tooltip>
+            </tooltip>
+        </RadioButton>
 
 
         <CheckBox text="Preserve capital letters" selected="false" fx:id="preserveCaseCheckBox" />

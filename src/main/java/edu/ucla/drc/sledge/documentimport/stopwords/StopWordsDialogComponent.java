@@ -36,7 +36,6 @@ public class StopWordsDialogComponent extends AnchorPane {
 
     Alert confirmAlert;
 
-    @FXML
     public void initialize (ProjectModel project, StopwordListsSource stopwordsSource, Consumer closeHandler) {
         this.project = project;
         this.closeHandler = closeHandler;

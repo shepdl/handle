@@ -10,6 +10,7 @@ import javafx.scene.control.RadioButton;
 import javafx.scene.control.Toggle;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.AnchorPane;
+import org.apache.xmlbeans.impl.xb.xsdschema.ImportDocument;
 
 public class ImportSettingsDialog extends AnchorPane {
 
@@ -40,6 +41,13 @@ public class ImportSettingsDialog extends AnchorPane {
             @Override
             public void changed(ObservableValue<? extends Toggle> observable, Toggle oldValue, Toggle newValue) {
                 RadioButton selectedRadioButton = (RadioButton) newValue;
+                if (selectedRadioButton.isSelected()) {
+                    if (selectedRadioButton == oneLineRadio) {
+                        settings.setIterationSchema(ImportFileSettings.DocumentIterationSchema.ONE_DOC_PER_LINE);
+                    } else {
+                        settings.setIterationSchema(ImportFileSettings.DocumentIterationSchema.ONE_DOC_PER_FILE);
+                    }
+                }
             }
         });
 

@@ -6,6 +6,7 @@ import cc.mallet.types.IDSorter;
 import edu.ucla.drc.sledge.LoadsFxml;
 import edu.ucla.drc.sledge.project.ProjectModel;
 import edu.ucla.drc.sledge.topicsettings.Topic;
+import edu.ucla.drc.sledge.topicsettings.TopicDocumentContainerSummary;
 import edu.ucla.drc.sledge.topicsettings.TopicSummary;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -72,6 +73,7 @@ public class ModelVisualization extends AnchorPane implements LoadsFxml {
         randomSeedText.setText(Integer.toString(model.randomSeed));
 
         List<TreeSet<IDSorter>> sortedWords = model.getSortedWords();
+        List<TopicDocumentContainerSummary> topicSummary = model.getSummary();
         for (int i = 0; i < sortedWords.size(); i++) {
             Topic topic = new Topic(i);
             Iterator items = sortedWords.get(i).iterator();
@@ -84,7 +86,7 @@ public class ModelVisualization extends AnchorPane implements LoadsFxml {
             }
 
             TopicSummary summary = new TopicSummary();
-            summary.setData(model, topic, model.getSummary().get(topic.getId()));
+            summary.setData(model, topic, topicSummary.get(topic.getId()));
 
             pane.getChildren().add(summary);
         }

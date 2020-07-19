@@ -2,9 +2,11 @@ package edu.ucla.drc.sledge.project;
 
 import cc.mallet.pipe.Pipe;
 import cc.mallet.topics.TopicModel;
+import cc.mallet.types.Instance;
 import cc.mallet.types.InstanceList;
 import edu.ucla.drc.sledge.ImportFileSettings;
 import edu.ucla.drc.sledge.documentimport.ImportPipeBuilder;
+import edu.ucla.drc.sledge.documents.CsvDocumentIterator;
 import edu.ucla.drc.sledge.documents.Document;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -55,7 +57,12 @@ public class ProjectModel {
 
     public InstanceList getInstancesForModeling () {
         InstanceList instances = new InstanceList(getFeaturePipe());
-        DocumentIterator iterator = new DocumentIterator(documents);
+        Iterator<Instance> iterator;
+        if (importFileSettings.getIterationSchema() == ImportFileSettings.DocumentIterationSchema.ONE_DOC_PER_FILE) {
+            iterator = new DocumentIterator(documents);
+        } else {
+            iterator = new CsvDocumentIterator(documents);
+        }
         instances.addThruPipe(iterator);
         return instances;
     }
@@ -70,13 +77,35 @@ public class ProjectModel {
         return new ProjectModel();
     }
 
-    public ProjectExportBuilder export () {
-        return new ProjectExportBuilder(documents, importFileSettings, stopwords, topicModels);
+    public interface Exporter {
+        void addDocuments(List<Document> documents);
+        void addSettings(ImportFileSettings settings);
+        void addStopwords(Set<String> stopwords);
+        void addTopicModels(List<TopicModel> topicModels);
     }
 
-    public static ProjectModel fromBuilder (ProjectExportBuilder builder) {
-        ProjectModel model = new ProjectModel();
-        return model;
+    public void exportTo (Exporter exporter) {
+        exporter.addDocuments(documents);
+        exporter.addSettings(importFileSettings);
+        exporter.addStopwords(stopwords);
+        exporter.addTopicModels(topicModels);
+    }
+
+    public interface Importer {
+        List<Document> provideDocuments();
+        ImportFileSettings provideSettings();
+        Set<String> provideStopwords();
+        List<TopicModel> provideTopicModels();
+    }
+
+    public ProjectModel () {
+    }
+
+    public ProjectModel (Importer importer) {
+        documents = FXCollections.observableArrayList(importer.provideDocuments());
+        importFileSettings = importer.provideSettings();
+        stopwords = importer.provideStopwords();
+        topicModels = FXCollections.observableArrayList(importer.provideTopicModels());
     }
 
 }

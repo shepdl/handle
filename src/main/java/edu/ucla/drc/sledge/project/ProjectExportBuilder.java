@@ -4,6 +4,7 @@ import cc.mallet.topics.TopicModel;
 import cc.mallet.types.Instance;
 import cc.mallet.types.InstanceList;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonSetter;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import edu.ucla.drc.sledge.ImportFileSettings;
 import edu.ucla.drc.sledge.documents.Document;
@@ -12,10 +13,14 @@ import javax.xml.stream.XMLOutputFactory;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
 import java.io.*;
+import java.net.URI;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class ProjectExportBuilder implements Serializable {
 
@@ -25,7 +30,7 @@ public class ProjectExportBuilder implements Serializable {
     private String name;
 
     @JsonProperty("documents")
-    private List<DocumentExporter> documents;
+    private List<Document.Exporter> documents;
 
     @JsonProperty("importFileSettings")
     private ImportFileSettings importFileSettings;
@@ -37,7 +42,11 @@ public class ProjectExportBuilder implements Serializable {
     private Set<String> stopwords;
 
     @JsonProperty("topicModels")
-    private List<TopicModel> topicModels;
+    private List<TopicModel.TopicModelSettingsExporter> topicModels;
+
+    public ProjectExportBuilder() {
+
+    }
 
     public ProjectExportBuilder(List<Document>documents,
             ImportFileSettings importFileSettings, Set<String> stopwords,
@@ -46,62 +55,61 @@ public class ProjectExportBuilder implements Serializable {
 //        this.documents = documents;
         this.documents = documents.stream().map((doc) -> {
             // TODO: fix
-            return new DocumentExporter(null, null);
+            DocExporterToProjectFile exporter = new DocExporterToProjectFile();
+            try {
+                doc.exportTo(exporter);
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+            return exporter;
+//            return new DocumentExporter(doc.getFile());
 //            return new DocumentExporter(doc.getFile(), doc.getIngested());
         }).collect(Collectors.toList());
         this.importFileSettings = importFileSettings;
         this.stopwords = stopwords;
-        this.topicModels = new ArrayList<>(topicModels);
+        this.topicModels = topicModels.stream().map((model) -> {
+            return new TopicModel.TopicModelSettingsExporter(model);
+        }).collect(Collectors.toList());
+//        this.topicModels = new ArrayList<>(topicModels);
     }
 
-    public void writeToFile (File outFile) {
-        StringWriter writer = new StringWriter();
-        XMLOutputFactory xmlOutputFactory = XMLOutputFactory.newFactory();
-        try {
-            XMLStreamWriter sw = xmlOutputFactory.createXMLStreamWriter(writer);
-            XmlMapper mapper = new XmlMapper();
-            sw.writeStartDocument();
-            sw.writeStartElement("root");
-            mapper.writeValue(sw, this);
-            sw.writeEndElement();
-            sw.writeEndDocument();
-        } catch (XMLStreamException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
+    public ProjectModel toModel () {
+        ProjectModel model = new ProjectModel();
+        model.setStopwords(stopwords);
+        return model;
+    }
+
+    private static class DocExporterToProjectFile implements Document.Exporter {
+
+        @JsonProperty("content")
+        private String content;
+
+        @JsonProperty("name")
+        private String name;
+
+        @JsonProperty("uri")
+        private String uri;
+
+        @Override
+        public void addContent(String content) {
+            this.content = content;
         }
-        System.out.println(writer.toString());
-    }
 
-    public final void writeObject (ObjectOutputStream out) throws IOException {
-        out.writeObject(name);
-        out.writeObject(documents);
-        out.writeObject(importFileSettings);
-        out.writeObject(instances);
-        out.writeObject(stopwords);
-        out.writeObject(topicModels);
-    }
-
-    public final void readObject (ObjectInputStream in) throws IOException, ClassNotFoundException {
-        int version = in.readInt();
-        this.name = (String)in.readObject();
-        this.documents = (List<DocumentExporter>)in.readObject();
-        this.importFileSettings = (ImportFileSettings)in.readObject();
-        this.instances = (InstanceList)in.readObject();
-        this.stopwords = (Set<String>)in.readObject();
-        this.topicModels = (ArrayList<TopicModel>)in.readObject();
-    }
-
-    private static class DocumentExporter implements Serializable {
-        private static final long SerialVersionUID = 1;
-
-        private final File file;
-        private final Instance instance;
-
-        public DocumentExporter (File file, Instance instance) {
-            this.file = file;
-            this.instance = instance;
+        @Override
+        public void addName(String name) {
+            this.name = name;
         }
+
+        @Override
+        public void addUri(URI uri) {
+            this.uri = uri.toString();
+        }
+
+        @Override
+        public void addFile(File file) {
+            return;
+        }
+
     }
 
 }

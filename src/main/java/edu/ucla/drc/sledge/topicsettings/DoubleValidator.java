@@ -22,6 +22,10 @@ class DoubleValidator implements ChangeListener<String> {
 
     @Override
     public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+        if (newValue.isEmpty()) {
+            field.setText("");
+            return;
+        }
         try {
             double alpha = Double.parseDouble(newValue);
             field.setText(newValue);

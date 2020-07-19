@@ -5,6 +5,7 @@ import cc.mallet.types.Instance;
 import cc.mallet.types.Token;
 import cc.mallet.types.TokenSequence;
 import edu.ucla.drc.sledge.documentimport.stopwords.TokenSequenceMarkStopwords;
+import net.didion.jwnl.util.TokenizerParser;
 
 public class ActuallyRemoveStopwordsPipe extends Pipe {
 
@@ -12,7 +13,7 @@ public class ActuallyRemoveStopwordsPipe extends Pipe {
         TokenSequence ts = (TokenSequence)carrier.getData();
         TokenSequence ret = new TokenSequence();
         for (Token token : ts) {
-            if (!isStopword(token)) {
+            if (!isStopword(token) && !isWhitespace(token)) {
                 ret.add(token);
             }
         }
@@ -23,5 +24,10 @@ public class ActuallyRemoveStopwordsPipe extends Pipe {
     private boolean isStopword (Token token) {
         return token.hasProperty(TokenSequenceMarkStopwords.IsStopword) &&
                 ((boolean)token.getProperty(TokenSequenceMarkStopwords.IsStopword) == true);
+    }
+
+    private boolean isWhitespace (Token token) {
+        return token.hasProperty(TokenSequenceMarkStopwords.IsWhitespace) &&
+                ((boolean)token.getProperty(TokenSequenceMarkStopwords.IsWhitespace) == true);
     }
 }

@@ -24,10 +24,9 @@ public class WordCountTable extends AnchorPane implements LoadsFxml {
 
     @FXML private TableColumn<WordCountEntry, String> wordColumn;
     @FXML private TableColumn<WordCountEntry, Number> countColumn;
-    private ProjectModel model;
+    @FXML TableView<WordCountEntry> wordTable;
 
-    @FXML
-    TableView<WordCountEntry> wordTable;
+    private ProjectModel model;
 
     public WordCountTable () {
         loadFxml();
@@ -81,15 +80,19 @@ public class WordCountTable extends AnchorPane implements LoadsFxml {
     public void setData (ProjectModel model, ObjectProperty<Instance> selectedDocument) {
         this.model = model;
         selectedDocument.addListener((ObservableValue<? extends Instance> observable, Instance oldValue, Instance newValue) -> {
+            wordTable.getItems().clear();
+            if (newValue == null) {
+                // Will be null when all documents are removed
+                return;
+            }
             TokenSequence ts = (TokenSequence)newValue.getData();
             WordCounter counter = new WordCounter(ts);
             List<WordCountEntry> wordCountEntries = new ArrayList<>();
             for (Map.Entry<String, Integer> entry : counter.count().entrySet()) {
                 wordCountEntries.add(new WordCountEntry(entry.getKey(), entry.getValue()));
             }
-            wordTable.getItems().clear();
             wordTable.getItems().addAll(wordCountEntries);
-//            wordTable.sort();
+            wordTable.sort();
         });
     }
 

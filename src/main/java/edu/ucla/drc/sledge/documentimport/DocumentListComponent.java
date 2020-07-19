@@ -38,7 +38,6 @@ public class DocumentListComponent extends TreeView<Document> {
     Alert invalidFilesBox = new Alert(Alert.AlertType.ERROR);
 
     public void setData (ProjectModel model, ObjectProperty<Instance> selectedDocument) {
-        FXCollections.observableArrayList();
         this.projectModel = model;
         this.documents = model.getDocuments();
         this.selectedDocument = selectedDocument;
@@ -51,6 +50,9 @@ public class DocumentListComponent extends TreeView<Document> {
                         TreeItem<Document> treeItem = new TreeItem<>(doc);
                         rootTreeItem.getChildren().add(treeItem);
                     });
+                } else if (c.wasRemoved()) {
+                    selectedDocument.setValue(null);
+                    rootTreeItem.getChildren().remove(getSelectionModel().getSelectedIndex());
                 }
             }
         });
@@ -62,6 +64,7 @@ public class DocumentListComponent extends TreeView<Document> {
                     super.updateItem(document, empty);
                     if (document == null || empty) {
                         setGraphic(null);
+                        setText(null);
                     } else {
                         setText(document.getName());
                     }
@@ -72,12 +75,10 @@ public class DocumentListComponent extends TreeView<Document> {
             final MenuItem removeDocumentItem = new MenuItem("Remove");
             menu.getItems().add(removeDocumentItem);
             removeDocumentItem.setOnAction(event -> {
-                treeView.getSelectionModel().getSelectedItem();
-                treeView.getRoot().getChildren().remove(treeView.getSelectionModel().getSelectedItem());
                 model.getDocuments().remove(cell.getItem());
             });
             cell.contextMenuProperty().bind(
-                    Bindings.when(cell.emptyProperty()).then((ContextMenu)null).otherwise(menu)
+                Bindings.when(cell.emptyProperty()).then((ContextMenu)null).otherwise(menu)
             );
 
             return cell;

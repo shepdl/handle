@@ -3,6 +3,9 @@ package cc.mallet.topics;
 
 import cc.mallet.types.*;
 import cc.mallet.util.Randoms;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import edu.ucla.drc.sledge.project.ProjectModel;
+import edu.ucla.drc.sledge.topicsettings.Topic;
 import edu.ucla.drc.sledge.topicsettings.TopicDocumentContainerSummary;
 
 import java.io.*;
@@ -239,6 +242,10 @@ public class TopicModel extends Thread implements Serializable {
     public void setSaveSerializedModel(int interval, String filename) {
         this.saveModelInterval = interval;
         this.modelFilename = filename;
+    }
+
+    public void addInstances(ProjectModel projectModel) {
+        addInstances(projectModel.getInstancesForModeling());
     }
 
     public void addInstances(InstanceList training) {
@@ -1776,7 +1783,12 @@ public class TopicModel extends Thread implements Serializable {
         }
     }
 
+    private List<TopicDocumentContainerSummary> summaryReport;
+
     public List<TopicDocumentContainerSummary> getSummary() {
+        if (summaryReport != null) {
+            return summaryReport;
+        }
         ArrayList<TreeSet<IDSorter>> topicSortedDocuments = getTopicDocuments(10.0);
 
         List<TopicDocumentContainerSummary> report = new ArrayList<>();
@@ -1803,6 +1815,8 @@ public class TopicModel extends Thread implements Serializable {
 
             report.add(summary);
         }
+
+        summaryReport = report;
 
         return report;
     }
@@ -2008,69 +2022,174 @@ public class TopicModel extends Thread implements Serializable {
         return title;
     }
 
-    private void writeObject(ObjectOutputStream out) throws IOException {
-        out.writeInt(0);
-        out.writeObject(this.data);
-        out.writeObject(this.alphabet);
-        out.writeObject(this.topicAlphabet);
-        out.writeInt(this.numTopics);
-        out.writeInt(this.topicMask);
-        out.writeInt(this.topicBits);
-        out.writeInt(this.numTypes);
-        out.writeObject(this.alpha);
-        out.writeDouble(this.alphaSum);
-        out.writeDouble(this.beta);
-        out.writeDouble(this.betaSum);
-        out.writeObject(this.typeTopicCounts);
-        out.writeObject(this.tokensPerTopic);
-        out.writeObject(this.docLengthCounts);
-        out.writeObject(this.topicDocCounts);
-        out.writeInt(this.numIterations);
-        out.writeInt(this.burninPeriod);
-        out.writeInt(this.saveSampleInterval);
-        out.writeInt(this.optimizeInterval);
-        out.writeInt(this.showTopicsInterval);
-        out.writeInt(this.wordsPerTopic);
-        out.writeInt(this.saveStateInterval);
-        out.writeObject(this.stateFilename);
-        out.writeInt(this.saveModelInterval);
-        out.writeObject(this.modelFilename);
-        out.writeInt(this.randomSeed);
-        out.writeObject(this.formatter);
-        out.writeBoolean(this.printLogLikelihood);
-        out.writeInt(this.numThreads);
+    public interface Importer {
+        String name();
+        int numTopics();
+        int topicMask();
+        int topicBits();
+        double[] alpha();
+        double alphaSum();
+        double beta();
+        double betaSum();
+        int[][] typeTopicCounts();
+        int[] tokensPerTopic();
+        int[] docLengthCounts();
+        int[][] topicDocCounts();
+        int numIterations();
+        int burnInPeriod();
+        int optimizeInterval();
+        int randomSeed();
     }
 
-    private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
-        int version = in.readInt();
-        this.data = (ArrayList)in.readObject();
-        this.alphabet = (Alphabet)in.readObject();
-        this.topicAlphabet = (LabelAlphabet)in.readObject();
-        this.numTopics = in.readInt();
-        this.topicMask = in.readInt();
-        this.topicBits = in.readInt();
-        this.numTypes = in.readInt();
-        this.alpha = (double[])((double[])in.readObject());
-        this.alphaSum = in.readDouble();
-        this.beta = in.readDouble();
-        this.betaSum = in.readDouble();
-        this.typeTopicCounts = (int[][])((int[][])in.readObject());
-        this.tokensPerTopic = (int[])((int[])in.readObject());
-        this.docLengthCounts = (int[])((int[])in.readObject());
-        this.topicDocCounts = (int[][])((int[][])in.readObject());
-        this.numIterations = in.readInt();
-        this.burninPeriod = in.readInt();
-        this.saveSampleInterval = in.readInt();
-        this.optimizeInterval = in.readInt();
-        this.showTopicsInterval = in.readInt();
-        this.wordsPerTopic = in.readInt();
-        this.saveStateInterval = in.readInt();
-        this.stateFilename = (String)in.readObject();
-        this.saveModelInterval = in.readInt();
-        this.modelFilename = (String)in.readObject();
-        this.randomSeed = in.readInt();
-        this.formatter = (NumberFormat)in.readObject();
-        this.printLogLikelihood = in.readBoolean();
-        this.numThreads = in.readInt();
+    public TopicModel (Importer importer) {
+        numTopics = importer.numTopics();
+        topicMask = importer.topicMask();
+        topicBits = importer.topicBits();
+        alpha = importer.alpha();
+        alphaSum = importer.alphaSum();
+        beta = importer.beta();
+        betaSum = importer.betaSum();
+        typeTopicCounts = importer.typeTopicCounts();
+        tokensPerTopic = importer.tokensPerTopic();
+        docLengthCounts = importer.docLengthCounts();
+        topicDocCounts = importer.topicDocCounts();
+        numIterations = importer.numIterations();
+        burninPeriod = importer.burnInPeriod();
+        optimizeInterval = importer.optimizeInterval();
+        randomSeed = importer.randomSeed();
     }
+
+    public void exportTo (Exporter exporter) {
+        exporter.addName(getName());
+        exporter.addNumTopics(numTopics);
+        exporter.addAlphabet(alphabet);
+        exporter.addLabelAlphabet(topicAlphabet);
+        exporter.addTopicMask(topicMask);
+        exporter.addTopicBits(topicBits);
+        exporter.addAlpha(alpha);
+        exporter.addAlphaSum(alphaSum);
+        exporter.addBeta(beta);
+        exporter.addBetaSum(betaSum);
+        exporter.addTypeTopicCounts(typeTopicCounts);
+        exporter.addTokensPerTopic(tokensPerTopic);
+        exporter.addDocLengthCounts(docLengthCounts);
+        exporter.addTopicDocCounts(topicDocCounts);
+        exporter.addNumIterations(numIterations);
+        exporter.addBurnInPeriod(burninPeriod);
+        exporter.addOptimizeInterval(optimizeInterval);
+        exporter.addRandomSeed(randomSeed);
+    }
+
+    public interface Exporter {
+        void addName(String name);
+        // TODO: Alphabet and LabelAlphabet
+        void addNumTopics(int numTopics);
+        void addAlphabet(Alphabet alphabet);
+        void addLabelAlphabet(LabelAlphabet labelAlphabet);
+        void addTopicMask(int topicMask);
+        void addTopicBits(int topicBits);
+        void addAlpha(double[] alpha);
+        void addAlphaSum(double alphaSum);
+        void addBeta(double beta);
+        void addBetaSum(double betaSum);
+        void addTypeTopicCounts(int[][] typeTopicCounts);
+        void addTokensPerTopic(int[] tokensPerTopic);
+        void addDocLengthCounts(int[] docLengthCounts);
+        void addTopicDocCounts(int[][] topicDocCounts);
+        void addNumIterations(int numIterations);
+        void addBurnInPeriod(int burnInPeriod);
+        void addOptimizeInterval(int optimizeInterval);
+        void addRandomSeed(int randomSeed);
+    }
+
+    public static class TopicModelSettingsExporter {
+
+        @JsonProperty("name")
+        private String name;
+        @JsonProperty("data")
+        private List<TopicAssignment> data;
+        @JsonProperty("alphabet")
+        private AlphabetExporter alphabet;
+        @JsonProperty("topicAlphabet")
+        private LabelAlphabet topicAlphabet;
+        @JsonProperty("numTopics")
+        private int numTopics;
+        @JsonProperty("topicMask")
+        private int topicMask;
+        @JsonProperty("topicBits")
+        private int topicBits;
+        @JsonProperty("numTypes")
+        private int numTypes;
+        @JsonProperty("alpha")
+        private double[] alpha;
+        @JsonProperty("alphaSum")
+        private double alphaSum;
+        @JsonProperty("beta")
+        private double beta;
+        @JsonProperty("betaSum")
+        private double betaSum;
+        @JsonProperty("typeTopicCounts")
+        private int[][] typeTopicCounts;
+        @JsonProperty("tokensPerTopic")
+        private int[] tokensPerTopic;
+        @JsonProperty("docLengthCounts")
+        private int[] docLengthCount;
+        @JsonProperty("topicDocCounts")
+        private int[][] topicDocCounts;
+        @JsonProperty("numIterations")
+        private int numIterations;
+        @JsonProperty("burnInPeriod")
+        private int burnInPeriod;
+
+        @JsonProperty("optimizeInterval")
+        private int optimizeInterval;
+        @JsonProperty("randomSeed")
+        private int randomSeed;
+
+        private static class AlphabetExporter {
+            @JsonProperty("entries")
+            private String[] entries;
+
+            AlphabetExporter () {
+
+            }
+
+            AlphabetExporter (Alphabet source) {
+                Object[] items = source.toArray();
+                entries = new String[items.length];
+                for (int i = 0; i < items.length; i++) {
+                    entries[i] = (String)items[i];
+                }
+            }
+        }
+
+        public TopicModelSettingsExporter () {
+
+        }
+
+        public TopicModelSettingsExporter (TopicModel model) {
+            name = model.getName();
+//            data = model.data;
+            alphabet = new AlphabetExporter(model.alphabet);
+            // TODO: add label alphabet
+//            topicAlphabet = model.topicAlphabet;
+            numTopics = model.numTopics;
+            topicMask = model.topicMask;
+            topicBits = model.topicBits;
+            numTypes = model.numTypes;
+            alpha = model.alpha;
+            alphaSum = model.alphaSum;
+            beta = model.beta;
+            betaSum = model.betaSum;
+            typeTopicCounts = model.typeTopicCounts;
+            tokensPerTopic = model.tokensPerTopic;
+            docLengthCount = model.docLengthCounts;
+            topicDocCounts = model.topicDocCounts;
+            numIterations = model.numIterations;
+            burnInPeriod = model.burninPeriod;
+            optimizeInterval = model.optimizeInterval;
+            randomSeed = model.randomSeed;
+        }
+    }
+
 }

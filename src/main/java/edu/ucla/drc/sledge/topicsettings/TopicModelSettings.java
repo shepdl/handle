@@ -254,7 +254,7 @@ public class TopicModelSettings extends VBox {
         topicModel.setBurninPeriod(Integer.parseInt(burinInPeriodField.textProperty().getValue()));
         topicModel.setNumThreads(Integer.parseInt(threadsField.textProperty().getValue()));
 
-        topicModel.addInstances(projectModel.getInstancesForModeling());
+        topicModel.addInstances(projectModel);
         topicModel.setProgress = this::updateProgress;
         topicModel.updateTopWords = this::updateTopicCounts;
 

@@ -33,7 +33,7 @@ public class DocumentTopicReport extends BorderPane implements LoadsFxml {
     private TopicModel topicModel;
 
     @FXML TreeView<Document> documentList;
-    private final TreeItem rootTreeItem = new TreeItem("Drag and drop some files here");
+    private final TreeItem rootTreeItem = new TreeItem("Documents");
     @FXML BarChart<String, Double> documentSummary;
     @FXML private PieChart compositionChart;
     @FXML private Button exportChartButton;
@@ -91,7 +91,7 @@ public class DocumentTopicReport extends BorderPane implements LoadsFxml {
     }
 
     private void updateChart (Document document) {
-        int[] topicWeights = topicModel.getTopicWeightsForDocument(model.getDocuments().indexOf(document));
+        double[] topicWeights = topicModel.getDocumentTopics(true, true)[model.getDocuments().indexOf(document)];
         ObservableList<PieChart.Data> data = FXCollections.observableArrayList();
 
         for (int i = 0; i < topicWeights.length; i++) {
