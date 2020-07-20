@@ -56,7 +56,7 @@
                             <Text fx:id="randomSeedText" />
                         </TextFlow>
                     </HBox>
-                    <ScrollPane fx:id="allTopicsPane" />
+                    <ScrollPane fx:id="allTopicsPane" fitToWidth="true" fitToHeight="true" />
                 </VBox>
             </Tab>
             <Tab text="Summary" closable="false">

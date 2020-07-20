@@ -143,7 +143,8 @@ public class WordCountTableTests extends ApplicationTest {
         stage.show();
         stage.toFront();
         project = ProjectModel.blank();
-        controller = loader.getController();
+        controller = new WordCountTable();
+        loader.setController(controller);
     }
 
     @Before

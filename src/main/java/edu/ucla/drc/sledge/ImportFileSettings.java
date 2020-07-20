@@ -17,7 +17,7 @@ public class ImportFileSettings implements Serializable {
 
     private List<String> stopwordFilenames;
 
-    public static final Pattern defaultRegex = Pattern.compile("\\p{L}[\\p{L}\\p{P}]+\\p{L}");
+    public static final Pattern defaultRegex = Pattern.compile("\\p{L}+");
     public static final Pattern nonEnglishRegex = Pattern.compile("[\\p{L}\\p{M}]+");
 
     public enum DocumentIterationSchema {
