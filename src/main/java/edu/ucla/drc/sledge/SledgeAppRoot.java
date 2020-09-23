@@ -32,7 +32,7 @@ public class SledgeAppRoot extends AnchorPane {
     @FXML
     public void initialize () {
 
-//        setupMenus();
+        setupMenus();
         model = ProjectModel.blank();
 //        documentImport.setData(model.getDocuments(), selectedDocument);
         documentImport.setModel(model);
@@ -65,6 +65,7 @@ public class SledgeAppRoot extends AnchorPane {
             try {
                 ProjectModel model = ioHelper.loadModelFromFile(file);
                 this.model = model;
+//                this.model.updateFromModel(ioHelper.loadModelFromFile(file));
                 documentImport.setModel(model);
                 topicModels.setModel(model);
             } catch (IOException e) {

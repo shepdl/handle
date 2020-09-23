@@ -16,6 +16,8 @@
     <VBox>
         <MenuBar fx:id="applicationMenu">
             <Menu text="Project">
+                <MenuItem text="Load Project" onAction="#loadProject" />
+                <MenuItem text="Save Project" onAction="#saveProject" />
                 <SeparatorMenuItem />
                 <MenuItem text="Quit" onAction="#quit" />
             </Menu>

@@ -14,6 +14,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.TableRow;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseButton;
+import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import org.junit.Before;
 import org.junit.Test;
@@ -76,13 +77,16 @@ public class WordCountTableWordRemovalTests extends ApplicationTest {
     public void start (Stage stage) throws Exception {
         FXMLLoader loader = new FXMLLoader(WordCountTable.class.getResource("WordCountTable.fxml"));
         WordCountTable table = new WordCountTable();
+        controller = table;
+        AnchorPane pane = new AnchorPane();
+        loader.setRoot(pane);
         mainNode = loader.load();
         scene = new Scene(mainNode);
         stage.setScene(scene);
         stage.show();
         stage.toFront();
         project = ProjectModel.blank();
-        controller = loader.getController();
+        loader.setController(table);
     }
 
     @Before

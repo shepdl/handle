@@ -99,7 +99,7 @@ public class AddDocumentTest extends ApplicationTest {
             project.getDocuments().add(factory.adaptDocument(inFile));
         }
         controller.setData(project, selectedDocument);
-        controller.prepareToAddFiles(inFiles);
+//        controller.prepareToAddFiles(inFiles);
         List<TreeItem<Document>> addedDocuments = controller.getRoot().getChildren();
         assertThat(addedDocuments, hasSize(3));
         assertThat(addedDocuments.get(0).getValue().getFile(), equalTo(inFiles.get(0)));

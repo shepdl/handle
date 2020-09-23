@@ -102,10 +102,21 @@ public class ProjectModel {
     }
 
     public ProjectModel (Importer importer) {
-        documents = FXCollections.observableArrayList(importer.provideDocuments());
+        documents.setAll(importer.provideDocuments());
         importFileSettings = importer.provideSettings();
         stopwords = importer.provideStopwords();
-        topicModels = FXCollections.observableArrayList(importer.provideTopicModels());
+        topicModels.setAll(importer.provideTopicModels());
+    }
+
+    public void updateFromModel (ProjectModel otherModel) {
+        documents.removeAll(documents);
+        topicModels.removeAll(topicModels);
+        stopwords.clear();
+
+        documents.setAll(otherModel.documents);
+        topicModels.setAll(otherModel.topicModels);
+        stopwords.addAll(otherModel.stopwords);
+        importFileSettings = otherModel.importFileSettings;
     }
 
 }

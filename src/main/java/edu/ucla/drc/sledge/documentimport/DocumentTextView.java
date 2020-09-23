@@ -157,7 +157,7 @@ public class DocumentTextView extends AnchorPane {
                 if (token.hasProperty(TokenSequenceMarkStopwords.IsStopword)) {
                     startPositions.add(textWidth);
                     endPositions.add(textWidth + wordLength);
-                    wordToAdd = new String(new char[wordLength]).replace("\0", "-");
+//                    wordToAdd = new String(new char[wordLength]).replace("\0", "-");
                     wordToAdd = token.getText();
                 } else {
                     wordToAdd= token.getText();
@@ -165,7 +165,7 @@ public class DocumentTextView extends AnchorPane {
 //                wordToAdd = token.getText();
 //                builder.append(ts.get(i).getText());
                 builder.append(wordToAdd);
-                builder.append(" ");
+//                builder.append(" ");
                 textWidth += wordLength + 1;
 //                if (i > 0 && i % 20 == 0) {
 //                    builder.append("\n");

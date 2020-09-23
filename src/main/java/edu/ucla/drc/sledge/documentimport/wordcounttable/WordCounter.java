@@ -23,6 +23,9 @@ public class WordCounter {
                 // TODO: display in the list, for example, italicized
                 return;
             }
+            if (ts.get(i).hasProperty(TokenSequenceMarkStopwords.IsWhitespace)) {
+                return;
+            }
             if (!counts.containsKey(word)) {
                 counts.put(word, 0);
             }

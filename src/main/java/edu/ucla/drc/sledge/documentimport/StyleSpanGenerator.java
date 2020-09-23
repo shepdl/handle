@@ -26,30 +26,30 @@ class StyleSpanGenerator {
             String word = token.getText();
 
             if (stopwordSpan) {
-                if (token.hasProperty(TokenSequenceMarkStopwords.IsStopword)) {
-                    lastSpanLength += word.length() + 1;
+                if (token.hasProperty(TokenSequenceMarkStopwords.IsStopword) || token.hasProperty(TokenSequenceMarkStopwords.IsWhitespace)) {
+                    lastSpanLength += word.length();// + 1;
                 } else {
-                    spansBuilder.add(Collections.singleton("stopword"), lastSpanLength - 1);
-                    lastSpanLength = word.length() + 2;
+                    spansBuilder.add(Collections.singleton("stopword"), lastSpanLength); // - 1);
+                    lastSpanLength = word.length();// + 2;
                     stopwordSpan = false;
                 }
             } else {
-                if (token.hasProperty(TokenSequenceMarkStopwords.IsStopword)) {
+                if (token.hasProperty(TokenSequenceMarkStopwords.IsStopword) || token.hasProperty(TokenSequenceMarkStopwords.IsWhitespace)) {
                     if (lastSpanLength > 0) {
                         spansBuilder.add(Collections.emptyList(), lastSpanLength );
                     }
-                    lastSpanLength = word.length() + 1;
+                    lastSpanLength = word.length();// + 1;
                     stopwordSpan = true;
                 } else {
-                    lastSpanLength += word.length() + 1;
+                    lastSpanLength += word.length();// + 1;
                 }
             }
         }
 
         if (stopwordSpan) {
-            spansBuilder.add(Collections.singleton("stopword"), lastSpanLength - 1);
+            spansBuilder.add(Collections.singleton("stopword"), lastSpanLength); // - 1);
         } else {
-            spansBuilder.add(Collections.emptyList(), lastSpanLength - 1);
+            spansBuilder.add(Collections.emptyList(), lastSpanLength); // - 1);
         }
 
         return spansBuilder.create();

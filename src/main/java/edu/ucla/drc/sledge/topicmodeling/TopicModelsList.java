@@ -45,17 +45,18 @@ public class TopicModelsList extends TreeView<TopicModel> {
         });
     }
 
+
     public void setData (ObservableList<TopicModel> topicModels, ObjectProperty<TopicModel> selectedTopicModel) {
         this.topicModels = topicModels;
         this.selectedTopicModel = selectedTopicModel;
 
+        rootItem.getChildren().clear();
+        topicModels.forEach(this::addItem);
+
         this.topicModels.addListener((ListChangeListener.Change<? extends TopicModel> c) -> {
             while (c.next()) {
                 if (c.wasAdded()) {
-                    c.getAddedSubList().forEach(topicModel -> {
-                        TreeItem<TopicModel> treeItem = new TreeItem<>(topicModel);
-                        rootItem.getChildren().add(treeItem);
-                    });
+                    c.getAddedSubList().forEach(this::addItem);
                 } else if (c.wasRemoved()) {
                     // NOTE: this is really inefficient as it's a linear search of a list multiple
                     // times, but there are unlikely to be enough topic models for this to be a problem
@@ -69,6 +70,13 @@ public class TopicModelsList extends TreeView<TopicModel> {
             }
         });
 
+    }
+
+    private TreeItem<TopicModel> addItem(TopicModel topicModel) {
+        setShowRoot(false);
+        TreeItem<TopicModel> item = new TreeItem<>(topicModel);
+        rootItem.getChildren().add(item);
+        return item;
     }
 
     @FXML

@@ -19,6 +19,7 @@ public class TokenSequenceMarkStopwords extends Pipe {
     public static String IsWhitespace = "IsWhitespace";
 
     private static Pattern WHITESPACE_PATTERN = Pattern.compile("\\s+");
+    private static Pattern NONTOKEN_PATTERN = Pattern.compile("[^\\p{L}]+");
 
     public TokenSequenceMarkStopwords (boolean caseSensitive) {
         this.caseSensitive = caseSensitive;
@@ -46,7 +47,8 @@ public class TokenSequenceMarkStopwords extends Pipe {
     }
 
     static boolean isWhitespace (String word) {
-        return WHITESPACE_PATTERN.matcher(word).matches();
+        return NONTOKEN_PATTERN.matcher(word).matches();
+//        return WHITESPACE_PATTERN.matcher(word).matches();
     }
 
     public Instance pipe (Instance carrier) {

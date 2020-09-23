@@ -5,7 +5,6 @@ import cc.mallet.types.Instance;
 import cc.mallet.types.Token;
 import cc.mallet.types.TokenSequence;
 import edu.ucla.drc.sledge.documentimport.stopwords.TokenSequenceMarkStopwords;
-import net.didion.jwnl.util.TokenizerParser;
 
 public class ActuallyRemoveStopwordsPipe extends Pipe {
 

@@ -1,5 +1,6 @@
 package edu.ucla.drc.sledge.project;
 
+import cc.mallet.topics.TopicModel;
 import edu.ucla.drc.sledge.IOHelper;
 import edu.ucla.drc.sledge.ImportFileSettings;
 import edu.ucla.drc.sledge.documents.Document;
@@ -95,14 +96,22 @@ public class SaveAndLoadProjectFileDocumentSavingTests {
     @Test
     public void topicModelsLoadedWhenOneTopicModelPresent () {
         ProjectModel toSave = new ProjectModel();
+        toSave.getTopicModels().addAll(new TopicModel(10) );
         ProjectModel loaded = saveAndLoad(toSave);
-        assertThat(loaded.getTopicModels(), hasSize(0));
-        fail("Not implemented");
+        assertThat(loaded.getTopicModels(), hasSize(1));
     }
 
     @Test
     public void topicModelsLoadedWhenFourTopicModelsPresent () {
-        fail("Not implemented");
+        ProjectModel toSave = new ProjectModel();
+        toSave.getTopicModels().addAll(
+                new TopicModel(10),
+                new TopicModel(20),
+                new TopicModel(30),
+                new TopicModel(40)
+        );
+        ProjectModel loaded = saveAndLoad(toSave);
+        assertThat(loaded.getTopicModels(), hasSize(4));
     }
 
     @Test

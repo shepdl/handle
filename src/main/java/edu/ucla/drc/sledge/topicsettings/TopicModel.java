@@ -2022,6 +2022,74 @@ public class TopicModel extends Thread implements Serializable {
         return title;
     }
 
+    public void writeObject(ObjectOutputStream out) throws IOException {
+        out.writeInt(0);
+        out.writeObject(this.data);
+        out.writeObject(this.alphabet);
+        out.writeObject(this.topicAlphabet);
+        out.writeInt(this.numTopics);
+        out.writeInt(this.topicMask);
+        out.writeInt(this.topicBits);
+        out.writeInt(this.numTypes);
+        out.writeObject(this.alpha);
+        out.writeDouble(this.alphaSum);
+        out.writeDouble(this.beta);
+        out.writeDouble(this.betaSum);
+        out.writeInt(this.numIterations);
+        out.writeInt(this.burninPeriod);
+        out.writeInt(this.randomSeed);
+        out.writeObject(this.typeTopicCounts);
+        out.writeObject(this.tokensPerTopic);
+        out.writeObject(this.docLengthCounts);
+        out.writeObject(this.topicDocCounts);
+        out.writeObject(this.topicTitles);
+//        out.writeInt(this.saveSampleInterval);
+//        out.writeInt(this.optimizeInterval);
+//        out.writeInt(this.showTopicsInterval);
+//        out.writeInt(this.wordsPerTopic);
+//        out.writeInt(this.saveStateInterval);
+//        out.writeObject(this.stateFilename);
+//        out.writeInt(this.saveModelInterval);
+//        out.writeObject(this.modelFilename);
+//        out.writeObject(this.formatter);
+//        out.writeBoolean(this.printLogLikelihood);
+//        out.writeInt(this.numThreads);
+    }
+
+    public void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
+        int version = in.readInt();
+        this.data = (ArrayList)in.readObject();
+        this.alphabet = (Alphabet)in.readObject();
+        this.topicAlphabet = (LabelAlphabet)in.readObject();
+        this.numTopics = in.readInt();
+        this.topicMask = in.readInt();
+        this.topicBits = in.readInt();
+        this.numTypes = in.readInt();
+        this.alpha = (double[])((double[])in.readObject());
+        this.alphaSum = in.readDouble();
+        this.beta = in.readDouble();
+        this.betaSum = in.readDouble();
+        this.numIterations = in.readInt();
+        this.burninPeriod = in.readInt();
+        this.randomSeed = in.readInt();
+        this.typeTopicCounts = (int[][])((int[][])in.readObject());
+        this.tokensPerTopic = (int[])((int[])in.readObject());
+        this.docLengthCounts = (int[])((int[])in.readObject());
+        this.topicDocCounts = (int[][])((int[][])in.readObject());
+        this.topicTitles = (String[])in.readObject();
+//        this.saveSampleInterval = in.readInt();
+//        this.optimizeInterval = in.readInt();
+//        this.showTopicsInterval = in.readInt();
+//        this.wordsPerTopic = in.readInt();
+//        this.saveStateInterval = in.readInt();
+//        this.stateFilename = (String)in.readObject();
+//        this.saveModelInterval = in.readInt();
+//        this.modelFilename = (String)in.readObject();
+//        this.formatter = (NumberFormat)in.readObject();
+//        this.printLogLikelihood = in.readBoolean();
+//        this.numThreads = in.readInt();
+    }
+
     public interface Importer {
         String name();
         int numTopics();
@@ -2057,6 +2125,7 @@ public class TopicModel extends Thread implements Serializable {
         burninPeriod = importer.burnInPeriod();
         optimizeInterval = importer.optimizeInterval();
         randomSeed = importer.randomSeed();
+
     }
 
     public void exportTo (Exporter exporter) {
@@ -2078,6 +2147,12 @@ public class TopicModel extends Thread implements Serializable {
         exporter.addBurnInPeriod(burninPeriod);
         exporter.addOptimizeInterval(optimizeInterval);
         exporter.addRandomSeed(randomSeed);
+        try {
+            exporter.addSerializedTopicModel(this);
+        } catch (IOException ex) {
+            // Hard to imagine how this could trigger an exception since this is all in-memory
+            ex.printStackTrace();
+        }
     }
 
     public interface Exporter {
@@ -2100,6 +2175,8 @@ public class TopicModel extends Thread implements Serializable {
         void addBurnInPeriod(int burnInPeriod);
         void addOptimizeInterval(int optimizeInterval);
         void addRandomSeed(int randomSeed);
+
+        void addSerializedTopicModel(TopicModel topicModel) throws IOException;
     }
 
     public static class TopicModelSettingsExporter {

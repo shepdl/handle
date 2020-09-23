@@ -11,7 +11,6 @@ import javafx.beans.binding.Bindings;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -37,22 +36,36 @@ public class DocumentListComponent extends TreeView<Document> {
     Alert eraseModelsConfirmationBox;
     Alert invalidFilesBox = new Alert(Alert.AlertType.ERROR);
 
+    private TreeItem<Document> addItem (Document document) {
+        setShowRoot(false);
+        TreeItem<Document> treeItem = new TreeItem<>(document);
+        rootTreeItem.getChildren().add(treeItem);
+        return treeItem;
+    }
+
     public void setData (ProjectModel model, ObjectProperty<Instance> selectedDocument) {
         this.projectModel = model;
         this.documents = model.getDocuments();
         this.selectedDocument = selectedDocument;
 
+        rootTreeItem.getChildren().clear();
+        model.getDocuments().forEach(this::addItem);
+
         this.documents.addListener((ListChangeListener.Change<? extends Document> c) -> {
             while (c.next()) {
                 if (c.wasAdded()) {
-                    c.getAddedSubList().forEach(doc -> {
-                        setShowRoot(false);
-                        TreeItem<Document> treeItem = new TreeItem<>(doc);
-                        rootTreeItem.getChildren().add(treeItem);
-                    });
+                    c.getAddedSubList().forEach(this::addItem);
                 } else if (c.wasRemoved()) {
-                    selectedDocument.setValue(null);
-                    rootTreeItem.getChildren().remove(getSelectionModel().getSelectedIndex());
+                    if (getSelectionModel().getSelectedIndex() == -1) {
+                        if (c.getRemovedSize() == rootTreeItem.getChildren().size()) {
+                            rootTreeItem.getChildren().clear();
+                        } else {
+                            System.out.println("You're trying to remove some large number of items without selecting them. How?");
+                        }
+                    } else {
+                        selectedDocument.setValue(null);
+                        rootTreeItem.getChildren().remove(getSelectionModel().getSelectedIndex());
+                    }
                 }
             }
         });

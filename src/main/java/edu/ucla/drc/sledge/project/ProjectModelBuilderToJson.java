@@ -9,13 +9,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import edu.ucla.drc.sledge.ImportFileSettings;
 import edu.ucla.drc.sledge.documents.Document;
 
-import java.io.File;
-import java.io.FileNotFoundException;
+import java.io.*;
 import java.net.URI;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
@@ -144,38 +140,41 @@ public class ProjectModelBuilderToJson implements ProjectModel.Exporter {
         private String name;
         @JsonProperty("numTopics")
         private int numTopics;
-        @JsonProperty("alphabet")
+//        @JsonProperty("alphabet")
         private List<String> alphabet;
-        @JsonProperty("labelAlphabet")
+//        @JsonProperty("labelAlphabet")
         private List<String> labelAlphabet;
-        @JsonProperty("topicMask")
+//        @JsonProperty("topicMask")
         private int topicMask;
-        @JsonProperty("topicBits")
+//        @JsonProperty("topicBits")
         private int topicBits;
-        @JsonProperty("alpha")
+//        @JsonProperty("alpha")
         private double[] alpha;
-        @JsonProperty("alphaSum")
+//        @JsonProperty("alphaSum")
         private double alphaSum;
-        @JsonProperty("beta")
+//        @JsonProperty("beta")
         private double beta;
-        @JsonProperty("betaSum")
+//        @JsonProperty("betaSum")
         private double betaSum;
-        @JsonProperty("typeTopicCounts")
+//        @JsonProperty("typeTopicCounts")
         private int[][] typeTopicCounts;
-        @JsonProperty("tokensPerTopic")
+//        @JsonProperty("tokensPerTopic")
         private int[] tokensPerTopic;
-        @JsonProperty("docLengthCounts")
+//        @JsonProperty("docLengthCounts")
         private int[] docLengthCounts;
-        @JsonProperty("topicDocCounts")
+//        @JsonProperty("topicDocCounts")
         private int[][] topicDocCounts;
-        @JsonProperty("numIterations")
+//        @JsonProperty("numIterations")
         private int numIterations;
-        @JsonProperty("burnInPeriod")
+//        @JsonProperty("burnInPeriod")
         private int burnInPeriod;
-        @JsonProperty("optimizeInterval")
+//        @JsonProperty("optimizeInterval")
         private int optimizeInterval;
-        @JsonProperty("randomSeed")
+//        @JsonProperty("randomSeed")
         private int randomSeed;
+
+        @JsonProperty("dehydratedTopicModel")
+        private String dehydratedTopicModel;
 
         @Override
         public void addName(String name) {
@@ -190,18 +189,22 @@ public class ProjectModelBuilderToJson implements ProjectModel.Exporter {
         @Override
         public void addAlphabet(Alphabet alphabet) {
             this.alphabet = new ArrayList<>();
-            Iterator<String> alphabetIterator = (Iterator<String>)alphabet.iterator();
-            while (alphabetIterator.hasNext()) {
-                this.alphabet.add(alphabetIterator.next());
+            if (alphabet != null) {
+                Iterator<String> alphabetIterator = (Iterator<String>)alphabet.iterator();
+                while (alphabetIterator.hasNext()) {
+                    this.alphabet.add(alphabetIterator.next());
+                }
             }
         }
 
         @Override
         public void addLabelAlphabet(LabelAlphabet alphabet) {
             this.labelAlphabet = new ArrayList<>();
-            Iterator<String> alphabetIterator = (Iterator<String>)alphabet.iterator();
-            while (alphabetIterator.hasNext()) {
-                this.alphabet.add(alphabetIterator.next());
+            if (alphabet != null) {
+                Iterator<String> alphabetIterator = (Iterator<String>)alphabet.iterator();
+                while (alphabetIterator.hasNext()) {
+                    this.alphabet.add(alphabetIterator.next());
+                }
             }
         }
 
@@ -273,6 +276,14 @@ public class ProjectModelBuilderToJson implements ProjectModel.Exporter {
         @Override
         public void addRandomSeed(int randomSeed) {
             this.randomSeed = randomSeed;
+        }
+
+        @Override
+        public void addSerializedTopicModel(TopicModel topicModel) throws IOException {
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            ObjectOutputStream oos = new ObjectOutputStream(baos);
+            topicModel.writeObject(oos);
+            dehydratedTopicModel = Base64.getEncoder().encodeToString(baos.toByteArray());
         }
     }
 }
